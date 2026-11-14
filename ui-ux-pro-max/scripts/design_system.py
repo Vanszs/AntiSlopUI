@@ -34,9 +34,9 @@ _BANNED_TEXT = _re.compile(r"^#(?:1E1B4B|312E81|3730A3|4C1D95|2E1065|86198F)$", 
 # Domain table, identical to anti-ai-slop-ui-ux/SKILL.md "brand hue by product domain".
 _DOMAIN_HUES = [
     (("money", "invoicing", "invoice", "ledger", "productivity"), "#0F766E"),
-    (("health", "clinical", "wellness", "care", "medical", "clinic"), "#0E7490"),
+    (("health", "healthcare", "clinical", "clinic", "wellness", "care"), "#0E7490"),
     (("safety", "urgency", "logistics", "alert", "alerts"), "#B45309"),
-    (("agriculture", "agri", "environment", "sustainability", "sustainab", "climate"), "#3F6212"),
+    (("agriculture", "agricultural", "farming", "farm", "environment", "sustainability", "sustainable", "climate"), "#3F6212"),
     (("enterprise", "legal", "infrastructure", "docs"), "#334155"),
     (("food", "hospitality", "craft", "heritage"), "#7F1D1D"),
     (("developer", "devtool", "tooling", "data", "ai"), "#4D7C0F"),
@@ -70,8 +70,10 @@ def domain_hue(query):
     """Deterministic hue from the filter's domain table; the catch-all is deep teal."""
     tokens = _re.sub(r"[^a-z0-9]+", " ", (query or "").lower()).split()
     for words, hue in _DOMAIN_HUES:
-        if any(token.startswith(word) for word in words for token in tokens):
+        # exact word first: "care" must not match "career", "ai" must not match "airline"
+        if any(token in words for token in tokens):
             return hue
+    return "#0F766E"
     return "#0F766E"
 
 
