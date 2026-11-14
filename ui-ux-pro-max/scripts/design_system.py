@@ -66,8 +66,13 @@ def contrast_ratio(a, b):
 
 
 def _readable_on(background):
-    """Pick the text colour that actually meets 4.5:1 on this background."""
-    return "#FFFFFF" if contrast_ratio(background, "#FFFFFF") >= contrast_ratio(background, "#0F172A") else "#0F172A"
+    """Pick the higher-contrast of white and near-black; verify the result against C7."""
+    white = contrast_ratio(background, "#FFFFFF")
+    ink = contrast_ratio(background, "#0F172A")
+    if ink > white:
+        _note_override("OVERRIDE: button text white → #0F172A on {} [{:.1f}:1]".format(background, ink))
+        return "#0F172A"
+    return "#FFFFFF"
 
 
 def _seed_index(seed, size):
@@ -120,14 +125,14 @@ def post_filter_colors(colors, seed=""):
         hexv = value.strip()
         if _BANNED_TINT.match(hexv):
             out[role] = _NEUTRAL_TINT if "border" in role else _NEUTRAL_BG
-            _note_override("OVERRIDE: vendor {} tint {} → {} [C1]".format(role, hexv, out[role]))
+            _note_override("OVERRIDE: vendor {} tint {} → {} [catalog C1]".format(role, hexv, out[role]))
         elif _BANNED_TEXT.match(hexv):
             out[role] = _NEUTRAL_TEXT
-            _note_override("OVERRIDE: vendor {} text {} → {} [C7]".format(role, hexv, out[role]))
+            _note_override("OVERRIDE: vendor {} text {} → {} [catalog C7]".format(role, hexv, out[role]))
         elif _BANNED_ACCENT.match(hexv):
             if role in accent_roles:
                 out[role] = rotations[accent_i % len(rotations)]
-                _note_override("OVERRIDE: vendor {} {} → {} [C1]".format(role, hexv, out[role]))
+                _note_override("OVERRIDE: vendor {} {} → {} [catalog C1]".format(role, hexv, out[role]))
                 accent_i += 1
             else:
                 out[role] = _NEUTRAL_TINT
@@ -874,7 +879,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("  border: 1px solid #E2E8F0;")
     lines.append("  border-radius: 8px;")
     lines.append("  font-size: 16px;")
-    lines.append("  transition: border-color 200ms ease;")
+    lines.append("  transition: border-color 150ms ease;")
     lines.append("}")
     lines.append("")
     lines.append(".input:focus {")
@@ -1315,7 +1320,7 @@ def sanitize_result(design_system):
     """Apply the semantic post-filter to every prose-bearing field."""
     for section, keys in (("style", ("effects", "keywords", "best_for")),
                           ("colors", ("notes",)),
-                          ("typography", ("mood",)),
+                          ("typography", ("mood", "best_for")),
                           ("pattern", ("name", "conversion", "sections", "cta_placement", "color_strategy"))):
         block = design_system.get(section)
         if isinstance(block, dict):
@@ -1353,7 +1358,7 @@ def sanitize_result(design_system):
 
 def render_overrides(design_system):
     """Lines describing every substitution, so the ledger reaches the artifact."""
-    overrides = design_system.get("overrides") or []
+    overrides = list(_OVERRIDES) or list(design_system.get("overrides") or [])
     if not overrides:
         return []
     return ["", "## Post-filter overrides", ""] + ["- {}".format(o) for o in overrides] + [""]

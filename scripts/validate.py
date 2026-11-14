@@ -367,8 +367,18 @@ def main():
             ds = _ilu.module_from_spec(spec); spec.loader.exec_module(ds)
             code_hues = {hue.upper() for _, hue in ds._DOMAIN_HUES} | {"#0F766E"}
             filter_doc = skill_doc.read_text(encoding="utf-8")
-            table_hues = {h.upper() for h in re.findall(r"`(#[0-9A-Fa-f]{6})`", filter_doc)}
+            palette = re.search(r"(?s)\| Product domain \| Brand hue \|(.*?)(?=\n\n|\Z)", filter_doc)
+            table_hues = {h.upper() for h in re.findall(r"`(#[0-9A-Fa-f]{6})`", palette.group(1) if palette else "")}
+            if not table_hues:
+                problems.append("brand-hue table not found in SKILL.md")
             missing = code_hues - table_hues
+            # the generator's money hue must be the Money row, not merely present somewhere
+            money = re.search(r"Money, invoicing[^\n]*?(#[0-9A-Fa-f]{6})", palette.group(1) if palette else "")
+            proc = subprocess.run([sys.executable, str(script), "invoicing ledger", "--design-system"],
+                                  cwd=_probe_cwd(), capture_output=True, text=True, timeout=60)
+            found_money = re.search(r"Primary:\s+(#[0-9A-Fa-f]{6})", proc.stdout)
+            if money and found_money and money.group(1).upper() != found_money.group(1).upper():
+                problems.append("money hue drift: table {} vs generator {}".format(money.group(1), found_money.group(1)))
             if missing:
                 problems.append("hue table out of sync: generator uses {} not documented in the filter".format(sorted(missing)))
             script = ROOT / "ui-ux-pro-max/scripts/search.py"
@@ -523,6 +533,10 @@ def main():
                     if re.match(r"^\|\s*[A-Z]{1,3}\d+\s*(?:/\s*[A-Z]{1,3}\d+)?\s*\|", line))
         kb = re.search(r"Ceiling:[^\n]*?(\d+)\s*KB", text)
         skill_kb = re.search(r"Ceiling:[^\n]*?(\d+)\s*KB", skill_text)
+        divisor = re.search(r"([0-9.]+)\s*bytes? ≈ 1 token", text)
+        skill_divisor = re.search(r"([0-9.]+)\s*bytes? ≈ 1 token", skill_text)
+        if divisor and skill_divisor and divisor.group(1) != skill_divisor.group(1):
+            failures.append("budget divisor differs: README {} vs SKILL.md {}".format(divisor.group(1), skill_divisor.group(1)))
         if kb and skill_kb and kb.group(1) != skill_kb.group(1):
             failures.append("budget ceiling differs: README {} KB vs SKILL.md {} KB".format(kb.group(1), skill_kb.group(1)))
         claimed_gates = re.search(r"(\d+)\s+hard gates", text)

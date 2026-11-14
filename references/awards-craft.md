@@ -72,8 +72,8 @@ be paid for is slop with better marketing.
 | Pattern | Earns | Cost | Guardrail |
 |---|---|---|---|
 | Kinetic display type | Concept expression, one hero moment | 1 animated text component, ≤2 animated properties | Settles to static; `prefers-reduced-motion` renders the final frame immediately |
-| Route / section transition | Continuity between views | Canonical route limit; hero choreography only may request the §5 `OVERRIDE` | Skipped entirely under reduced motion; no transition on back-navigation |
-| Scroll choreography | Rhythm across sections | max 1 trigger per section, fires once; hero choreography only may request the §5 `OVERRIDE`; `transform`/`opacity` only | No pinning longer than one viewport; no scroll-jack; native scroll always wins |
+| Route / section transition | Continuity between views | Canonical route limit (≤300ms); no §5 OVERRIDE applies to routes | Skipped entirely under reduced motion; no transition on back-navigation |
+| Scroll choreography | Rhythm across sections | max 1 trigger per section, fires once; only the hero choreography duration may use the §5 `OVERRIDE`; `transform`/`opacity` only | No pinning longer than one viewport; no scroll-jack; native scroll always wins |
 | 3D / WebGL accent | Memorability where the product is spatial | ≤800KB gzip, one canvas, capped DPR | Static poster fallback; paused off-screen; paused under reduced motion; no autoplay audio |
 | Custom cursor | Tone, if the brand is the tool | 1 layer, must not hide the native affordance for text/links | Keyboard path unaffected; disabled under reduced motion and on touch |
 | Video loop | Atmosphere or product proof | ≤2MB, muted, `playsinline`, poster, `preload="metadata"` | Visible pause control; paused off-screen and under reduced motion |
@@ -107,7 +107,7 @@ Both relaxations remain pausable and static under reduced motion. Hovers and non
 ## 6. Procedure
 
 1. Confirm the tier applies (§0). If not, refuse and ship solid.
-2. Run the Pre-Delivery Audit in `../SKILL.md` first. A P0 fail denies the tier — do not
+2. Run the Pre-Delivery Audit in `../SKILL.md` first. A P0 fail, or 3+ P0/HIGH tells, denies the tier — do not
    decorate a page that has not passed the Delivery gate.
 3. Measure the §2 gates. Record numbers, not impressions.
 4. Score the §1 rubric. Fix the weakest criterion before adding any §3 pattern.

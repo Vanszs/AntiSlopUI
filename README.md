@@ -38,7 +38,7 @@ For agents without a skills mechanism, point them at the file:
 ```markdown
 ## UI work
 Read `<skill-dir>/SKILL.md` before writing or reviewing any UI code. It is a hard filter
-that owns the ban list, not advice. Open at most two files from `<skill-dir>/references/` per task (the tell catalogue plus one library file). Run the Pre-Delivery Audit and report PASS/FAIL/N-A/UNVERIFIED per item with
+that owns the ban list, not advice. Open the tell catalogue plus, at most, two sections of one library file per task — never a whole reference file. Run the Pre-Delivery Audit and report PASS/FAIL/N-A/UNVERIFIED per item with
 evidence. Never invent social proof; omit it and record `NO-PROOF: user supplied none`.
 ```
 
@@ -73,8 +73,8 @@ motion table, a single budget, and no dangling cross-skill steps.
 ## The decision rule
 
 **Any P0 tell blocks delivery, as does 3+ P0/HIGH tells. MEDIUM and LOW are recorded.**
-A tell is one catalogue row, or a code-level finding you can see in the markup (the audit's
-five code items), counted **per element** — overlapping rows on one element collapse to the highest
+A tell is one catalogue row, or one of the code-level findings in the audit (four a11y HIGH
+items and seven code P0 items), counted **per element** — overlapping rows on one element collapse to the highest
 severity, and page-scope rows count once for the page.
 
 `WARN-BRAND-SWAP` is a warning, never a block. `N-A` means the component or capability is
@@ -86,8 +86,9 @@ absent; `UNVERIFIED` means you could not measure it — never mark an unmeasured
 - **On demand:** this file, the tell catalogue (needed for counting) and **sections** of one
   library file — never whole reference files. Ceiling: 70 KB of skill text (≈20k real tokens;
   3.5 bytes ≈ 1 token).
-- **Never:** read a whole reference file. Read its `## Contents`, grep the heading, read
-  that range: `cd <skill-dir> && grep -nE '^#{1,2} ' references/layouts.md`.
+- **Never:** read a whole reference file. Grep the headings — the `## Contents` block is only
+  a summary, grep also gives line numbers — then read that range:
+  `cd <skill-dir> && grep -nE '^#{1,2} ' references/layouts.md`.
 - **Never:** read the CSVs by hand. Query them through the research tool (2–3 targeted
   queries).
 

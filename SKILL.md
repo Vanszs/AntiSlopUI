@@ -25,7 +25,8 @@ lives in `ui-ux-pro-max/`.
 Before delivery, report `PASS`, `FAIL`, `N-A`, or `UNVERIFIED` plus an evidence
 pointer for every audit item below. `N-A` is allowed only when the component — or
 the capability it audits — does not exist on the page. `UNVERIFIED` means you could
-not measure it; never mark an unmeasured item PASS.
+not measure it; never mark an unmeasured item PASS, and an `UNVERIFIED` **P0** blocks delivery exactly like a
+`FAIL` until you verify it.
 
 **Any P0 failure blocks delivery, as does 3+ P0/HIGH tells. MEDIUM and LOW tells are
 recorded, not blocking.** `WARN-BRAND-SWAP` is a warning, never a block.
@@ -38,7 +39,9 @@ items). Severity is exactly `P0`, `HIGH`, `MEDIUM` or `LOW`; the vocabulary is c
 
 Count **per element**: when one element matches several rows (a 3-card grid with emoji icons
 is both K1 and I1), count it once at the **higher** severity. Rows that describe the whole
-page count **once for the page**: L1, L2, L3, L4, L7, L8, M20, MO1. N4 and H8 are
+page count **once for the page**; today that is L1, L2, L3, L4, L5, L7, L8, L10, L11, M16, M17,
+M20, MO1, MO3, MO13, C10, FO1, and any other row whose tell is a property of the page rather than
+of one element. N4 and H8 are
 **JUDGEMENT** — record them, never count them. Absence rows do not match unless the page
 claims the capability; otherwise they are `N-A`.
 
@@ -76,8 +79,8 @@ sample is not an invented metric.
 | N1 | Floating glassmorphic navbar | Fixed solid navbar with a border | HIGH |
 
 Also enforced from the catalog: mono/technical faces as display (§3), indigo-950 or
-violet-50 tints as text or background (values come from the vendor palette; the
-research post-filter lists substitutions), typewriter-style copy animation (MO12) and
+violet-50 tints as text or background (no catalogue row: these are vendor palette values,
+and `references/research.md` lists the substitutions), typewriter-style copy animation (MO12) and
 multi-layer parallax (MO8), both in §8 MOTION. These are catalog rows, not a
 second list.
 
@@ -199,12 +202,22 @@ structures; at least two deliberate asymmetric moments per page.
 ## Reference budget
 
 Per task: this file plus **sections**, never whole reference files. A whole reference is
-30–36 KB (8–10k tokens) and will blow the ceiling on contact; a section is 150–700 tokens.
+6–36 KB (2–10k tokens): six still fit under the ceiling, the four largest do not, and none
+may be read whole. A section runs from a few hundred tokens to about 1,300, with the
+dashboard and code catalogues reaching roughly 2,100.
 
 Ceiling: **70 KB of skill text per task** (≈20k real tokens; 3.5 bytes ≈ 1 token, so bytes
 ÷ 3.5 is the token estimate). Self-check with a shell: `wc -c` what you have loaded, add
-it up, and compare with 70,000. Without a shell, use the structural rule: this file plus
-the tell catalogue plus at most two sections from one library file.
+it up, and compare with 70,000. To measure a section rather than a file:
+
+```bash
+s=$(grep -nE '^#{1,2} ' references/layouts.md | grep -i 'HERO VARIANTS' | cut -d: -f1)
+e=$(grep -nE '^#{1,2} ' references/layouts.md | awk -F: -v s="$s" '$1>s{print $1; exit}')
+sed -n "${s},$((e-1))p" references/layouts.md | wc -c
+```
+
+Without a shell, use the structural rule: this file plus the tell catalogue plus at most two
+sections from one library file.
 
 When a number appears here and in a reference, **this file wins**; reference values are
 examples at their own scale. The `## Contents` block in a reference is a summary of its sections — `grep` returns the
@@ -259,7 +272,7 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 - [ ] Every metric is real or visibly labelled; unknown proof omitted with `NO-PROOF`.
 - [ ] Sample content visibly labelled.
 
-**Code-level (catalogue P0s you can see in the markup)**
+**Code-level (P0 findings)**
 - [ ] Semantic landmarks: one `<main>`, `<nav>`, `<header>`, `<footer>`; page has `lang`.
 - [ ] Real controls: `<button>`/`<a>`, never `<div onClick>` or `<span role="button">`.
 - [ ] Overlays are `<dialog>` (or a focus-trapped equivalent) and close on Escape.

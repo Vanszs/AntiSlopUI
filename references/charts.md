@@ -6,9 +6,9 @@ Synthesized from web research (2025–2026): Recharts 3.x docs, Tremor, shadcn/u
 Apache ECharts, Observable, IBM Carbon Data-Viz, ColorBrewer, Okabe-Ito, Vercel/Linear/Stripe
 dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
 
-> Quality bar: derive one hue from the product; never use purple/indigo or impose a fixed client palette. Keep labels accessible, data real, motion reduced-aware, chrome legible.
+> Quality bar: derive one hue from the product; never use purple/indigo unless it is a supplied brand asset, and never impose a fixed client palette. Keep labels accessible, data real, motion reduced-aware, chrome legible.
 
-> Quality bar: one product-derived hue (never purple/indigo unless a supplied brand asset) · subtle dashed horizontal grid · gradient
+> Quality bar: one product-derived hue (never purple/indigo unless a supplied brand asset unless a supplied brand asset) · subtle dashed horizontal grid · gradient
 > area fills · hover-only dots · custom tooltip card · `tabular-nums` · `prefers-reduced-motion`
 > gated · `role="img"`+`aria-label` · real data only. If a chart could be swapped into any
 > generic dashboard and nobody notices, it's slop.
@@ -35,7 +35,7 @@ dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
 
 ## 0. THE 15-POINT ANTI-SLOP CHART SCAN (run before shipping any chart)
 
-- [ ] Derive one hue from the product; never purple/indigo unless a supplied brand asset, and never impose a fixed client palette
+- [ ] Derive one hue from the product; never purple/indigo unless a supplied brand asset unless a supplied brand asset, and never impose a fixed client palette
 - [ ] ≤4 colors in any single chart (no rainbow-per-series)
 - [ ] Gridlines: **horizontal only**, dashed `"3 3"`, `#e5e7eb`/`#eef2f6`
 - [ ] One focal series visually dominant (others muted / lower opacity)
@@ -73,7 +73,7 @@ const CHART = {
 Derive hue from the product; vary lightness only. Use 4–5 steps, never rainbow. For multi-series, use one hue at descending lightness.
 
 ### 1c. CATEGORICAL palette (max ~5–7, colorblind-safe, brand-anchored)
-Modified Okabe-Ito, product-derived hue first, **no purple/indigo**:
+Modified Okabe-Ito, product-derived hue first, **no purple unless a supplied brand asset/indigo**:
 ```ts
 const CATEGORICAL = ["var(--product-hue-700)","#0072B2","#D55E00","#009E73","#CC79A7","#E69F00","#6B7280"];
 ```
@@ -223,7 +223,7 @@ Beauty = smooth monotone curve + gradient fill + hidden dots (hover ring) + dash
 | Curve | `type="monotone"` for bounded data (%, counts) — never overshoots. `natural` = aesthetic only |
 | Gradient fill | top stop 0.20–0.35, bottom 0.01–0.03, vertical |
 | Dots | `dot={false}` + `activeDot={{r:5,stroke:"#fff",strokeWidth:2}}` (white ring "lift") |
-| Multi-line | smooth, hover dots, **no purple in palette**, circle legend |
+| Multi-line | smooth, hover dots, **no purple unless a supplied brand asset in palette**, circle legend |
 | Stacked area | per-series gradient fills (`sa-${gid}-${key}`), `stackId="stack"` |
 | Gaps | `connectNulls` true for attendance/trend; false when data genuinely missing |
 | Thresholds | `<ReferenceLine y={85} stroke="#f59e0b" strokeDasharray="6 4" label="Target 85%" />` |
