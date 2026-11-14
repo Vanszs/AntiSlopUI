@@ -48,7 +48,7 @@ Count **per element**, not per row: if one element matches several rows (a 3-car
 Absence rows do not match. A row that describes something missing (a form without states, a page without numbers) only counts when the page *claims* that capability; otherwise it is `N-A`, same as in the audit.
 
 
-A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, `domain table`, `display table`, `catalog <ID>`, or a gate id such as `H2`.
+A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, `domain table`, `display table`, `catalog <ID>`, `prose`, or a gate id such as `H2`.
 
 Vendor prose describes intent, never implementation: never copy a duration, effect or style name out of generated text, and apply the substitution table instead.
 

@@ -1,6 +1,6 @@
 # Mandatory Post-Filter
 
-Treat generated recommendations as proposals. Apply these substitutions before code; the cited gate/catalog section remains authoritative. This table covers every value the generator is known to emit; if a value is absent here and violates the frozen contract in `SKILL.md`, treat it as banned and record the substitution.
+Treat generated recommendations as proposals. Apply these substitutions before code; the cited gate/catalog section remains authoritative. This table covers the substitutions the generator applies in code; if a value is absent here and violates the frozen contract in `SKILL.md`, treat it as banned and record the substitution.
 
 | Vendor output | Substitute | Authority |
 |---|---|---|
@@ -16,5 +16,5 @@ Treat generated recommendations as proposals. Apply these substitutions before c
 
 Record each substitution exactly: `OVERRIDE: <from> → <to> [<reason>]`.
 
-Determinism: the hue is decided by the product domain in the query. `-p` names the output folder and never changes the palette; same query = identical output.
-The substitution set is a fixed 7-hue list. The primary is always the domain hue; secondary and CTA derive from it, so a banned secondary collapses to the primary rather than introducing a new hue.
+Determinism: the hue is decided by the product domain in the query. `-p` names the output folder and never changes the palette. Recommendations are deterministic for a given query; persisted artifacts additionally embed a generation timestamp.
+The substitution set is a fixed 7-hue list. The primary is always the domain hue. Secondary and CTA derive from it: a banned secondary collapses to the primary, and a second banned accent takes the next hue in the fixed list.

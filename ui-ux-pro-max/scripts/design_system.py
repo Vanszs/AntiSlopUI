@@ -30,16 +30,16 @@ _BANNED_ACCENT = _re.compile(
     r"^#(?:6366F1|818CF8|8B5CF6|7C3AED|A78BFA|4F46E5|C4B5FD|6D28D9|5B21B6|A855F7|7B61FF|E879F9)$", _re.I)
 _BANNED_TINT = _re.compile(
     r"^#(?:E0E7FF|EEF2FF|FAF5FF|F5F3FF|EDE9FE|F3E8FF|DDD6FE|C7D2FE)$", _re.I)
-_BANNED_TEXT = _re.compile(r"^#(?:1E1B4B|312E81|3730A3|4C1D95|2E1065)$", _re.I)
+_BANNED_TEXT = _re.compile(r"^#(?:1E1B4B|312E81|3730A3|4C1D95|2E1065|86198F)$", _re.I)
 # Domain table, identical to anti-ai-slop-ui-ux/SKILL.md "brand hue by product domain".
 _DOMAIN_HUES = [
-    (("invoice", "ledger", "money", "payment", "billing", "productivity", "task", "saas"), "#0F766E"),
-    (("health", "medical", "clinic", "wellness", "care", "spa", "fitness"), "#0E7490"),
-    (("safety", "logistics", "alert", "delay", "compliance", "security"), "#B45309"),
-    (("agri", "farm", "environment", "sustainab", "climate"), "#3F6212"),
-    (("enterprise", "legal", "infrastructure", "docs", "b2b", "portal"), "#334155"),
-    (("food", "restaurant", "hospitality", "craft", "heritage", "wine"), "#7F1D1D"),
-    (("developer", "devtool", "api", "data", "ai", "analytics", "ml"), "#4D7C0F"),
+    (("money", "invoicing", "invoice", "ledger", "productivity"), "#0F766E"),
+    (("health", "clinical", "wellness", "care", "medical", "clinic"), "#0E7490"),
+    (("safety", "urgency", "logistics", "alert", "alerts"), "#B45309"),
+    (("agriculture", "agri", "environment", "sustainability", "sustainab", "climate"), "#3F6212"),
+    (("enterprise", "legal", "infrastructure", "docs"), "#334155"),
+    (("food", "hospitality", "craft", "heritage"), "#7F1D1D"),
+    (("developer", "devtool", "tooling", "data", "ai"), "#4D7C0F"),
 ]
 _ACCENT_HUES = ["#0F766E", "#B45309", "#3F6212", "#334155", "#7F1D1D", "#0E7490", "#4D7C0F"]
 _NEUTRAL_BG = "#F8FAFC"
@@ -53,7 +53,7 @@ def _seed_index(seed, size):
 
 
 _FACE_EDITORIAL = ("editorial", "luxury", "culture", "museum", "portfolio", "art", "gallery", "heritage", "beauty", "spa", "wellness", "jewel")
-_FACE_CONSUMER = ("playful", "consumer", "education", "school", "kid", "game", "gaming", "esport", "ecommerce", "e-commerce", "retail", "fashion", "food", "restaurant")
+_FACE_CONSUMER = ("playful", "consumer", "education", "school", "kid", "game", "gaming", "esport", "ecommerce", "commerce", "retail", "fashion", "food", "restaurant")
 
 
 def category_face(query):
@@ -68,9 +68,9 @@ def category_face(query):
 
 def domain_hue(query):
     """Deterministic hue from the filter's domain table; the catch-all is deep teal."""
-    q = " " + _re.sub(r"[^a-z0-9]+", " ", (query or "").lower()) + " "
+    tokens = _re.sub(r"[^a-z0-9]+", " ", (query or "").lower()).split()
     for words, hue in _DOMAIN_HUES:
-        if any(" {} ".format(word) in q for word in words):
+        if any(token.startswith(word) for word in words for token in tokens):
             return hue
     return "#0F766E"
 
@@ -135,7 +135,15 @@ def post_filter_typography(typo, query=""):
             + body_face.replace(" ", "+") + ":wght@400;500&display=swap');"
         )
         out["post_filter_note"] = "display pairing substituted (banned pairing or Inter-everywhere)"
-        _note_override("OVERRIDE: {} / {} → {} / {} [T1]".format(heading or "?", body or "?", new_heading, body or "Inter"))
+        if inter_only:
+            reason = "T1"
+        elif bad_pairing:
+            reason = "catalog T11"
+        elif mono_display:
+            reason = "catalog T13"
+        else:
+            reason = "display table"
+        _note_override("OVERRIDE: {} / {} → {} / {} [{}]".format(heading or "?", body or "?", new_heading, body or "Inter", reason))
     return out
 
 
@@ -1195,12 +1203,10 @@ _PROSE_SUBS = [
     (r"frosted glass[^.,;]*", "solid surface"),
     (r"backdrop[- ]blur(?:\s*\([^)]*\))?[^.,;]*", "solid surface"),
     (r"neon glow", "flat accent"),
-    (r"parallax[^.,;)]*", "scroll-linked reveal"),
     (r"streaming text", "progressive text update"),
     (r"blurred background", "solid background"),
     (r"light source|light reflection|Z-depth", "flat surface"),
-    (r"hover\s*\((?:150-250|200-300|300-400)ms\)", "hover (100-150ms)"),
-    (r"parallax[^.,;)]*", "scroll-linked reveal"),
+    (r"hover\s*\((?:(?:100|150|200|250|300|350|400)-\d+ms)\)", "hover (100-150ms)"),
     (r"Client Logos", "Customer proof (omit if not supplied)"),
     (r"(?:3-5 )?testimonials", "customer evidence (omit if not supplied)"),
     (r"indigo primary", "brand primary"),
@@ -1224,7 +1230,7 @@ def sanitize_prose(text):
     for pattern, replacement in _PROSE_SUBS:
         new = _re.sub(pattern, replacement, out, flags=_re.I)
         if new != out:
-            _note_override("OVERRIDE: vendor prose \"{}\" → \"{}\" [catalog K4]".format(
+            _note_override("OVERRIDE: vendor prose \"{}\" → \"{}\" [prose]".format(
                 _re.search(pattern, out, _re.I).group(0), replacement))
             out = new
     return out
@@ -1235,7 +1241,7 @@ def sanitize_result(design_system):
     for section, keys in (("style", ("effects", "keywords", "best_for")),
                           ("colors", ("notes",)),
                           ("typography", ("mood",)),
-                          ("pattern", ("name", "conversion"))):
+                          ("pattern", ("name", "conversion", "sections", "cta_placement"))):
         block = design_system.get(section)
         if isinstance(block, dict):
             for key in keys:

@@ -304,7 +304,9 @@ def main():
                 if len(row) != width:
                     continue
                 value = row[sev_idx].strip()
-                if value and value.lower() not in ("critical", "high", "medium", "low"):
+                if not value:
+                    problems.append("{}: row {} has no severity".format(path.relative_to(ROOT), row[0]))
+                elif value.lower() not in ("critical", "high", "medium", "low"):
                     problems.append("{}: severity column holds {!r}".format(path.relative_to(ROOT), value))
             nums = sorted(int(value) for value in ids if value.isdigit())
             if nums and nums != list(range(nums[0], nums[-1] + 1)):
@@ -332,6 +334,10 @@ def main():
             table_domains = set(re.findall(r"(?m)^\|\s*`([a-z-]+)`\s*\|", section.group(1))) if section else set()
             if table_domains != domain_choices:
                 problems.append("domain table mismatch: documented {} vs CSV_CONFIG {}".format(sorted(table_domains), sorted(domain_choices)))
+            stack_section = re.search(r"(?s)### Available Stacks(.*?)(?=\n### |\Z)", skill_text)
+            table_stacks = set(re.findall(r"(?m)^\|\s*`([a-z-]+)`\s*\|", stack_section.group(1))) if stack_section else set()
+            if table_stacks != stack_choices:
+                problems.append("stack table mismatch: documented {} vs AVAILABLE_STACKS {}".format(sorted(table_stacks), sorted(stack_choices)))
 
         # the brand-hue table must match the generator, and -p must not change the hue
         try:
@@ -358,11 +364,6 @@ def main():
                 problems.append("primary hue does not follow the domain table: got {}, expected {}".format(outs[0], expected))
         except Exception as exc:
             problems.append("cannot verify hue table: {}".format(exc))
-
-            stack_section = re.search(r"(?s)### Available Stacks(.*?)(?=\n### |\Z)", skill_text)
-            table_stacks = set(re.findall(r"(?m)^\|\s*`([a-z-]+)`\s*\|", stack_section.group(1))) if stack_section else set()
-            if table_stacks != stack_choices:
-                problems.append("stack table mismatch: documented {} vs AVAILABLE_STACKS {}".format(sorted(table_stacks), sorted(stack_choices)))
 
         for doc in (ROOT / "ui-ux-pro-max/SKILL.md", ROOT / "README.md"):
             if not doc.exists():

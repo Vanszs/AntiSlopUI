@@ -60,7 +60,7 @@ an 8-bullet ban summary. Installing all three is still better than installing on
 - **Always:** the `SKILL.md` of skills that apply (≤3 files).
 - **On demand:** per skill, at most one reference file; the tell catalog is a second file when
   auditing (two total for a full run); two also when combining dashboards + charts. Every reference starts with a `## Contents` index —
-  `grep -nE '^#{1,2} ' references/<file>.md`, then read only that range (END = next match − 1).
+  `cd <skill-dir> && grep -nE '^#{1,2} ' references/<file>.md`, then read only that range (END = next match − 1).
 - **Never:** read the CSVs by hand. Query them through `search.py` (2–3 targeted queries).
 
 ## Installation
