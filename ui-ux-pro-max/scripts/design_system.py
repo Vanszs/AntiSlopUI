@@ -1212,6 +1212,7 @@ _PROSE_SUBS = [
     (r"blurred background", "solid background"),
     (r"light source|light reflection|Z-depth", "flat surface"),
     (r"hover\s*\((?:(?:100|150|200|250|300|350|400)-\d+ms)\)", "hover (100-150ms)"),
+    (r"\b(?:50|100|150|200|300|400|500|600)-(?:100|150|200|250|300|400|500|600|700)ms\b", "150-250ms"),
     (r"parallax(?:\s*\([^)]*\))?[^.,;]*", "scroll-linked reveal"),
     (r"Client Logos", "Customer proof (omit if not supplied)"),
     (r"(?:3-5 )?testimonials", "customer evidence (omit if not supplied)"),
@@ -1259,6 +1260,26 @@ def sanitize_prose(text):
     return out
 
 
+_PROOF_WORDS = _re.compile(r"\b(?:proof|metric|metrics|results?|badge|credibility|guarantee|rating|ratings|review|reviews|testimonial|testimonials|sponsor|sponsors|logos?|trust|verified)\b", _re.I)
+_PROOF_REPLACEMENT = "customer evidence the user supplied (omit otherwise)"
+
+
+def sanitize_proof_items(text):
+    """Replace every comma-separated clause that talks about proof."""
+    if not isinstance(text, str) or not text:
+        return text
+    items = [item.strip() for item in text.split(",")]
+    changed = False
+    for i, item in enumerate(items):
+        if _PROOF_WORDS.search(item):
+            items[i] = _PROOF_REPLACEMENT
+            changed = True
+    if not changed:
+        return text
+    _note_override("OVERRIDE: vendor proof language → {} [prose]".format(_PROOF_REPLACEMENT))
+    return ", ".join(dict.fromkeys(items))
+
+
 def sanitize_result(design_system):
     """Apply the semantic post-filter to every prose-bearing field."""
     for section, keys in (("style", ("effects", "keywords", "best_for")),
@@ -1270,6 +1291,14 @@ def sanitize_result(design_system):
             for key in keys:
                 if key in block:
                     block[key] = sanitize_prose(block[key])
+    for section, keys in (("pattern", ("conversion", "sections", "color_strategy", "cta_placement")),
+                          ("style", ("keywords", "effects"))):
+        block = design_system.get(section)
+        if isinstance(block, dict):
+            for key in keys:
+                if isinstance(block.get(key), str):
+                    block[key] = sanitize_proof_items(block[key])
+
     pattern_block = design_system.get("pattern")
     if isinstance(pattern_block, dict) and isinstance(pattern_block.get("conversion"), str):
         conversion = pattern_block["conversion"]
@@ -1279,7 +1308,8 @@ def sanitize_result(design_system):
             pattern_block["conversion"] = cleaned
     for key in ("key_effects",):
         if key in design_system:
-            design_system[key] = sanitize_prose(design_system.get(key))
+            value = design_system.get(key)
+            design_system[key] = sanitize_proof_items(sanitize_prose(value) or "") or value
     # anti_patterns is a list of things to AVOID: rewriting it would invert its polarity
     for key in ("keywords", "effects", "accessibility", "performance"):
         block = design_system.get("style")
