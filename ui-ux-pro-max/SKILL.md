@@ -102,7 +102,7 @@ python3 ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" -
 
 This command:
 1. Searches 5 domains in one pass (product, style, color, landing, typography)
-2. Uses product/style reasoning rules where available; color and typography are top BM25 matches, not reasoned selections
+2. Uses product/style reasoning rules where available. Colour and typography are top BM25 matches from the CSV, then overridden by the suite's deterministic tables (domain hue, category face) and recorded in the override ledger
 3. Returns complete design system: pattern, style, colors, typography, effects
 4. Includes anti-patterns to avoid
 

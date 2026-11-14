@@ -320,8 +320,9 @@ def main():
         # the documented domain table must match argparse, not just the examples
         skill_doc = ROOT / "ui-ux-pro-max/SKILL.md"
         if skill_doc.exists():
-            table_domains = set(re.findall(r"(?m)^\|\s*`([a-z-]+)`\s*\|", skill_doc.read_text(encoding="utf-8")))
-            table_domains &= domain_choices | {"prompt", "icons", "web", "react", "ux", "chart", "landing", "product", "style", "typography", "color"}
+            skill_text = skill_doc.read_text(encoding="utf-8")
+            section = re.search(r"(?s)### Available Domains(.*?)(?=\n### |\Z)", skill_text)
+            table_domains = set(re.findall(r"(?m)^\|\s*`([a-z-]+)`\s*\|", section.group(1))) if section else set()
             if table_domains != domain_choices:
                 problems.append("domain table mismatch: documented {} vs CSV_CONFIG {}".format(sorted(table_domains), sorted(domain_choices)))
 

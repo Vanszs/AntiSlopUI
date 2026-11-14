@@ -46,7 +46,7 @@ A **tell** is one row in `references/slop-uiux-patterns.md` sections 1–10 with
 Absence rows do not match. A row that describes something missing (a form without states, a page without numbers) only counts when the page *claims* that capability; otherwise it is `N-A`, same as in the audit.
 
 
-A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, `domain table`, or a gate id such as `H2`.
+A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, `domain table`, `display table`, or a gate id such as `H2`.
 
 Vendor prose describes intent, never implementation: never copy a duration, effect or style name out of generated text, and apply the substitution table instead.
 
@@ -71,7 +71,7 @@ Placeholder content is allowed only when visibly labeled and structurally distin
 | B3 | Pill buttons everywhere | `rounded-md`/`rounded-lg`; pills only semantic | HIGH |
 | N1 | Floating glassmorphic navbar | Fixed solid navbar with border | HIGH |
 
-For the full catalog: `# run from this skill's directory (cd anti-ai-slop-ui-ux)
+For the full catalog: `cd anti-ai-slop-ui-ux   # these paths are skill-relative
 grep -nE '^## |^\| ?[A-Z]{1,3}[0-9]+' references/slop-uiux-patterns.md`.
 
 ## The five axes

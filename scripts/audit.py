@@ -83,18 +83,16 @@ def main():
         text = path.read_text(encoding="utf-8")
         for line_no, line in enumerate(text.splitlines(), 1):
             compact = re.sub(r"\s+", " ", line).strip()
-            if path.suffix.lower() in DOC_EXTENSIONS and any(token in compact for token in DOC_BAN_CONTEXT):
-                continue
             if compact.startswith(("- NO-PROOF:", "NO-PROOF:")):
                 continue
             if compact.startswith(("- OVERRIDE:", "OVERRIDE:")):
-                # a ledger record is allowed to name the banned value it replaced;
-                # only the substituted side is shipped, so check that.
                 parts = re.split(r"→|->", compact, maxsplit=1)
                 if len(parts) < 2:
-                    pass  # not a substitution record: scan it like any other line
+                    compact = ""      # a record with no substitution side ships nothing
                 else:
                     compact = parts[1].strip()
+            elif path.suffix.lower() in DOC_EXTENSIONS and any(token in compact for token in DOC_BAN_CONTEXT):
+                continue
             for name, pattern in RULES:
                 matches = list(pattern.finditer(compact))
                 if name == "text-transparent-gradient" and matches:
