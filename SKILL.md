@@ -1,6 +1,6 @@
 ---
 name: antislop-design
-description: "Single skill for producing UI that does not read as machine-generated: a deterministic ban filter (AI-slop tells, severity tiers, PASS/FAIL audit), a positive pattern library (layouts, typography, components, charts, dashboards, award-tier craft), and a CSV-backed design-system generator whose output is post-filtered before use. Load before writing or reviewing any UI code. Not for backend, API, data-pipeline, or docs-only work."
+description: "Load before writing, reviewing or fixing any web UI code (HTML, CSS, Tailwind, React) or when auditing accessibility and visual quality. A single deterministic contract: a ban filter for AI-slop defaults (purple gradients, Inter everywhere, 3-card grids, glassmorphism, emoji icons, invented proof), a positive pattern library (layouts, typography, components, charts, web dashboards, award-tier craft), and a CSV design-system generator whose output is post-filtered before use. Not for backend, API, data pipelines, docs-only work, native mobile UI, or data-viz in notebooks and BI tools."
 license: MIT
 compatibility: "Python 3.8+ for the CSV research tool (ui-ux-pro-max/scripts/search.py); everything else is Markdown."
 metadata:

@@ -135,7 +135,7 @@ AntiSlopUI/
 │   ├── scripts/                 # search.py, core.py, design_system.py
 │   ├── data/                    # CSV databases (query via search.py)
 │   └── LICENSE                  # upstream MIT notice + local modifications
-├── scripts/
+├── scripts/                     # contributor tooling; not needed to use the skill
 │   ├── validate.py              # 23 repository checks
 │   ├── audit.py                 # artifact gate (bans, glass, motion, proof)
 │   ├── stats.py                 # recompute/splice the stats block below

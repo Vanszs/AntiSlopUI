@@ -19,7 +19,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-# --- Local compliance post-filter (see ../../POST-FILTER.md) -----------------
+# --- Local compliance post-filter (see ../references/research.md) ------------
 # The vendor database is statistically averaged and can recommend values the
 # suite bans. Substitutions happen here, in code, so generated artifacts are
 # compliant by construction instead of by agent discipline.
@@ -31,7 +31,7 @@ _BANNED_ACCENT = _re.compile(
 _BANNED_TINT = _re.compile(
     r"^#(?:E0E7FF|EEF2FF|FAF5FF|F5F3FF|EDE9FE|F3E8FF|DDD6FE|C7D2FE)$", _re.I)
 _BANNED_TEXT = _re.compile(r"^#(?:1E1B4B|312E81|3730A3|4C1D95|2E1065|86198F)$", _re.I)
-# Domain table, identical to anti-ai-slop-ui-ux/SKILL.md "brand hue by product domain".
+# Domain table, identical to the "Palette and type" table in SKILL.md.
 _DOMAIN_HUES = [
     (("money", "invoicing", "invoice", "ledger", "productivity"), "#0F766E"),
     (("health", "healthcare", "clinical", "clinic", "wellness", "care"), "#0E7490"),
@@ -497,7 +497,7 @@ def format_ascii_box(design_system: dict) -> str:
     checklist_items = [
         "[ ] No emojis as icons (use SVG: Heroicons/Lucide)",
         "[ ] cursor-pointer on all clickable elements",
-        "[ ] Hover timing follows anti-ai-slop-ui-ux/SKILL.md motion table",
+        "[ ] Hover timing follows the motion table in SKILL.md",
         "[ ] Light mode: text contrast 4.5:1 minimum",
         "[ ] Focus states visible for keyboard nav",
         "[ ] prefers-reduced-motion respected",
@@ -596,7 +596,7 @@ def format_markdown(design_system: dict) -> str:
     lines.append("### Pre-Delivery Checklist")
     lines.append("- [ ] No emojis as icons (use SVG: Heroicons/Lucide)")
     lines.append("- [ ] cursor-pointer on all clickable elements")
-    lines.append("- [ ] Hover timing follows anti-ai-slop-ui-ux/SKILL.md motion table")
+    lines.append("- [ ] Hover timing follows the motion table in SKILL.md")
     lines.append("- [ ] Light mode: text contrast 4.5:1 minimum")
     lines.append("- [ ] Focus states visible for keyboard nav")
     lines.append("- [ ] prefers-reduced-motion respected")
@@ -925,7 +925,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("- ❌ **Missing cursor:pointer** — All clickable elements must have cursor:pointer")
     lines.append("- ❌ **Layout-shifting hovers** — Avoid scale transforms that shift layout")
     lines.append("- ❌ **Low contrast text** — Maintain 4.5:1 minimum contrast ratio")
-    lines.append("- ❌ **Instant state changes** — Use purposeful transitions within anti-ai-slop-ui-ux/SKILL.md motion limits")
+    lines.append("- ❌ **Instant state changes** — Use purposeful transitions within the motion table in SKILL.md")
     lines.append("- ❌ **Invisible focus states** — Focus states must be visible for a11y")
     lines.append("")
     
@@ -939,7 +939,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("- [ ] No emojis used as icons (use SVG instead)")
     lines.append("- [ ] All icons from consistent icon set (Heroicons/Lucide)")
     lines.append("- [ ] `cursor-pointer` on all clickable elements")
-    lines.append("- [ ] Hover timing follows anti-ai-slop-ui-ux/SKILL.md motion table")
+    lines.append("- [ ] Hover timing follows the motion table in SKILL.md")
     lines.append("- [ ] Light mode: text contrast 4.5:1 minimum")
     lines.append("- [ ] Focus states visible for keyboard navigation")
     lines.append("- [ ] `prefers-reduced-motion` respected")

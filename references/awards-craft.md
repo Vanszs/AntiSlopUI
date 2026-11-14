@@ -1,6 +1,6 @@
 # Awards Craft Tier — Opt-In
 
-Companion to `../SKILL.md`. This is the **only** file in the suite that is allowed to
+Companion to `../SKILL.md`. This is the **only** file in this skill that is allowed to
 raise the craft ceiling. It is opt-in and gated, because award-grade detail and
 slop are separated by one thing: whether the detail pays for itself.
 
@@ -24,7 +24,7 @@ launch-page, or brand-site work — or explicitly names a craft tier.
 onboarding, or any surface where the user's job is the product. There, the tier is
 denied: its budget is not available.
 
-**Never** overrides `Anti-AI-Slop`. This tier can add craft; it cannot spend a ban.
+**Never** overrides this skill's bans. This tier can add craft; it cannot spend a ban.
 The two relaxations it *is* allowed to request are listed in §5 and nowhere else.
 
 ## 1. The rubric — score before you decorate
@@ -97,7 +97,7 @@ scoring worse on the actual rubric:
 
 ## 5. The only two relaxations this tier may request
 
-Everything else in `Anti-AI-Slop` stays exactly as written.
+Everything else in `../SKILL.md` stays exactly as written.
 
 1. **Hero choreography duration** — may use 400ms. Declare `OVERRIDE: canonical motion limit → 400ms [craft tier §5]` on the motion instance.
 2. **Viewport-wide ambient animation** — may persist across the viewport rather than one section. Declare `OVERRIDE: ambient limited to one section → viewport-wide [craft tier §5]`. Keep it pausable and static under `prefers-reduced-motion`.
@@ -107,7 +107,7 @@ Both relaxations remain pausable and static under reduced motion. Hovers and non
 ## 6. Procedure
 
 1. Confirm the tier applies (§0). If not, refuse and ship solid.
-2. The filter's Pre-Delivery Audit runs first when that skill is installed; otherwise run the palette ship gate in `../SKILL.md`. A P0 fail denies the tier — do not
+2. Run the Pre-Delivery Audit in `../SKILL.md` first. A P0 fail denies the tier — do not
    decorate a page that has not passed the ship gate.
 3. Measure the §2 gates. Record numbers, not impressions.
 4. Score the §1 rubric. Fix the weakest criterion before adding any §3 pattern.

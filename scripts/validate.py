@@ -171,9 +171,18 @@ def main():
                 failures.append("{}: missing link target {!r}".format(path.relative_to(ROOT), target))
     results.append(check("3 LINK INTEGRITY", failures))
 
-    failures = ["{}:{} contains steering/ui-ux-pro-max".format(p.relative_to(ROOT), i)
-                for p in md_files for i, line in enumerate(p.read_text(encoding="utf-8").splitlines(), 1)
-                if "steering/ui-ux-pro-max" in line]
+    retired = ("steering/ui-ux-pro-max", "anti-ai-slop-ui-ux/", "component-reference-design/",
+               "ui-ux-pro-max/SKILL.md", "ui-ux-pro-max/POST-FILTER.md")
+    failures = []
+    stale_targets = (list(ROOT.glob("*.md")) + list(ROOT.glob("references/*.md"))
+                     + list(ROOT.glob("scripts/*.py")) + list(ROOT.glob("ui-ux-pro-max/scripts/*.py")))
+    for doc in stale_targets:
+        if doc.name in ("README.md", "validate.py"):
+            continue  # README documents the migration; validate.py holds this list
+        for i, line in enumerate(doc.read_text(encoding="utf-8").splitlines(), 1):
+            for literal in retired:
+                if literal in line:
+                    failures.append("{}:{} references retired path {!r}".format(doc.relative_to(ROOT), i, literal))
     results.append(check("4 NO STALE PATHS", failures))
 
     failures = []
