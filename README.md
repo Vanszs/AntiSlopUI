@@ -83,8 +83,9 @@ absent; `UNVERIFIED` means you could not measure it — never mark an unmeasured
 ## Context budget
 
 - **Always:** `SKILL.md`.
-- **On demand:** at most two reference files — the tell catalogue (needed for counting)
-  plus one library file. Ceiling: 20k tokens of skill text (4 chars ≈ 1 token).
+- **On demand:** this file, the tell catalogue (needed for counting) and **sections** of one
+  library file — never whole reference files. Ceiling: 70 KB of skill text (≈20k real tokens;
+  3.5 bytes ≈ 1 token).
 - **Never:** read a whole reference file. Read its `## Contents`, grep the heading, read
   that range: `cd <skill-dir> && grep -nE '^#{1,2} ' references/layouts.md`.
 - **Never:** read the CSVs by hand. Query them through the research tool (2–3 targeted

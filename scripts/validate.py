@@ -513,10 +513,18 @@ def main():
         rows = sum(1 for line in (ROOT / "references/slop-uiux-patterns.md").read_text(encoding="utf-8").splitlines()
                    if re.match(r"^\|\s*[A-Z]{1,3}\d+\s*\|", line))
         claimed = re.search(r"(\d+)\s+tell rows", text)
+        skill_text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        skill_claim = re.search(r"(\d+)\s+tell rows", skill_text)
+        if skill_claim and int(skill_claim.group(1)) != rows:
+            failures.append("SKILL.md claims {} tell rows; the catalogue has {}".format(skill_claim.group(1), rows))
         if claimed and int(claimed.group(1)) != rows:
             failures.append("README claims {} tell rows; the catalogue has {}".format(claimed.group(1), rows))
         gates = sum(1 for line in (ROOT / "SKILL.md").read_text(encoding="utf-8").splitlines()
                     if re.match(r"^\|\s*[A-Z]{1,3}\d+\s*(?:/\s*[A-Z]{1,3}\d+)?\s*\|", line))
+        kb = re.search(r"Ceiling:[^\n]*?(\d+)\s*KB", text)
+        skill_kb = re.search(r"Ceiling:[^\n]*?(\d+)\s*KB", skill_text)
+        if kb and skill_kb and kb.group(1) != skill_kb.group(1):
+            failures.append("budget ceiling differs: README {} KB vs SKILL.md {} KB".format(kb.group(1), skill_kb.group(1)))
         claimed_gates = re.search(r"(\d+)\s+hard gates", text)
         if claimed_gates and int(claimed_gates.group(1)) != gates:
             failures.append("README claims {} hard gates; the table has {}".format(claimed_gates.group(1), gates))

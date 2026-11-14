@@ -32,27 +32,15 @@ recorded, not blocking.** `WARN-BRAND-SWAP` is a warning, never a block.
 
 ## Deterministic terms
 
-A **tell** is one catalog row in `references/slop-uiux-patterns.md` sections 1–10, or one
-code-level finding with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity
-vocabulary is closed.
+A **tell** is one catalogue row in `references/slop-uiux-patterns.md` sections 1–10, or one
+of the code-level findings the audit lists below (four a11y HIGH items and seven code P0
+items). Severity is exactly `P0`, `HIGH`, `MEDIUM` or `LOW`; the vocabulary is closed.
 
-The code-level findings you must count without opening the code catalogue are these four
-HIGH items, each visible on the page and each already an audit line below: focus states
-not visible, form inputs without labels or validation states, images without alt text,
-colour as the only state indicator. `references/slop-code-patterns.md` remains the full
-React/TSX catalogue and is optional reading — the count is completable from this file and
-the tell catalogue alone.
-
-Count **per element**, not per row: if one element matches several rows (a 3-card grid
-with emoji icons is both K1 and I1), it is one tell at the highest matching severity.
-Rows that describe the whole page rather than one element count **once for the page**:
-L1 (section rhythm), L2 (single container), L3 (alternating halves), L7 (uniform padding),
-K1 (3-card grid repeated), M16 (uniform copy voice), MO13 (universal scroll reveal). When two rows describe the same defect (the
-catalogue overlaps, e.g. a left-border accent appears as both K6 and X3), count it once at
-the **higher** severity. Absence rows do not match unless the page claims the capability; otherwise they are `N-A`.
-Rows whose fix is a judgement call rather than a measurement — N4 (nav personality) and
-H8 (template rhythm) — are recorded as `JUDGEMENT` and are **not counted** toward the
-threshold.
+Count **per element**: when one element matches several rows (a 3-card grid with emoji icons
+is both K1 and I1), count it once at the **higher** severity. Rows that describe the whole
+page count **once for the page**: L1, L2, L3, L4, L7, L8, M20, MO1. N4 and H8 are
+**JUDGEMENT** — record them, never count them. Absence rows do not match unless the page
+claims the capability; otherwise they are `N-A`.
 
 Banned purple, indigo or violet counts as "real brand" only when the value appears in
 user-supplied brand assets — a logo file, existing CSS tokens, or a brand PDF. Otherwise
@@ -182,7 +170,8 @@ compute a custom pair, move the value until it matches one of these.
 - Layout: prose `max-w-3xl`, grids `max-w-6xl`, section padding `py-32`/`py-16`/`py-12`.
 - Radius scale: badges and avatars `rounded-full` (or `rounded-sm` for rectangular badges),
   inputs and buttons `rounded-md`, cards and tables `rounded-lg`, modals and drawers
-  `rounded-xl`. No other values.
+  `rounded-xl`, sections and banners `rounded-none` or `rounded-lg` to match their card,
+  accordion rows inherit the card radius, tooltips `rounded-md`. No other values.
 - Interaction: `cursor-pointer` on anything clickable, visible `focus-visible` ring, hover
   feedback by colour or shadow only.
 - Responsive: verify 375 / 768 / 1024 / 1440 with no horizontal scroll.
@@ -217,7 +206,8 @@ Ceiling: **70 KB of skill text per task** (≈20k real tokens; 3.5 bytes ≈ 1 t
 it up, and compare with 70,000. Without a shell, use the structural rule: this file plus
 the tell catalogue plus at most two sections from one library file.
 
-The `## Contents` block in a reference is a summary of its sections — `grep` returns the
+When a number appears here and in a reference, **this file wins**; reference values are
+examples at their own scale. The `## Contents` block in a reference is a summary of its sections — `grep` returns the
 same names with line numbers, so grep is the step that saves round-trips:
 
 ```bash
@@ -256,7 +246,7 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 - [ ] No banned purple/indigo without a supplied brand asset; exceptions recorded as `OVERRIDE:` with source.
 - [ ] No gradient text; at most one intentional gradient element per page.
 - [ ] Display face is not Inter/Geist; ≤3 weights; modular scale.
-- [ ] Body text passes 4.5:1 (and 3:1 for large/UI), light and dark when a dark palette is supplied.
+- [ ] Body text passes 4.5:1 (and 3:1 for large/UI). If the user supplies a dark palette, verify both; otherwise ship light and state that choice.
 
 **Layout and components**
 - [ ] Container widths and section padding vary by content; at least one full-bleed break.
@@ -273,8 +263,13 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 - [ ] Semantic landmarks: one `<main>`, `<nav>`, `<header>`, `<footer>`; page has `lang`.
 - [ ] Real controls: `<button>`/`<a>`, never `<div onClick>` or `<span role="button">`.
 - [ ] Overlays are `<dialog>` (or a focus-trapped equivalent) and close on Escape.
+- [ ] Custom inputs follow the ARIA pattern: a combobox/select exposes `role="listbox"` +
+  `aria-expanded` and is keyboard operable.
 - [ ] Icon-only controls carry `aria-label`; images carry `alt`.
-- [ ] No secrets, keys or tokens in client code.
+- [ ] No secrets, keys or tokens in client code, and no unsanitized HTML injection
+  (`dangerouslySetInnerHTML`, `innerHTML`, `v-html`).
+- [ ] Data fetching follows the stack's idiom — server component, loader, or query cache —
+  not a client-side request waterfall in an effect.
 
 **Motion and accessibility**
 - [ ] Motion inside the canonical table; colour/shadow hovers are 100–150ms; any spatial motion uses `transform`/`opacity` only; reduced-motion renders static.
@@ -287,7 +282,7 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 
 ## References
 
-- `references/slop-uiux-patterns.md` — 125 tell rows, TELL → WHY-SLOP → FIX → SEVERITY.
+- `references/slop-uiux-patterns.md` — 126 tell rows, TELL → WHY-SLOP → FIX → SEVERITY.
 - `references/slop-code-patterns.md` — React/TSX/a11y code-level tells.
 - `references/layouts.md`, `typography.md`, `components.md`, `animation.md`,
   `design-systems.md`, `charts.md`, `dashboards.md` — the positive pattern library.

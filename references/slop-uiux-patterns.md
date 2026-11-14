@@ -53,7 +53,7 @@ WHY, it's slop.
 | H5 | Perspective-tilted dashboard mockup + glow (`rotateY(-5deg) shadow-2xl`) | Canonical "AI product shot"; nobody screenshotted real software | Flat, straight-on real product screenshot; minimal flat device frame | MEDIUM |
 | H6 | Greyed fake "Trusted by 5,000+ teams" logo strip | Logos often hallucinated/unlicensed; domain registered 3 weeks ago | Only verified customer logos w/ permission; else omit; use named case studies | HIGH |
 | H7 | `h-screen` hero with only text + button | PowerPoint-slide emptiness; pushes content below fold | `py-24 sm:py-32 lg:py-40`; full-height only with rich visual filling ≥60% | LOW |
-| H8 | Standard skeleton hero→features→pricing→FAQ→CTA→footer | "Default WordPress theme" structure; most-probable page order | Introduce ≥1 unconventional section; break the template rhythm | MEDIUM |
+| H8 | (JUDGEMENT — recorded, not counted) Standard skeleton hero→features→pricing→FAQ→CTA→footer | "Default WordPress theme" structure; most-probable page order | Introduce ≥1 unconventional section; break the template rhythm | MEDIUM |
 
 ---
 
@@ -67,7 +67,6 @@ WHY, it's slop.
 | C4 | Neon glow `box-shadow: 0 0 40px rgba(purple)` on cards/buttons/text | SaaS WordArt; when everything glows nothing is emphasized | Shadows = elevation only; neutral `shadow-sm/md`; glow only on focus ring | MEDIUM |
 | C5 | Aurora blobs / mesh gradient washes (`blur(100px)` saturated circles) | Named slop-detect pattern; every vibe-coder default for "modern" bg | Noise texture / single-tone radial ≤10%; never animate (paint storms) | MEDIUM |
 | C6 | `bg-gradient-to-br from-X to-Y` on every surface | Most common gradient direction in tutorials; kills hierarchy | Flat solids for 90% of surfaces; `to-b` if any; ONE gradient bg per page | MEDIUM |
-| M17 | Invented proof: metrics, testimonials, logos or benchmarks the user never supplied | "invention is P0" in SKILL.md had no row to count against | Omit and record `NO-PROOF: user supplied none`; a visibly labelled sample is allowed | P0 |
 | C7 | Low-contrast `text-gray-400`/`slate-400` body on white/dark | 83.9% of homepages fail WCAG contrast (WebAIM 2026); "elegant to you, invisible to millions" | Body ≥ `gray-700` (light) / `gray-200` (dark); verify 4.5:1 | P0 |
 | C8 | "Just slate-900 + indigo accent" default dark mode | Every Tailwind dark-mode tutorial; zero brand intent | Warmer dark surface (`zinc-900`); brand-matched accent; 2–3 surface elevations | HIGH |
 | C9 | Oversaturated "vibrant" palette (every accent at -500) | AI stacks every high-performing color at once; busy & artificial | 60-30-10; desaturate to -700/-800 text, -50/-100 bg; max 2 saturated/viewport | MEDIUM |
@@ -183,6 +182,7 @@ WHY, it's slop.
 | M18 | Rule-of-three triplets every sentence | AI produces 3 examples obsessively | Vary list lengths (2, 4); break the pattern | MEDIUM |
 | M19 | "In short…/Ultimately…/At the end of the day…" closers | LLM termination convention | End w/ action item or link, or just stop | MEDIUM |
 | M20 | Artificially cheerful / sanitized tone | RLHF positivity bias; 35% of new sites (Imperial/Stanford) | Specific human voice w/ edge; name concrete problems | MEDIUM |
+| M21 | Invented proof: metrics, testimonials, logos or benchmarks the user never supplied | Fabricated evidence is unrecoverable once shipped and is the fastest way to lose trust | Omit and record `NO-PROOF: user supplied none`; a visibly labelled sample is allowed | P0 |
 
 > **Meta-rule:** the #1 AI content tell is *absence of specificity*. If you can swap the product name and the copy still works → slop.
 > **Corpus red-flag words (overrepresentation):** ensuring 4.3× · highlights 4.3× · broader 6.1× · reflects 3.6× · significantly/effectively/reducing 3.1× · essential 2.6× · leveraging/utilizing/delve/landscape/tapestry/multifaceted (high). Replace with plain verbs.
@@ -239,7 +239,7 @@ WHY, it's slop.
 | N1 | Floating glassmorphic `backdrop-blur` navbar | slop-detect Glassmorphism axis; novel 2021, ubiquitous by 2024 | `fixed top-0 inset-x-0 bg-white border-b`; no blur/float/rounded | HIGH |
 | N2 | Premature sticky CTA bar (on load) | Copies e-commerce; desperate before user understands product | Only after scroll past primary CTA on long pages; slide-in | MEDIUM |
 | N3 | shadcn icon+label sidebar clone for non-dashboards | Most-copied AI dashboard layout | Choose nav by IA: <5 items→top nav; customize visual treatment | MEDIUM |
-| N4 | Navbar logo-left / links-center / pill-CTA-right | Appears in every AI output; indistinguishable | Vary layout/spacing/type for personality | MEDIUM |
+| N4 | (JUDGEMENT — recorded, not counted)  Navbar logo-left / links-center / pill-CTA-right | Appears in every AI output; indistinguishable | Vary layout/spacing/type for personality | MEDIUM |
 
 ### Footer
 | # | Tell | Why-slop | Fix | Severity |
