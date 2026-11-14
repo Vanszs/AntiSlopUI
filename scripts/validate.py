@@ -522,6 +522,23 @@ def main():
         return []
     run_check(results, "21 SUITE VERSION", suite_version)
 
+    def referential_integrity():
+        problems = []
+        def names(path, col):
+            rows = list(csv.reader(open(path, encoding="utf-8")))
+            head = rows[0]
+            idx = head.index(col)
+            return rows, head, idx
+        style_rows, _, _ = names(ROOT / "ui-ux-pro-max/data/styles.csv", "Style Category")
+        known_styles = {r[1] for r in style_rows[1:]}
+        reason_rows, head, sp = names(ROOT / "ui-ux-pro-max/data/ui-reasoning.csv", "Style_Priority")
+        for row in reason_rows[1:]:
+            for part in [x.strip() for x in row[sp].split("+")]:
+                if part and part not in known_styles:
+                    problems.append("ui-reasoning.csv: unknown style {!r}".format(part))
+        return problems
+    run_check(results, "22 REFERENTIAL INTEGRITY", referential_integrity)
+
     def readme_check_count():
         text = readme.read_text(encoding="utf-8")
         match = re.search(r"(\d+)\s+structural", text, re.I)
@@ -531,7 +548,7 @@ def main():
         if int(match.group(1)) != implemented:
             return ["README claims {} checks; implemented {}".format(match.group(1), implemented)]
         return []
-    run_check(results, "22 README CHECK COUNT", readme_check_count)
+    run_check(results, "23 README CHECK COUNT", readme_check_count)
 
     if "--json" in sys.argv:
         print(json.dumps({"passed": sum(results), "failed": len(results) - sum(results), "checks": len(results)}))

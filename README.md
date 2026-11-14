@@ -187,7 +187,7 @@ AntiSlopUI/
 │   └── scripts/                         # search engine
 │
 ├── scripts/
-│   ├── validate.py                      # repo-level validation (22 checks)
+│   ├── validate.py                      # repo-level validation (23 checks)
 │   ├── audit.py                         # artifact-level P0 gate (case-insensitive)
 │   └── stats.py                         # recompute/splice the stats block below
 │
@@ -199,7 +199,7 @@ AntiSlopUI/
 Claims in this repository are checked, not asserted:
 
 ```bash
-python3 scripts/validate.py       # 22 structural + semantic checks, non-zero exit on failure
+python3 scripts/validate.py       # 23 structural + semantic checks, non-zero exit on failure
 python3 scripts/audit.py <path>   # artifact gate: banned values in CSS/HTML/TSX/MD
 python3 scripts/stats.py          # recompute stats from the CSVs
 python3 scripts/stats.py --write  # splice corrected numbers into this README
