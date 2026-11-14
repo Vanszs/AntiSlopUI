@@ -5,6 +5,7 @@ license: MIT
 metadata:
   author: "b4r7x"
   version: "2.2.0"
+  suite_version: "2.2.0"
   updated: "2026-11-14"
   references: "references/slop-uiux-patterns.md, references/slop-code-patterns.md"
 ---
@@ -103,6 +104,36 @@ Apply the deterministic terms above. Do not invent metrics, testimonials, custom
 ## Reference budget
 
 Two reference files per task, not one: the tell catalog (required for counting) plus one pattern library file. Read the catalog sections you need, not the whole file.
+
+Budget ceiling: at most two references and roughly 12k tokens of skill text per task. If opening the next file would cross that line, grep the heading and read the range instead.
+
+## Palette and type: who decides
+
+Colour is decided in this order, and the first match wins:
+1. **User-supplied brand assets** — a logo file, existing CSS tokens, or a brand PDF. Use the value found there and record `[brand: <source>]`.
+2. **This skill's brand rule** — one hue that is not purple, indigo, or violet, defensible from the product's own domain (ledger-neutral, clinical-calm, safety-orange …). State the reason in one sentence.
+3. **Research output** — `--design-system` colours, after `POST-FILTER.md`. A proposal, never an authority.
+
+`component-reference-design` supplies structure, spacing and components. It never supplies colour values.
+
+Display face is chosen by product category, not taste:
+
+| Product category | Display face | Body |
+|---|---|---|
+| Editorial, luxury, culture | Fraunces | Inter |
+| Software, developer tool, data product | Bricolage Grotesque | Inter |
+| Neutral B2B, enterprise, docs | Bricolage Grotesque | Inter |
+| Playful, consumer, education | Cabinet Grotesk | Inter |
+
+If the category is genuinely ambiguous, use Bricolage Grotesque and say why. Two families maximum; Inter is legal for body only when a different display face is present.
+
+## Contrast: how to check it
+
+Compute relative luminance, or use these verified pairs and do not guess: `#0F172A` on `#F8FAFC` = 15.9:1 · `#475569` on `#F8FAFC` = 7.2:1 · `#FFFFFF` on `#0F766E` = 5.5:1 · `#FFFFFF` on `#B45309` = 5.2:1. Ship body text at 4.5:1 or better, large text and UI at 3:1 or better. If you cannot compute a custom pair, move the value until it matches one of the pairs above.
+
+## Container widths, precisely
+
+"Vary the container" means the page's sections use different widths — a text section, a wider grid, a full-bleed band. A grid section may repeat `max-w-6xl` (that is its content width); what is banned is every section sharing one container, which flattens the page into a single column.
 
 ## Authored defaults (used when research output is unavailable)
 

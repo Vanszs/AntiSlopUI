@@ -374,6 +374,21 @@ def main():
         return failures
     run_check(results, "14 FRONTMATTER TYPES", frontmatter_types)
 
+    def suite_version():
+        versions = {}
+        for path, data in parsed.items():
+            meta = data.get("metadata") or {}
+            value = meta.get("suite_version") if isinstance(meta, dict) else None
+            versions[path.relative_to(ROOT)] = value
+        distinct = {v for v in versions.values()}
+        if None in distinct:
+            return ["missing metadata.suite_version in {}".format(
+                ", ".join(str(k) for k, v in versions.items() if v is None))]
+        if len(distinct) != 1:
+            return ["suite_version disagrees: {}".format(versions)]
+        return []
+    run_check(results, "21 SUITE VERSION", suite_version)
+
     def toc_sync():
         import importlib.util
         spec = importlib.util.spec_from_file_location("toc_tool", str(ROOT / "scripts" / "toc.py"))
@@ -432,9 +447,8 @@ def main():
         text = readme.read_text(encoding="utf-8")
         failures = ["README.md contains --write# (missing shell-comment space)"] if "--write#" in text else []
         match = re.search(r"(\d+)\s+structural", text, re.I)
-        implemented = len(results) + 2  # This check plus the generated-artifact audit below.
-        if match and int(match.group(1)) != implemented:
-            failures.append("README claims {} checks; implemented {}".format(match.group(1), implemented))
+        if not match:
+            failures.append("README does not state the number of structural checks")
         return failures
     run_check(results, "19 README CLAIM SYNC", readme_claim_sync)
 
@@ -443,6 +457,17 @@ def main():
         proc = subprocess.run([sys.executable, str(ROOT / "scripts/audit.py"), str(master)], capture_output=True, text=True, timeout=30)
         return [] if proc.returncode == 0 else ["audit exit {}: {}".format(proc.returncode, (proc.stdout + proc.stderr).strip())]
     run_check(results, "20 GENERATED ARTIFACT AUDIT", generated_audit)
+
+    def readme_check_count():
+        text = readme.read_text(encoding="utf-8")
+        match = re.search(r"(\d+)\s+structural", text, re.I)
+        implemented = len(results) + 1
+        if not match:
+            return ["README does not state the number of structural checks"]
+        if int(match.group(1)) != implemented:
+            return ["README claims {} checks; implemented {}".format(match.group(1), implemented)]
+        return []
+    run_check(results, "22 README CHECK COUNT", readme_check_count)
 
     if "--json" in sys.argv:
         print(json.dumps({"passed": sum(results), "failed": len(results) - sum(results), "checks": len(results)}))

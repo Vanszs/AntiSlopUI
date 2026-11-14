@@ -304,7 +304,7 @@ Sources: Every-Layout.dev, joshwcomeau.com (full-bleed, interactive grid guide),
 
 Real page-level skeletons as built by best-in-class sites: Linear, Vercel, Stripe, Raycast, Clerk, Resend, Framer, Apple, Nike, NYT, Mintlify. Each: NAME · when · concrete Tailwind · responsive · source. All anti-slop compliant (no purple-gradient default, no centered-dual-CTA monotony, varied section anatomy, semantic HTML, `dvh`, focus-visible, reduced-motion).
 
-> **The golden flow (Evil Martians, 100 dev-tool pages):** Hero → Trust → Features → Social proof → Supporting (FAQ/pricing/comparison) → Final CTA → Footer. **Each section a DIFFERENT anatomy.** Never repeat the same grid back-to-back.
+> **The golden flow (Evil Martians, 100 dev-tool pages):** Hero → Trust → Features → Social proof → Supporting (FAQ/pricing/comparison) → Final CTA → Footer. Trust and social proof may be omitted when evidence is absent; record `NO-PROOF: user supplied none`. **Each section a DIFFERENT anatomy.** Never repeat the same grid back-to-back.
 
 ---
 
@@ -509,7 +509,7 @@ Vary content per cell — never icon+title+blurb in all six. Use `grid-auto-flow
   </main>
 </div>
 ```
-Mobile: sidebar → filter bottom-sheet/drawer. Avoid hover scaling on cards and images.
+Mobile: sidebar → filter bottom-sheet/drawer. Avoid `hover:scale-105` on grids of cards/images (filter K3).
 
 ### PDP — gallery + sticky buy box
 ```html
@@ -575,7 +575,7 @@ For full named-line system (content/popout/feature/full) see §5 in core layouts
 
 | Page | Skeleton | Key |
 |------|----------|-----|
-| Login (brand) | `grid min-h-dvh lg:grid-cols-2` — dark brand panel + form | brand panel `hidden lg:flex`, real testimonial |
+| Login (brand) | `grid min-h-dvh lg:grid-cols-2` — dark brand panel + form | brand panel `hidden lg:flex`, real testimonial; omit testimonial if none supplied and record `NO-PROOF: user supplied none` |
 | Login (minimal) | centered card `max-w-sm` on `bg-gray-50` | social-first OR progressive (email→password) |
 | Onboarding wizard | header progress bar + centered step `max-w-md` + footer Back/Continue | `has-[:checked]` role cards, "Skip" text-link, time estimates |
 | Empty-state dashboard | centered icon + title + ONE CTA + progressive checklist | human copy, "see sample data" secondary path |

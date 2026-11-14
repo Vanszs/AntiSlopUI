@@ -1,6 +1,6 @@
 # AntiSlopUI
 
-![Version](https://img.shields.io/badge/version-2.2.0-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/suite%202.2.0-blue?style=for-the-badge)
 ![3 Skills](https://img.shields.io/badge/skills-3-green?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
 [![validate](https://github.com/Vanszs/AntiSlopUI/actions/workflows/validate.yml/badge.svg)](https://github.com/Vanszs/AntiSlopUI/actions/workflows/validate.yml)
@@ -32,7 +32,9 @@ purpose; load order is stated inside the descriptions because a router never rea
 | `component-reference-design` | You need a concrete pattern/markup for UI you are already building | Deciding whether to build UI; backend or data work |
 | `ui-ux-pro-max` | You need industry-specific style/palette/typography evidence, after the filter is loaded | Code review; pattern lookup (use the palette skill) |
 
-If you load only one skill, load the filter. The other two defer to it.
+If you load only one skill, load the filter. The other two defer to it, and each carries a local
+minimum contract so it still works alone: the palette ships a ship-gate, the research skill ships
+an 8-bullet ban summary. Installing all three is still better than installing one.
 
 ## Precedence & conflict policy
 
@@ -71,6 +73,8 @@ Put the directory in the platform's skills root (or symlink it there).
 git clone https://github.com/Vanszs/AntiSlopUI.git
 mkdir -p ~/.claude/skills
 ln -s "$PWD/AntiSlopUI/anti-ai-slop-ui-ux" ~/.claude/skills/anti-ai-slop-ui-ux
+ln -s "$PWD/AntiSlopUI/component-reference-design" ~/.claude/skills/component-reference-design
+ln -s "$PWD/AntiSlopUI/ui-ux-pro-max" ~/.claude/skills/ui-ux-pro-max
 ```
 
 ### Codex
@@ -78,6 +82,8 @@ ln -s "$PWD/AntiSlopUI/anti-ai-slop-ui-ux" ~/.claude/skills/anti-ai-slop-ui-ux
 ```bash
 mkdir -p ~/.agents/skills
 ln -s "$PWD/AntiSlopUI/anti-ai-slop-ui-ux" ~/.agents/skills/anti-ai-slop-ui-ux
+ln -s "$PWD/AntiSlopUI/component-reference-design" ~/.agents/skills/component-reference-design
+ln -s "$PWD/AntiSlopUI/ui-ux-pro-max" ~/.agents/skills/ui-ux-pro-max
 ```
 
 ### opencode
@@ -85,6 +91,8 @@ ln -s "$PWD/AntiSlopUI/anti-ai-slop-ui-ux" ~/.agents/skills/anti-ai-slop-ui-ux
 ```bash
 mkdir -p ~/.config/opencode/skills
 ln -s "$PWD/AntiSlopUI/anti-ai-slop-ui-ux" ~/.config/opencode/skills/anti-ai-slop-ui-ux
+ln -s "$PWD/AntiSlopUI/component-reference-design" ~/.config/opencode/skills/component-reference-design
+ln -s "$PWD/AntiSlopUI/ui-ux-pro-max" ~/.config/opencode/skills/ui-ux-pro-max
 ```
 
 Note: opencode derives the skill id from the **path**, and treats frontmatter `name` as a
@@ -178,7 +186,7 @@ AntiSlopUI/
 │   └── scripts/                         # search engine
 │
 ├── scripts/
-│   ├── validate.py                      # repo-level validation (20 checks)
+│   ├── validate.py                      # repo-level validation (22 checks)
 │   ├── audit.py                         # artifact-level P0 gate (case-insensitive)
 │   └── stats.py                         # recompute/splice the stats block below
 │
@@ -190,7 +198,7 @@ AntiSlopUI/
 Claims in this repository are checked, not asserted:
 
 ```bash
-python3 scripts/validate.py       # 20 structural + semantic checks, non-zero exit on failure
+python3 scripts/validate.py       # 22 structural + semantic checks, non-zero exit on failure
 python3 scripts/audit.py <path>   # artifact gate: banned values in CSS/HTML/TSX/MD
 python3 scripts/stats.py          # recompute stats from the CSVs
 python3 scripts/stats.py --write  # splice corrected numbers into this README

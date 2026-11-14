@@ -86,7 +86,7 @@ Theme = remap semantic layer (dark mode: `color-action-primary: {blue-300}`).
 
 # PART D — MARKETING SECTION ANATOMIES (varied, anti-monotony)
 
-> Storytelling sequence (Evil Martians): Hero → Trust → Features → Social proof → Supporting (FAQ/pricing/comparison) → Final CTA. Each section a DIFFERENT anatomy.
+> Storytelling sequence (Evil Martians): Hero → Trust → Features → Social proof → Supporting (FAQ/pricing/comparison) → Final CTA. Omit Trust or Social proof when evidence is absent; record `NO-PROOF: user supplied none`. Each section a DIFFERENT anatomy.
 
 ## Hero (4 variants — break the centered-dual-CTA mold)
 | Variant | Structure |
@@ -106,10 +106,10 @@ Theme = remap semantic layer (dark mode: `color-action-primary: {blue-300}`).
 | Icon list (non-uniform) | `<ul>` icon+text, varied card spans, no equal-weight grid |
 
 ## Social proof (4)
-Logo wall (real logos only, ≤6–12, grayscale, no auto-scroll <12) · metrics bar (GitHub stars, usage, uptime) · case-study card (logo + quote + metric + named person) · inline quote next to the feature it validates.
+Optional: omit when the user supplied no evidence and record `NO-PROOF: user supplied none`. Otherwise use a logo wall (real logos only, ≤6–12, grayscale, no auto-scroll <12) · metrics bar (GitHub stars, usage, uptime) · case-study card (logo + quote + metric + named person) · inline quote next to the feature it validates.
 
 ## Testimonials (3)
-Single big quote (early-stage, weight) · masonry grid (`columns-*` break-inside-avoid) · accessible carousel (pause/prev/next, `aria-live` slide count).
+Optional: omit when the user supplied no evidence and record `NO-PROOF: user supplied none`. Otherwise use a single big quote (early-stage, weight) · masonry grid (`columns-*` break-inside-avoid) · accessible carousel (pause/prev/next, `aria-live` slide count).
 
 ## Pricing (3)
 Cards (2–3 tiers, ≤5 features each, recommended = inverted fill NOT ring) · monthly/annual toggle (`role="switch"`) · comparison table (`<table>` checkmarks, for "vs" pages).

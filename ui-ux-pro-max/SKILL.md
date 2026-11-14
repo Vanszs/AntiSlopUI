@@ -7,6 +7,7 @@ metadata:
   upstream: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
   author: NextLevelBuilder (vendored)
   version: "1.2.0"
+  suite_version: "2.2.0"
   updated: "2026-11-14"
   references: "POST-FILTER.md"
   attribution: "vendored from https://github.com/nextlevelbuilder/ui-ux-pro-max-skill with minimal local fixes (paths, CSV quoting, docstrings) — see git history."
@@ -82,12 +83,25 @@ Extract key information from user request:
 
 **When the shell is available, start with `--design-system`** to get comprehensive recommendations with reasoning:
 
+Run it:
+
+```bash
+# A. From a clone of the suite (repo root):
+cd /path/to/AntiSlopUI
+python3 ui-ux-pro-max/scripts/search.py "<query>" --design-system
+
+# B. Installed as a skill anywhere:
+python3 "<skill-dir>/scripts/search.py" "<query>" --design-system
+```
+
+Every command below assumes option A; substitute the path from option B when the skill is installed elsewhere.
+
 ```bash
 python3 ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" --design-system [-p "Project Name"]
 ```
 
 This command:
-1. Searches 5 domains in parallel (product, style, color, landing, typography)
+1. Searches 5 domains in one pass (product, style, color, landing, typography)
 2. Uses product/style reasoning rules where available; color and typography are top BM25 matches, not reasoned selections
 3. Returns complete design system: pattern, style, colors, typography, effects
 4. Includes anti-patterns to avoid
@@ -263,3 +277,16 @@ Do not read CSV files by hand. Fall back to the pattern library and authored def
 ## Post-Filter
 
 Apply [`POST-FILTER.md`](POST-FILTER.md) to every result before implementation. For common rules and the pre-delivery checklist, use `anti-ai-slop-ui-ux/SKILL.md`; its rules own any conflict.
+
+## Bans this skill must apply when the filter is absent
+
+If `anti-ai-slop-ui-ux` is installed, its list is authoritative and this block is redundant; if not, this block is the minimum contract.
+
+- Purple/indigo/violet accents
+- Gradient-text headlines
+- Glassmorphism surfaces
+- Inter-everywhere
+- `hover:scale-*`
+- `transition: all`
+- Motion longer than 300ms without an explicit `OVERRIDE`
+- Invented metrics/social proof

@@ -151,7 +151,7 @@ Beauty = rounded caps + breathing room + value labels + ONE focal color.
   <CartesianGrid {...gridProps} horizontal={false} />
   <XAxis type="number" hide domain={[0,"dataMax"]} />        {/* ← see PITFALL */}
   <YAxis type="category" dataKey="label" tick={{fill:CHART.label,fontSize:12}} axisLine={false} tickLine={false} width={140} />
-  <Tooltip content={<ChartTooltip />} cursor={{fill:"rgba(0,93,76,0.05)"}} />
+  <Tooltip content={<ChartTooltip />} cursor={{fill:"rgba(15,23,42,0.05)"}} />
   <Bar dataKey="value" radius={[0,6,6,0]} isAnimationActive={!reduced} animationDuration={ANIM_MS} barSize={20}>
     {data.map((d,i)=><Cell key={i} fill={d.color ?? CHART.brand} />)}
     <LabelList dataKey="value" position="right" className="fill-slate-500"

@@ -37,7 +37,7 @@
 15. **Progressive disclosure** — overview first (KPIs+chart+recent), detail on demand. Never overwhelm. (Stripe)
 
 ### Instant-slop bans (dashboard-specific)
-purple/indigo accent · shadow on every card · any hover scaling · big `text-3xl` page titles · uniform `rounded-2xl` · `transition: all` · whole-page scroll · rainbow chart series · glassmorphic nav · pulsing notification badge · left-border nav active state.
+purple/indigo accent · shadow on every card · `hover:scale-105` in a grid (filter K3) · big `text-3xl` page titles · uniform `rounded-2xl` · `transition: all` · whole-page scroll · rainbow chart series · glassmorphic nav · pulsing notification badge · left-border nav active state.
 
 ---
 
@@ -68,7 +68,7 @@ purple/indigo accent · shadow on every card · any hover scaling · big `text-3
 ### 2a. Collapsible (w-64 ↔ w-16 rail)
 Toggle expanded/rail via CSS var `--sidebar-w`; transition `width` (not transform). Icons always visible; labels hidden in rail (Radix Tooltip shows label on hover/focus).
 ```html
-<aside class="row-span-full flex flex-col border-r border-slate-200 bg-slate-50 transition-transform duration-200 ease-out motion-reduce:transition-none" style="width:var(--sidebar-w,16rem)" aria-label="Navigasi utama">
+<aside class="row-span-full flex flex-col border-r border-slate-200 bg-slate-50 transition-transform duration-200 ease-out motion-reduce:transition-none" style="width:var(--sidebar-w,16rem)" aria-label="Primary navigation">
   <nav class="flex-1 overflow-y-auto p-3 space-y-6"><!-- groups --></nav>
   <div class="border-t border-slate-200 p-3"><!-- §2d footer --></div>
 </aside>

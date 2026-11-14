@@ -4,6 +4,7 @@ description: "Positive pattern library: copy-pasteable, accessible Tailwind mark
 metadata:
   author: "b4r7x"
   version: "1.2.0"
+  suite_version: "2.2.0"
   updated: "2026-11-14"
   references: "references/layouts.md, references/typography.md, references/components.md, references/animation.md, references/design-systems.md, references/charts.md, references/dashboards.md, references/awards-craft.md"
 license: MIT
@@ -26,20 +27,35 @@ component variant, and tasteful accessible motion — all copy-pasteable and a11
 3. Copy the concrete markup; swap in real content, brand color, and a non-Inter
    display font.
 4. Apply the **Anti-Monotony Rules** below so the page doesn't feel templated.
-5. Run the Anti-AI-Slop **Pre-Delivery Audit** before shipping.
+5. Run the local ship gate below before shipping. If `anti-ai-slop-ui-ux` is installed, its audit supersedes this one.
+
+## Ship gate (use when the filter is not installed)
+
+Record each item as **PASS / FAIL / N-A + evidence**:
+1. No purple/indigo accent.
+2. No gradient-text headline.
+3. No glass surface except one over imagery with an `@supports` fallback.
+4. Motion stays within the canonical table; reduced-motion renders static.
+5. No hover enlargement in a grid (filter K3).
+6. Radius uses a scale, not one radius everywhere.
+7. Shipped palette meets WCAG AA contrast.
+8. No invented proof; record `NO-PROOF` when evidence was not supplied.
 
 ## Precedence & Conflict Resolution
 This skill is the palette; `Anti-AI-Slop` is the filter and authority. Its bans win every conflict; state the compliant substitution.
 Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception.
-Vary container widths by content; never use uniform `max-w-7xl`/`max-w-6xl` across sections. Never scale on hover anywhere or use `transition-all`; pills are for tags and avatars only.
+Vary container widths by content; a grid may repeat `max-w-6xl`, but not every section. K3 bans hover enlargement in a grid; avoid scaling hover elsewhere too. Never use `transition-all`; pills are for tags and avatars only.
 
 ### Craft tier is opt-in
 `references/awards-craft.md` is the only file allowed to raise the craft ceiling, and only when the user explicitly asks for premium / award-grade / "wow" / studio / launch work. It carries a scored rubric (Design 40 · Usability 30 · Creativity 20 · Content 10), hard performance and a11y gates that deny the tier on failure, and a cost table for every craft pattern. It never buys a ban, and its two permitted relaxations are declared in `OVERRIDE:` form. Do not load it for dashboards, admin tools, docs, checkout, or forms.
 
 ## Context Budget
 Always load this `SKILL.md` first.
-Open at most ONE reference file per task; two only when combining dashboards + charts.
-Grep to the needed section; do not read a whole reference file.
+Open at most ONE reference file per task; two only when combining dashboards + charts. Never read a whole reference file: read its Contents TOC, grep the heading, then read that range only. Mandatory recipe:
+```sh
+grep -n '^## ' references/layouts.md     # pick the section
+sed -n 'START,ENDp' references/layouts.md # read only that range
+```
 
 Motion values here defer to the canonical table in `anti-ai-slop-ui-ux/SKILL.md`; the numbers are restated so this skill stays usable when installed alone: hovers 100–150ms, entrances/exits 150–250ms, page/route ≤300ms. Craft tier may use 400ms only with `OVERRIDE: ... [craft tier §5]`.
 Use Category Map to select the narrowest relevant reference.
@@ -67,7 +83,7 @@ Use Category Map to select the narrowest relevant reference.
 7. **≥2 deliberate asymmetric moments per page** — unequal columns, off-centre headings, left-aligned text.
 
 ## Proven Storytelling Sequence (Evil Martians, 100 dev-tool landing pages)
-`Hero (what is it?) → Trust (who uses it? — omit and record `NO-PROOF: user supplied none` when no evidence exists) → Features (what/why?) → Social proof (what do users say?) → Supporting (FAQ / comparison / pricing) → Final CTA (what now?)` — with each section using a DIFFERENT anatomy.
+`Hero (what is it?) → Trust (who uses it? — omit and record `NO-PROOF: user supplied none` when no evidence exists) → Features (what/why?) → Social proof (what do users say? — omit and record `NO-PROOF: user supplied none` when no evidence exists) → Supporting (FAQ / comparison / pricing) → Final CTA (what now?)` — with each section using a DIFFERENT anatomy.
 
 ## Non-Negotiable Quality Bar (every pattern here already follows it)
 - **Semantic HTML first** — `<table>`, `<ul>`, `<dl>`, `<dialog>`, `<nav>`, `<button>`, `<a>` before div-soup.
@@ -75,7 +91,7 @@ Use Category Map to select the narrowest relevant reference.
 - **`prefers-reduced-motion`** gates every spatial animation.
 - **Radius is a scale** — inputs/buttons `rounded-md`, cards `rounded-lg`, modals `rounded-xl`, pills `rounded-full`.
 - **Type** — distinctive display font (NOT Inter-everywhere), modular scale, `max-w-prose` body, 2–3 weights.
-- **Motion budget** — see `anti-ai-slop-ui-ux/SKILL.md`; use `transform`+`opacity` only.
+- **Motion budget** — hover 100–150ms, entrances/exits 150–250ms, page/route ≤300ms; 400ms only with `OVERRIDE:`. Use `transform`+`opacity` only.
 - **WCAG AA contrast** — 4.5:1 body, 3:1 large/UI; test light and dark when a dark palette is supplied; otherwise ship light and state it.
 - **Text measure** — prose `max-w-3xl`, paragraphs `max-w-prose`, grids `max-w-6xl`; a 2-column hero split may use `max-w-2xl`.
 

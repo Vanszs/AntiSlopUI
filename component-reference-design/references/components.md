@@ -71,7 +71,7 @@ Entire card clickable, heading stays the semantic link, `:focus-within` mirrors 
 | radius | `rounded-md` | `rounded-lg` | `rounded-xl` | `rounded-full` |
 | shadow | none | `shadow-sm` rest / `shadow-md` hover | `shadow-lg` | — |
 
-Hover (never `scale-105`): `hover:shadow-md hover:-translate-y-0.5 transition-transform duration-150 ease-out`.
+Hover: `hover:shadow-md hover:-translate-y-0.5 transition-transform duration-150 ease-out`; avoid `hover:scale-105` in grids (filter K3).
 
 ---
 
