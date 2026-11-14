@@ -316,7 +316,12 @@ def main():
                 problems.append("{}: row field count differs from header ({})".format(path.relative_to(ROOT), width))
             if len(ids) != len(set(ids)):
                 problems.append("{}: duplicate first-column IDs".format(path.relative_to(ROOT)))
-            sev_idx = width - 2 if "docs url" in rows[0][-1].strip().lower() else None
+            sev_idx = None
+            if rows and rows[0]:
+                for i, name in enumerate(rows[0]):
+                    if name.strip().lower() == "severity":
+                        sev_idx = i
+                        break
             for row in (rows[1:] if sev_idx is not None else []):
                 if len(row) != width:
                     continue
@@ -335,8 +340,6 @@ def main():
         problems = []
         script = ROOT / "ui-ux-pro-max/scripts/search.py"
         source = script.read_text(encoding="utf-8")
-        domains = re.search(r"--domain[^\n]*choices=\s*list\(CSV_CONFIG\.keys\(\)\)", source)
-        stacks = re.search(r"--stack[^\n]*choices=\s*AVAILABLE_STACKS", source)
         sys.path.insert(0, str(script.parent))
         try:
             from core import CSV_CONFIG, AVAILABLE_STACKS
@@ -428,7 +431,7 @@ def main():
             if not any(resolved in path for path in produced):
                 failures.append("docs promise {!r} but the probe wrote {}".format(clean, produced))
         if not promised:
-            failures.append("SKILL.md names no persist path: the contract cannot be checked")
+            failures.append("references/research.md names no persist path: the contract cannot be checked")
         if any(path.endswith("/design-system/MASTER.md") for path in produced):
             failures.append("legacy non-slugged design-system/MASTER.md was produced")
         return failures
@@ -502,10 +505,21 @@ def main():
 
     def readme_claim_sync():
         text = readme.read_text(encoding="utf-8")
-        failures = ["README.md contains --write# (missing shell-comment space)"] if "--write#" in text else []
-        match = re.search(r"(\d+)\s+structural", text, re.I)
-        if not match:
+        failures = []
+        if "--write#" in text:
+            failures.append("README.md contains --write# (missing shell-comment space)")
+        if not re.search(r"(\d+)\s+structural", text, re.I):
             failures.append("README does not state the number of structural checks")
+        rows = sum(1 for line in (ROOT / "references/slop-uiux-patterns.md").read_text(encoding="utf-8").splitlines()
+                   if re.match(r"^\|\s*[A-Z]{1,3}\d+\s*\|", line))
+        claimed = re.search(r"(\d+)\s+tell rows", text)
+        if claimed and int(claimed.group(1)) != rows:
+            failures.append("README claims {} tell rows; the catalogue has {}".format(claimed.group(1), rows))
+        gates = sum(1 for line in (ROOT / "SKILL.md").read_text(encoding="utf-8").splitlines()
+                    if re.match(r"^\|\s*[A-Z]{1,3}\d+\s*(?:/\s*[A-Z]{1,3}\d+)?\s*\|", line))
+        claimed_gates = re.search(r"(\d+)\s+hard gates", text)
+        if claimed_gates and int(claimed_gates.group(1)) != gates:
+            failures.append("README claims {} hard gates; the table has {}".format(claimed_gates.group(1), gates))
         return failures
     run_check(results, "19 README CLAIM SYNC", readme_claim_sync)
 
@@ -543,8 +557,8 @@ def main():
             head = rows[0]
             idx = head.index(col)
             return rows, head, idx
-        style_rows, _, _ = names(ROOT / "ui-ux-pro-max/data/styles.csv", "Style Category")
-        known_styles = {r[1] for r in style_rows[1:]}
+        style_rows, style_head, style_idx = names(ROOT / "ui-ux-pro-max/data/styles.csv", "Style Category")
+        known_styles = {r[style_idx] for r in style_rows[1:] if len(r) > style_idx}
         reason_rows, head, sp = names(ROOT / "ui-ux-pro-max/data/ui-reasoning.csv", "Style_Priority")
         for row in reason_rows[1:]:
             for part in [x.strip() for x in row[sp].split("+")]:

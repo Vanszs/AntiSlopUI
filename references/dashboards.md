@@ -2,7 +2,7 @@
 
 Companion to `../SKILL.md`. The reference for building **clean, modern admin dashboards** that read as Linear/Vercel/Stripe/Tremor quality — dense yet calm, not generic SaaS template, not AI-slop. Every pattern: NAME · when-to-use · concrete accessible Tailwind · why-clean · source. Synthesized from web research (2025–2026): Linear (2026 "calmer interface" refresh), Vercel/Geist, Stripe Apps, Tremor, shadcn/ui dashboard, Untitled UI, PostHog "3000", Notion, Retool, Mixpanel, TanStack Table, IBM Carbon, React Aria, W3C WAI-ARIA APG, NNG, SetProduct, Refactoring UI.
 
-> Quality bar: product-derived accent hue on interactive/focal only (never purple/indigo; no fixed client palette) · sidebar recedes (`bg-slate-50`, content shines) · elevation via surface shade NOT shadow-spam · border-only cards (shadow reserved for floating) · `tabular-nums` on all data · radius scale (md/lg/xl) · visible focus ring using the product accent · `prefers-reduced-motion` gated · real `<button>`/`<a>` · all states designed (empty/loading/error/zero). If it could be swapped into any generic admin panel and nobody notices, it's slop.
+> Quality bar: product-derived accent hue on interactive/focal only (never purple/indigo unless it is a supplied brand asset — then record `OVERRIDE:`ndigo; no fixed client palette) · sidebar recedes (`bg-slate-50`, content shines) · elevation via surface shade NOT shadow-spam · border-only cards (shadow reserved for floating) · `tabular-nums` on all data · radius scale (md/lg/xl) · visible focus ring using the product accent · `prefers-reduced-motion` gated · real `<button>`/`<a>` · all states designed (empty/loading/error/zero). If it could be swapped into any generic admin panel and nobody notices, it's slop.
 
 ---
 
@@ -81,7 +81,7 @@ Toggle expanded/rail via CSS var `--sidebar-w`; transition `width` (not transfor
 ```
 
 ### 2b. Nav item states (active / inactive)
-NEVER left-border accent (P0 slop), NEVER purple, NEVER bold-color bg. Active = subtle fill + medium weight + product-accent icon.
+NEVER left-border accent (P0 slop), no purple unless it is a supplied brand asset (record the override), never bold-color bg. Active = subtle fill + medium weight + product-accent icon.
 ```html
 <!-- Active -->
 <a href="/dashboard" aria-current="page"

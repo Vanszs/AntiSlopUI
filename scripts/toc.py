@@ -34,9 +34,14 @@ def remove_contents(lines):
 
 
 def entries(lines):
-    """Section headings in order, excluding the document title."""
-    found, seen_first = [], False
+    """Section headings in order, excluding the document title and fenced code."""
+    found, seen_first, fenced = [], False, False
     for line in lines:
+        if line.lstrip().startswith("```"):
+            fenced = not fenced
+            continue
+        if fenced:
+            continue
         match = HEADING.match(line)
         if not match:
             continue

@@ -8,7 +8,7 @@ dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
 
 > Quality bar: derive one hue from the product; never use purple/indigo or impose a fixed client palette. Keep labels accessible, data real, motion reduced-aware, chrome legible.
 
-> Quality bar: one product-derived hue (never purple/indigo) · subtle dashed horizontal grid · gradient
+> Quality bar: one product-derived hue (never purple/indigo unless a supplied brand asset) · subtle dashed horizontal grid · gradient
 > area fills · hover-only dots · custom tooltip card · `tabular-nums` · `prefers-reduced-motion`
 > gated · `role="img"`+`aria-label` · real data only. If a chart could be swapped into any
 > generic dashboard and nobody notices, it's slop.
@@ -35,7 +35,7 @@ dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
 
 ## 0. THE 15-POINT ANTI-SLOP CHART SCAN (run before shipping any chart)
 
-- [ ] Derive one hue from the product; never purple/indigo and never impose a fixed client palette
+- [ ] Derive one hue from the product; never purple/indigo unless a supplied brand asset, and never impose a fixed client palette
 - [ ] ≤4 colors in any single chart (no rainbow-per-series)
 - [ ] Gridlines: **horizontal only**, dashed `"3 3"`, `#e5e7eb`/`#eef2f6`
 - [ ] One focal series visually dominant (others muted / lower opacity)

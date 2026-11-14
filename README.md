@@ -42,7 +42,8 @@ that owns the ban list, not advice. Open at most two files from `<skill-dir>/ref
 evidence. Never invent social proof; omit it and record `NO-PROOF: user supplied none`.
 ```
 
-Requirement: Python 3.8+ only for the research tool. Everything else is Markdown.
+Requirement: Python 3.8+ for the research tool and for the repository checks in `scripts/`.
+The skill content itself — `SKILL.md` and `references/` — is pure Markdown.
 
 ## What problem this solves
 
@@ -72,8 +73,8 @@ motion table, a single budget, and no dangling cross-skill steps.
 ## The decision rule
 
 **Any P0 tell blocks delivery, as does 3+ P0/HIGH tells. MEDIUM and LOW are recorded.**
-A tell is one catalogue row, or one code-catalogue finding (any P0 plus the four a11y HIGH
-rows), counted **per element** — overlapping rows on one element collapse to the highest
+A tell is one catalogue row, or a code-level finding you can see in the markup (the audit's
+five code items), counted **per element** — overlapping rows on one element collapse to the highest
 severity, and page-scope rows count once for the page.
 
 `WARN-BRAND-SWAP` is a warning, never a block. `N-A` means the component or capability is
@@ -120,7 +121,7 @@ directory relative to itself. Full workflow, domains, stacks and the post-filter
 AntiSlopUI/
 ├── SKILL.md                     # the skill: gates, tables, terms, audit
 ├── references/
-│   ├── slop-uiux-patterns.md    # 125 tell rows: TELL → WHY-SLOP → FIX → SEVERITY
+│   ├── slop-uiux-patterns.md    # 126 tell rows: TELL → WHY-SLOP → FIX → SEVERITY
 │   ├── slop-code-patterns.md    # React/TSX/a11y code-level tells
 │   ├── layouts.md               # 25 numbered layout patterns
 │   ├── typography.md            # pairings, modular scales, clamp() recipes
@@ -137,9 +138,10 @@ AntiSlopUI/
 │   └── LICENSE                  # upstream MIT notice + local modifications
 ├── scripts/                     # contributor tooling; not needed to use the skill
 │   ├── validate.py              # 23 repository checks
-│   ├── audit.py                 # artifact gate (bans, glass, motion, proof)
+│   ├── audit.py                 # artifact gate (bans, glass, motion, layout)
 │   ├── stats.py                 # recompute/splice the stats block below
-│   └── toc.py                   # regenerate every ## Contents index
+│   ├── toc.py                   # regenerate every ## Contents index
+│   └── conflict-allowlist.txt   # reviewed exemptions for audit/validate scans
 └── .github/workflows/validate.yml
 ```
 

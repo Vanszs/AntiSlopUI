@@ -34,7 +34,7 @@ Companion to `../SKILL.md`. Every entry: NAME · when-to-use · concrete accessi
 | Interactive (link) | nav cards | pseudo-content trick (below) |
 | Actions-footer | settings, CRUD | content + `border-t` footer with buttons |
 | Overlay-text-on-image | featured/hero | image + `bg-gradient-to-t from-gray-900/80` + bottom text (≥70% gradient for AA) |
-| Glass (tasteful) | ONE per viewport over imagery | ⚠ exception (state it): only one surface over imagery, `bg-white/80` or stronger, with `@supports` fallback; `backdrop-blur-sm border-white/20` |
+| Glass (tasteful) | ONE per page over imagery | ⚠ exception (state it): only one surface over imagery, `bg-white/80` or stronger, with `@supports` fallback; `backdrop-blur-sm border-white/20` |
 | Skeleton | loading | mirror real shape, `animate-pulse motion-reduce:animate-none`, `aria-busy` |
 | Bento cell | feature showcase | grid with `col-span-2 row-span-2` dominant cell |
 

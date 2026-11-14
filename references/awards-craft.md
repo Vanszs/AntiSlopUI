@@ -35,7 +35,7 @@ Creativity 20 · Content 10). Score each criterion 0–10, multiply by weight, s
 | Criterion | Weight | What earns points | What loses points |
 |---|---|---|---|
 | **Design** | 40 | Composition, hierarchy, type colour, grid discipline, contrast, consistency across breakpoints, deliberate negative space, finished states (empty/loading/error) | Decoration masking weak composition; mismatched radii; default-feeling sections; unfinished states |
-| **Usability** | 30 | Keyboard reachable, focus visible, labels wired, hit areas ≥44px, no scroll traps, reduced-motion parity, mobile parity at 390px, navigation legible in one pass | Scroll hijack, cursor-only affordances, hidden nav, motion that blocks input, contrast below AA |
+| **Usability** | 30 | Keyboard reachable, focus visible, labels wired, hit areas ≥44px, no scroll traps, reduced-motion parity, mobile parity at 375px, navigation legible in one pass | Scroll hijack, cursor-only affordances, hidden nav, motion that blocks input, contrast below AA |
 | **Creativity** | 20 | A concept that belongs to *this* product; one memorable mechanism; type/motion/imagery that carry meaning | Trends applied without reason; borrowed mechanism with no content tie; gimmick that dies after 4 seconds |
 | **Content** | 10 | Real copy with concrete numbers, real screenshots, real logos, honest proof | Invented metrics, stock testimonial faces, "trusted by" theatre, lorem leftovers |
 
@@ -60,7 +60,7 @@ page ships at "solid", not "premium".
 | JS payload | ≤200KB gzip initial, excluding a single justified 3D chunk | bundle report |
 | Reduced motion | full parity — content identical, no spatial motion, no autoplay | OS setting + reload |
 | Keyboard | every action reachable, no trap, `focus-visible` visible on every stop | tab through |
-| Mobile | usable at 390px: no horizontal scroll, tap targets ≥44px, no hover-only reveal | device emulation |
+| Mobile | usable at 375px: no horizontal scroll, tap targets ≥44px, no hover-only reveal | device emulation |
 | Contrast | 4.5:1 body, 3:1 large/UI, light and dark | contrast checker |
 | Content | zero invented numbers, logos, or testimonials | manual read |
 
@@ -77,7 +77,7 @@ be paid for is slop with better marketing.
 | 3D / WebGL accent | Memorability where the product is spatial | ≤800KB gzip, one canvas, capped DPR | Static poster fallback; paused off-screen; paused under reduced motion; no autoplay audio |
 | Custom cursor | Tone, if the brand is the tool | 1 layer, must not hide the native affordance for text/links | Keyboard path unaffected; disabled under reduced motion and on touch |
 | Video loop | Atmosphere or product proof | ≤2MB, muted, `playsinline`, poster, `preload="metadata"` | Visible pause control; paused off-screen and under reduced motion |
-| Oversized editorial type | Confidence, hierarchy | fluid `clamp()`, measure ≤2 lines, ≤3 words per line | Reflows at 390px without clipping; no `text-*`-only headline without a semantic heading |
+| Oversized editorial type | Confidence, hierarchy | fluid `clamp()`, measure ≤2 lines, ≤3 words per line | Reflows at 375px without clipping; no `text-*`-only headline without a semantic heading |
 | Micro-interaction set | Perceived quality | ≤3 distinct interactions per view; follow canonical timing | No layout shift; no hover-only information |
 | Sound | Rarely | opt-in only, default off | Never required to understand state |
 
@@ -100,7 +100,7 @@ scoring worse on the actual rubric:
 Everything else in `../SKILL.md` stays exactly as written.
 
 1. **Hero choreography duration** — may use 400ms. Declare `OVERRIDE: canonical motion limit → 400ms [craft tier §5]` on the motion instance.
-2. **Viewport-wide ambient animation** — may persist across the viewport rather than one section. Declare `OVERRIDE: ambient limited to one section → viewport-wide [craft tier §5]`. Keep it pausable and static under `prefers-reduced-motion`.
+2. **Viewport-wide ambient animation** — the single permitted ambient animation may span the viewport instead of one section. Declare `OVERRIDE: ambient limited to one section → viewport-wide [craft tier §5]`. Keep it pausable and static under `prefers-reduced-motion`.
 
 Both relaxations remain pausable and static under reduced motion. Hovers and non-hero transitions stay within canonical limits.
 

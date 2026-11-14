@@ -8,8 +8,6 @@ it reaches code.
 ## Contents
 
 - Path and prerequisites
-- A. From a clone of this skill (repository root):
-- B. Installed anywhere:
 - Workflow
 - Search reference
 - Persist and hierarchical retrieval
@@ -113,8 +111,8 @@ The cited gate or catalog row in `../SKILL.md` stays authoritative.
 
 | Vendor output | Substitute | Authority |
 |---|---|---|
-| SaaS `Glassmorphism + Flat Design` | Evidence-supported allowed style; record the override | K4 |
-| Glass/transparent cards | Solid surface; at most ONE image-overlay surface at `bg-white/80` or stronger with an `@supports` fallback | K4 |
+| SaaS `Glassmorphism + Flat Design` | Evidence-supported allowed style; record the override | catalog K4 |
+| Glass/transparent cards | Solid surface; at most ONE image-overlay surface at `bg-white/80` or stronger with an `@supports` fallback | catalog K4 |
 | Violet/indigo background tint | Neutral surface, or a supported brand/domain tint | C1 |
 | `indigo-950` text | High-contrast neutral; verify contrast | C7 |
 | `Playfair Display + Inter` | Non-banned display/body pairing | catalog T11 |

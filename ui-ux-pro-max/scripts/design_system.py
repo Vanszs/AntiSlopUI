@@ -47,6 +47,29 @@ _NEUTRAL_TINT = "#E2E8F0"
 _NEUTRAL_TEXT = "#0F172A"
 
 
+def _luminance(hex_value):
+    value = (hex_value or "").lstrip("#")
+    if len(value) != 6:
+        return 0.0
+    try:
+        channels = [int(value[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    except ValueError:
+        return 0.0
+    linear = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+
+def contrast_ratio(a, b):
+    la, lb = _luminance(a), _luminance(b)
+    hi, lo = max(la, lb), min(la, lb)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def _readable_on(background):
+    """Pick the text colour that actually meets 4.5:1 on this background."""
+    return "#FFFFFF" if contrast_ratio(background, "#FFFFFF") >= contrast_ratio(background, "#0F172A") else "#0F172A"
+
+
 def _seed_index(seed, size):
     digest = hashlib.sha256((seed or "default").encode("utf-8")).hexdigest()
     return int(digest[:8], 16) % size
@@ -73,7 +96,6 @@ def domain_hue(query):
         # exact word first: "care" must not match "career", "ai" must not match "airline"
         if any(token in words for token in tokens):
             return hue
-    return "#0F766E"
     return "#0F766E"
 
 
@@ -666,19 +688,22 @@ def persist_design_system(design_system: dict, page: str = None, output_dir: str
     pages_dir.mkdir(parents=True, exist_ok=True)
     
     master_file = design_system_dir / "MASTER.md"
-    
-    # Generate and write MASTER.md
+
+    # Build the page first so its substitutions land in the same ledger as MASTER's.
+    page_file = page_content = None
+    if page:
+        page_file = pages_dir / f"{page.lower().replace(' ', '-')}.md"
+        page_content = format_page_override_md(design_system, page, page_query)
+
+    # Generate and write MASTER.md, then the page file, both with the full ledger
     master_content = format_master_md(design_system) + "\n".join(render_overrides(design_system))
     with open(master_file, 'w', encoding='utf-8') as f:
         f.write(master_content)
     created_files.append(str(master_file))
-    
-    # If page is specified, create page override file with intelligent content
-    if page:
-        page_file = pages_dir / f"{page.lower().replace(' ', '-')}.md"
-        page_content = format_page_override_md(design_system, page, page_query)
+
+    if page_file is not None:
         with open(page_file, 'w', encoding='utf-8') as f:
-            f.write(page_content)
+            f.write(page_content + "\n".join(render_overrides(design_system)))
         created_files.append(str(page_file))
     
     return {
@@ -791,8 +816,9 @@ def format_master_md(design_system: dict) -> str:
     lines.append("```css")
     lines.append("/* Primary Button */")
     lines.append(".btn-primary {")
-    lines.append(f"  background: {colors.get('cta', '#F97316')};")
-    lines.append("  color: white;")
+    cta = colors.get("cta", "#F97316")
+    lines.append(f"  background: {cta};")
+    lines.append(f"  color: {_readable_on(cta)};")
     lines.append("  padding: 12px 24px;")
     lines.append("  border-radius: 8px;")
     lines.append("  font-weight: 600;")
@@ -1125,7 +1151,7 @@ def _generate_intelligent_overrides(page_name: str, page_query: str, design_syst
         do_text = ux.get("Do", "")
         dont_text = ux.get("Don't", "")
         if do_text:
-            recommendations.append(f"{category}: {do_text}")
+            recommendations.append(f"{category}: {sanitize_prose(do_text)}")
         if dont_text:
             components.append(f"Avoid: {dont_text}")
     
@@ -1215,6 +1241,8 @@ _PROSE_SUBS = [
     (r"\bglass\b(?!morphism)", "solid surface"),
     (r"light source|light reflection|Z-depth", "flat surface"),
     (r"hover\s*\((?:(?:100|150|200|250|300|350|400)-\d+ms)\)", "hover (100-150ms)"),
+    (r"hover[^.,;]*\((?:2[5-9]\d|[3-9]\d\d)ms\)", "hover (100-150ms)"),
+    (r"minimum glow[^.,;]*|minimal glow[^.,;]*", "flat accents only"),
     (r"\b(?:50|100|150|200|300|400|500|600)-(?:100|150|200|250|300|400|500|600|700)ms\b", "150-250ms"),
     (r"parallax(?:\s*\([^)]*\))?[^.,;]*", "scroll-linked reveal"),
     (r"Client Logos", "Customer proof (omit if not supplied)"),
@@ -1295,7 +1323,8 @@ def sanitize_result(design_system):
                 if key in block:
                     block[key] = sanitize_prose(block[key])
     for section, keys in (("pattern", ("conversion", "sections", "color_strategy", "cta_placement")),
-                          ("style", ("keywords", "effects", "best_for"))):
+                          ("style", ("keywords", "effects", "best_for")),
+                          ("typography", ("best_for",))):
         block = design_system.get(section)
         if isinstance(block, dict):
             for key in keys:

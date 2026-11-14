@@ -67,6 +67,7 @@ WHY, it's slop.
 | C4 | Neon glow `box-shadow: 0 0 40px rgba(purple)` on cards/buttons/text | SaaS WordArt; when everything glows nothing is emphasized | Shadows = elevation only; neutral `shadow-sm/md`; glow only on focus ring | MEDIUM |
 | C5 | Aurora blobs / mesh gradient washes (`blur(100px)` saturated circles) | Named slop-detect pattern; every vibe-coder default for "modern" bg | Noise texture / single-tone radial ≤10%; never animate (paint storms) | MEDIUM |
 | C6 | `bg-gradient-to-br from-X to-Y` on every surface | Most common gradient direction in tutorials; kills hierarchy | Flat solids for 90% of surfaces; `to-b` if any; ONE gradient bg per page | MEDIUM |
+| M17 | Invented proof: metrics, testimonials, logos or benchmarks the user never supplied | "invention is P0" in SKILL.md had no row to count against | Omit and record `NO-PROOF: user supplied none`; a visibly labelled sample is allowed | P0 |
 | C7 | Low-contrast `text-gray-400`/`slate-400` body on white/dark | 83.9% of homepages fail WCAG contrast (WebAIM 2026); "elegant to you, invisible to millions" | Body ≥ `gray-700` (light) / `gray-200` (dark); verify 4.5:1 | P0 |
 | C8 | "Just slate-900 + indigo accent" default dark mode | Every Tailwind dark-mode tutorial; zero brand intent | Warmer dark surface (`zinc-900`); brand-matched accent; 2–3 surface elevations | HIGH |
 | C9 | Oversaturated "vibrant" palette (every accent at -500) | AI stacks every high-performing color at once; busy & artificial | 60-30-10; desaturate to -700/-800 text, -50/-100 bg; max 2 saturated/viewport | MEDIUM |
@@ -221,7 +222,7 @@ WHY, it's slop.
 | B2 | Emoji inside buttons (`🚀 Launch`) | Laziest visual affordance; no design system | Icon library `w-4 h-4`, or no icon | HIGH |
 | B3 | `rounded-full` pill buttons everywhere | "Modern" default; hierarchy collapses | `rounded-md/lg`; pill only when semantically a tag/avatar | HIGH |
 | B4 | Oversized `px-8 py-4 text-lg` buttons | "Prominent" = "huge"; screams desperation | Standard `px-4 py-2 text-sm`; hero `px-6 py-3 text-base` | MEDIUM |
-| B5 | Purple gradient CTA `from-violet-600 to-blue-500` + `hover:opacity-90` | THE most-cited tell; Wathan apologized for indigo default | Solid brand color; `hover:bg-[color]-700` | HIGH |
+| B5 | Purple gradient CTA `from-violet-600 to-blue-500` + `hover:opacity-90` | THE most-cited tell; Wathan apologized for indigo default | Solid brand color; `hover:bg-[color]-700` | P0 |
 | B6 | Generic CTA copy ("Get Started"/"Join Now") | Highest-probability text; says nothing | Name the action/benefit; first-person lifts 30–40% | MEDIUM |
 
 ### Forms
@@ -251,7 +252,7 @@ WHY, it's slop.
 |---|------|----------|-----|----------|
 | X1 | Uniform border radius on everything | "Identical corners → hierarchy disappears" (Krebs) | Differentiated scale: inputs/buttons `rounded-md`, cards `rounded-lg`, modals `rounded-xl` | HIGH |
 | X2 | Shadows at exactly 0.1 opacity (Tailwind default) | Part of the fingerprint; communicates no depth hierarchy | Vary by importance; most elements need none | LOW |
-| X3 | Left-border accent on cards | #1 single-component tell (Krebs/Grigorev) | Remove; state-only emphasis (alerts) | HIGH |
+| X3 | Left-border accent on cards | #1 single-component tell (Krebs/Grigorev) | Remove; state-only emphasis (alerts) | P0 |
 | X4 | Eyebrow pill badge above hero H1 | +5 slop-detect; decorative info on every AI page | Remove unless time-sensitive; no pill, no emoji | HIGH |
 
 ---

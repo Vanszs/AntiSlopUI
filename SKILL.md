@@ -45,11 +45,14 @@ the tell catalogue alone.
 
 Count **per element**, not per row: if one element matches several rows (a 3-card grid
 with emoji icons is both K1 and I1), it is one tell at the highest matching severity.
-Rows that describe the whole page rather than one element (layout rhythm, copy voice,
-motion series) count **once for the page**. When two rows describe the same defect (the
+Rows that describe the whole page rather than one element count **once for the page**:
+L1 (section rhythm), L2 (single container), L3 (alternating halves), L7 (uniform padding),
+K1 (3-card grid repeated), M16 (uniform copy voice), MO13 (universal scroll reveal). When two rows describe the same defect (the
 catalogue overlaps, e.g. a left-border accent appears as both K6 and X3), count it once at
-the **higher** severity. Absence rows do not match unless the page claims the capability;
-otherwise they are `N-A`.
+the **higher** severity. Absence rows do not match unless the page claims the capability; otherwise they are `N-A`.
+Rows whose fix is a judgement call rather than a measurement — N4 (nav personality) and
+H8 (template rhythm) — are recorded as `JUDGEMENT` and are **not counted** toward the
+threshold.
 
 Banned purple, indigo or violet counts as "real brand" only when the value appears in
 user-supplied brand assets — a logo file, existing CSS tokens, or a brand PDF. Otherwise
@@ -71,7 +74,7 @@ sample is not an invented metric.
 
 | ID | Banned | Compliant default | Severity |
 |---|---|---|---|
-| H2 | Gradient-text headline | Solid, high-contrast headline | P0 |
+| H2 / T2 | Gradient-text headline (one defect, two catalogue rows) | Solid, high-contrast headline | P0 |
 | C1 | Purple/indigo/violet primary accent without a supplied brand asset | A non-purple brand hue from the domain table | P0 |
 | C2 | Canonical purple/indigo or blue/cyan gradient combinations | Flat colour, or one intentional compliant gradient per page | P0 |
 | C7 | Low-contrast body text | 4.5:1 body, 3:1 large/UI, checked | P0 |
@@ -206,21 +209,26 @@ structures; at least two deliberate asymmetric moments per page.
 
 ## Reference budget
 
-Per task: at most **two** reference files besides this one — the tell catalogue (needed
-for counting) plus one library file. Ceiling: **20k tokens** of skill text per task
-(4 characters ≈ 1 token). Self-check with a shell: `wc -c` the files you have loaded,
-add them up, divide by 4. Without a shell, use the structural rule: the catalogue plus
-one reference, and prefer the smaller of two candidates.
+Per task: this file plus **sections**, never whole reference files. A whole reference is
+30–36 KB (8–10k tokens) and will blow the ceiling on contact; a section is 150–700 tokens.
 
-When a number appears here and in a reference, **this file wins**; reference values are
-examples at their own scale (a hero example may show `py-24 sm:py-32 lg:py-40`, which is
-the same intent). Never read a whole reference file. Read its `## Contents`, grep the
-heading, read that range:
+Ceiling: **70 KB of skill text per task** (≈20k real tokens; 3.5 bytes ≈ 1 token, so bytes
+÷ 3.5 is the token estimate). Self-check with a shell: `wc -c` what you have loaded, add
+it up, and compare with 70,000. Without a shell, use the structural rule: this file plus
+the tell catalogue plus at most two sections from one library file.
+
+The `## Contents` block in a reference is a summary of its sections — `grep` returns the
+same names with line numbers, so grep is the step that saves round-trips:
 
 ```bash
-cd <skill-dir> && grep -nE '^#{1,2} ' references/layouts.md   # every section heading
+cd <skill-dir> && grep -nE '^#{1,2} ' references/layouts.md   # names + line numbers
 sed -n 'START,ENDp' references/layouts.md                     # END = next match − 1
 ```
+
+When a reference carries its own checklist, run it too: `references/dashboards.md` has 15
+dashboard principles, `references/charts.md` a 15-point chart scan, and
+`references/research.md` a mandatory post-filter. Opening those files adds those checks to
+the audit.
 
 ## Craft tier (opt-in)
 
@@ -246,7 +254,7 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 
 **Colour and type**
 - [ ] No banned purple/indigo without a supplied brand asset; exceptions recorded as `OVERRIDE:` with source.
-- [ ] No gradient text; at most one intentional gradient element per section.
+- [ ] No gradient text; at most one intentional gradient element per page.
 - [ ] Display face is not Inter/Geist; ≤3 weights; modular scale.
 - [ ] Body text passes 4.5:1 (and 3:1 for large/UI), light and dark when a dark palette is supplied.
 
@@ -254,15 +262,22 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 - [ ] Container widths and section padding vary by content; at least one full-bleed break.
 - [ ] No identical 3-col grid repeated; one dominant element per section.
 - [ ] Radius is a scale, not one value.
-- [ ] No scaling hover (`hover:scale-*`); no glass except ONE surface over imagery at `bg-white/80`+ with `@supports`; no emoji icons.
+- [ ] No scaling hover (`hover:scale-*`); no glass except ONE surface per page over imagery at `bg-white/80`+ with `@supports`; no emoji icons.
 
 **Copy**
 - [ ] No hype, no generic CTAs, no `[placeholder]` / lorem / TODO.
 - [ ] Every metric is real or visibly labelled; unknown proof omitted with `NO-PROOF`.
 - [ ] Sample content visibly labelled.
 
+**Code-level (catalogue P0s you can see in the markup)**
+- [ ] Semantic landmarks: one `<main>`, `<nav>`, `<header>`, `<footer>`; page has `lang`.
+- [ ] Real controls: `<button>`/`<a>`, never `<div onClick>` or `<span role="button">`.
+- [ ] Overlays are `<dialog>` (or a focus-trapped equivalent) and close on Escape.
+- [ ] Icon-only controls carry `aria-label`; images carry `alt`.
+- [ ] No secrets, keys or tokens in client code.
+
 **Motion and accessibility**
-- [ ] Motion inside the canonical table; `transform`/`opacity` only; reduced-motion renders static.
+- [ ] Motion inside the canonical table; colour/shadow hovers are 100–150ms; any spatial motion uses `transform`/`opacity` only; reduced-motion renders static.
 - [ ] Focus states visible; forms have labels and validation states; contrast checked.
 - [ ] Images have alt text; colour is never the only indicator.
 
