@@ -1137,11 +1137,11 @@ def _generate_intelligent_overrides(page_name: str, page_query: str, design_syst
         color_strategy = landing.get("Color Strategy", "")
         
         if sections:
-            layout["Sections"] = sections
+            layout["Sections"] = sanitize_prose(sections)
         if cta_placement:
-            recommendations.append(f"CTA Placement: {cta_placement}")
+            recommendations.append(f"CTA Placement: {sanitize_prose(cta_placement)}")
         if color_strategy:
-            colors["Strategy"] = color_strategy
+            colors["Strategy"] = sanitize_prose(color_strategy)
     
     # Add page-type specific defaults if no search results
     if not layout:
@@ -1212,8 +1212,16 @@ _PROSE_SUBS = [
     (r"blurred background", "solid background"),
     (r"light source|light reflection|Z-depth", "flat surface"),
     (r"hover\s*\((?:(?:100|150|200|250|300|350|400)-\d+ms)\)", "hover (100-150ms)"),
+    (r"parallax(?:\s*\([^)]*\))?[^.,;]*", "scroll-linked reveal"),
     (r"Client Logos", "Customer proof (omit if not supplied)"),
     (r"(?:3-5 )?testimonials", "customer evidence (omit if not supplied)"),
+    (r"social proof[^.,;]*", "customer evidence (omit if not supplied)"),
+    (r"waitlist (?:count|number)[^.,;]*", "sign-up count (omit if not supplied)"),
+    (r"sponsors?", "partners (omit if not supplied)"),
+    (r"aggregate rating[^.,;]*", "rating (omit if not supplied)"),
+    (r"individual reviews?", "customer quotes (omit if not supplied)"),
+    (r"include ratings?[^.,;]*", "omit ratings unless supplied"),
+    (r"trust signals?[^.,;]*", "supplied evidence only"),
     (r"indigo primary", "brand primary"),
     (r"purple tech", "brand accent"),
     (r"\b(?:indigo|violet|purple|lavender)\b", "brand"),

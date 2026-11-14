@@ -41,7 +41,7 @@ This skill owns the suite's UI ban list. Its rules override conflicting recommen
 
 ## Deterministic terms
 
-A **tell** is one catalog row in `references/slop-uiux-patterns.md` sections 1–10, or one **P0 finding** in `references/slop-code-patterns.md`, with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity vocabulary is closed.
+A **tell** is one catalog row in `references/slop-uiux-patterns.md` sections 1–10, or one finding in `references/slop-code-patterns.md` — any P0, plus the four a11y HIGH rows (focus states, form labels, alt text, colour-only indicators) — with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity vocabulary is closed.
 
 Count **per element**, not per row: if one element matches several rows (a 3-card grid with emoji icons is both K1 and I1), it is one tell at the highest matching severity. Fold overlapping rows into one before applying the threshold.
 
@@ -177,7 +177,7 @@ If shell access is unavailable, do NOT read CSVs. Build from the authored defaul
 
 ## Pre-Delivery Slop Audit
 
-Report `PASS`, `FAIL`, or `N-A` plus an evidence pointer per item. `N-A` is valid only when that component does not exist on the page. A P0 failure blocks delivery; **any P0 tell or 3+ P0/HIGH tells = block**.
+Report `PASS`, `FAIL`, or `N-A` plus an evidence pointer per item. `N-A` is valid only when that component, or the capability it audits, does not exist on the page. A P0 failure blocks delivery; **any P0 tell or 3+ P0/HIGH tells = block**.
 
 **Color & type**
 - [ ] No banned purple/indigo without user-supplied brand asset; any exception recorded as `OVERRIDE:` with source.

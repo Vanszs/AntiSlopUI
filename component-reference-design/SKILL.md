@@ -27,14 +27,14 @@ component variant, and tasteful accessible motion — all copy-pasteable and a11
 3. Copy the concrete markup; swap in real content, brand color, and a non-Inter
    display font.
 4. Apply the **Anti-Monotony Rules** below so the page doesn't feel templated.
-5. Run the local ship gate below before shipping. If `anti-ai-slop-ui-ux` is installed, its audit supersedes this one.
+5. Run the local ship gate below before shipping. If `anti-ai-slop-ui-ux` is installed, its audit supersedes this one. Alone: any FAIL item blocks; report the list and stop.
 
 ## Ship gate (use when the filter is not installed)
 
 Record each item as **PASS / FAIL / N-A + evidence**:
 1. No purple/indigo accent.
 2. No gradient-text headline.
-3. No glass surface except one over imagery with an `@supports` fallback.
+3. No glass surface except ONE over imagery at `bg-white/80` or stronger, with an `@supports` fallback.
 4. Motion stays within the canonical table; reduced-motion renders static.
 5. No hover enlargement on any interactive element (shadow, colour or border feedback only).
 6. Radius uses a scale, not one radius everywhere.

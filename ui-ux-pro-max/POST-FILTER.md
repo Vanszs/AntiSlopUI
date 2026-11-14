@@ -5,7 +5,7 @@ Treat generated recommendations as proposals. Apply these substitutions before c
 | Vendor output | Substitute | Authority |
 |---|---|---|
 | SaaS `Glassmorphism + Flat Design` | Choose an evidence-supported allowed style; record override | ui-reasoning.csv; catalog K4 |
-| Glass/transparent cards | Solid surface; at most one image-overlay surface with fallback | catalog K4 |
+| Glass/transparent cards | Solid surface; at most one image-overlay surface at `bg-white/80` or stronger with an `@supports` fallback | catalog K4 |
 | Violet/indigo background tint | Neutral surface or supported brand/domain tint | gate C1 |
 | `indigo-950` text | High-contrast neutral or supported brand text; verify contrast | gate C7 |
 | `Playfair Display + Inter` | Non-banned display/body pairing supported by typography results | catalog T11 |
