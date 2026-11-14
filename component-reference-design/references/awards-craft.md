@@ -95,8 +95,8 @@ scoring worse on the actual rubric:
 
 Everything else in `Anti-AI-Slop` stays exactly as written.
 
-1. **Hero choreography duration** — may use 400ms. Declare `OVERRIDE: canonical motion limit → 400ms (craft tier §5)` on the motion instance.
-2. **Viewport-wide ambient animation** — may persist across the viewport rather than one section. Declare `OVERRIDE: ambient limited to one section → viewport-wide (craft tier §5)`. Keep it pausable and static under `prefers-reduced-motion`.
+1. **Hero choreography duration** — may use 400ms. Declare `OVERRIDE: canonical motion limit → 400ms [craft tier §5]` on the motion instance.
+2. **Viewport-wide ambient animation** — may persist across the viewport rather than one section. Declare `OVERRIDE: ambient limited to one section → viewport-wide [craft tier §5]`. Keep it pausable and static under `prefers-reduced-motion`.
 
 Both relaxations remain pausable and static under reduced motion. Hovers and non-hero transitions stay within canonical limits.
 

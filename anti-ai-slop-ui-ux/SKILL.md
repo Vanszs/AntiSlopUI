@@ -3,7 +3,7 @@ name: anti-ai-slop-ui-ux
 description: "Hard ban filter for AI-slop UI defaults. Load FIRST, before any UI code is written or reviewed; it owns the ban list that component-reference-design and ui-ux-pro-max defer to. Bans purple/indigo accent gradients, gradient-text headlines, Inter-everywhere, 3-card grids, glassmorphism, emoji icons, pill CTAs, hover:scale-105, invented metrics, and missing prefers-reduced-motion, with severity tiers and a PASS/FAIL pre-delivery audit. Not for backend, API, data-pipeline, or docs-only work."
 license: MIT
 metadata:
-  author: "b4r7x"
+  author: "Vanszs (catalog by b4r7x)"
   version: "2.2.0"
   suite_version: "2.2.0"
   updated: "2026-11-14"
@@ -48,7 +48,7 @@ Absence rows do not match. A row that describes something missing (a form withou
 
 A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, or a gate id such as `H2`.
 
-Also enforced from the catalog: mono/technical faces used as display (catalog §3), indigo-950 / violet-50 tints used as text or background (catalog §2), typewriter-style copy animation and multi-layer parallax (catalog §9). These are catalog rows, not a second list.
+Also enforced from the catalog: mono/technical faces used as display (catalog §3 TYPOGRAPHY), indigo-950 / violet-50 tints used as text or background (catalog §2), typewriter-style copy animation and multi-layer parallax (catalog §8 MOTION, rows MO8 and MO12). These are catalog rows, not a second list.
 
 Placeholder content is allowed only when visibly labeled and structurally distinct, e.g. `<figcaption>Sample data — replace before launch</figcaption>` or `data-sample="true"`. `[placeholder]`, lorem ipsum, and TODO remain banned. Unknown social proof or metrics must be omitted and recorded `NO-PROOF: user supplied none`; omission is compliant, invention is P0.
 
@@ -103,7 +103,7 @@ Apply the deterministic terms above. Do not invent metrics, testimonials, custom
 
 ## Reference budget
 
-Two reference files per task, not one: the tell catalog (required for counting) plus one pattern library file. Read the catalog sections you need, not the whole file.
+Budget formula, suite-wide: **per skill, at most one reference file**; when auditing, the tell catalog is a second file. That is two files total for a full run, never the whole reference tree.
 
 Budget ceiling: at most two references and roughly 12k tokens of skill text per task. If opening the next file would cross that line, grep the heading and read the range instead.
 
@@ -114,7 +114,7 @@ Colour is decided in this order, and the first match wins:
 2. **This skill's brand rule** — one hue that is not purple, indigo, or violet, defensible from the product's own domain (ledger-neutral, clinical-calm, safety-orange …). State the reason in one sentence.
 3. **Research output** — `--design-system` colours, after `POST-FILTER.md`. A proposal, never an authority.
 
-`component-reference-design` supplies structure, spacing and components. It never supplies colour values.
+`component-reference-design` supplies structure, spacing, components and colour *systems* (tokens, chart palettes, OKLCH recipes). It does not choose your brand hue — steps 1–3 above do that; use its systems to express the hue you chose.
 
 Display face is chosen by product category, not taste:
 
@@ -149,7 +149,7 @@ If shell access is unavailable, do NOT read CSVs. Use `component-reference-desig
 
 ## Pre-Delivery Slop Audit
 
-Report `PASS`, `FAIL`, or `N-A` plus an evidence pointer per item. `N-A` is valid only when that component does not exist on the page. A P0 failure blocks delivery; **3+ tells = block and regenerate**.
+Report `PASS`, `FAIL`, or `N-A` plus an evidence pointer per item. `N-A` is valid only when that component does not exist on the page. A P0 failure blocks delivery; **any P0 tell or 3+ P0/HIGH tells = block**.
 
 **Color & type**
 - [ ] No banned purple/indigo without user-supplied brand asset; any exception recorded as `OVERRIDE:` with source.
@@ -173,7 +173,7 @@ Report `PASS`, `FAIL`, or `N-A` plus an evidence pointer per item. `N-A` is vali
 
 **Gestalt**
 - [ ] Could a competitor swap the logo without notice? If yes, FAIL.
-- [ ] Counted catalog tells; **3+ tells = block and regenerate**.
+- [ ] Counted catalog tells; **any P0 tell or 3+ P0/HIGH tells = block**.
 
 ## References
 

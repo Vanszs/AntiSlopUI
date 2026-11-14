@@ -284,7 +284,7 @@ If `anti-ai-slop-ui-ux` is installed, its list is authoritative and this block i
 
 - Purple/indigo/violet accents
 - Gradient-text headlines
-- Glassmorphism surfaces
+- Glassmorphism surfaces — except one image-overlay surface at `bg-white/80` or stronger with an `@supports` fallback, stated per use
 - Inter-everywhere
 - `hover:scale-*`
 - `transition: all`

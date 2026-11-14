@@ -2,7 +2,7 @@
 name: component-reference-design
 description: "Positive pattern library: copy-pasteable, accessible Tailwind markup for layouts, typography, card variants, buttons, forms, navigation, data display, overlays, charts, dashboards, and an opt-in award-tier rubric. Load only when you need a concrete pattern for UI you are already building, and load it alongside anti-ai-slop-ui-ux (which owns the ban list). Not a starting point for deciding whether to build UI, and not for backend or data work."
 metadata:
-  author: "b4r7x"
+  author: "Vanszs (catalog by b4r7x)"
   version: "1.2.0"
   suite_version: "2.2.0"
   updated: "2026-11-14"

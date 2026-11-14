@@ -58,8 +58,9 @@ an 8-bullet ban summary. Installing all three is still better than installing on
 ## Context budget
 
 - **Always:** the `SKILL.md` of skills that apply (≤3 files).
-- **On demand:** one reference file per task (two only for dashboards + charts). Every
-  reference starts with a `## Contents` index — grep to the section you need.
+- **On demand:** per skill, at most one reference file; the tell catalog is a second file when
+  auditing (two total for a full run). Every reference starts with a `## Contents` index —
+  `grep -n '^## '`, then read only that range.
 - **Never:** read the CSVs by hand. Query them through `search.py` (2–3 targeted queries).
 
 ## Installation
@@ -217,6 +218,8 @@ What is enforced:
 - README claims matching the implementation (including the check count)
 - `audit.py` run against a freshly generated `MASTER.md` — this is what catches a generator
   that emits `transition: all` or an indigo accent
+- `metadata.suite_version` agreement across all three skills (it increments only when the
+  suite's shared contract changes; per-skill `version` stays independent)
 
 ## Stats
 
@@ -256,8 +259,8 @@ If your change conflicts with the filter, the filter wins.
 
 - **[UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)** by
   [NextLevelBuilder](https://github.com/nextlevelbuilder) — the `ui-ux-pro-max/` directory is
-  their design intelligence system, vendored under MIT with minimal local fixes (paths, CSV
-  quoting, docstrings). Consider [supporting their project](https://paypal.me/uiuxpromax).
+  their design intelligence system, vendored under MIT with local fixes (paths, CSV quoting,
+  docstrings, and a compliance post-filter inside the generator). Local notice: [`ui-ux-pro-max/LICENSE`](ui-ux-pro-max/LICENSE). Consider [supporting their project](https://paypal.me/uiuxpromax).
 - Inspired by MUI, shadcn/ui, Radix, Headless UI, Material Design 3, Apple HIG, IBM Carbon,
   NNG, Refactoring UI, Every-Layout, Tailwind UI, Ant Design, Chakra UI, Josh Comeau,
   Emil Kowalski, and [Adrian Krebs](https://slop-detect.com/).
