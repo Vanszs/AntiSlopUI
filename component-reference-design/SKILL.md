@@ -41,7 +41,7 @@ Record each item as **PASS / FAIL / N-A + evidence**:
 7. Shipped palette meets WCAG AA contrast.
 8. No invented proof; record `NO-PROOF` when evidence was not supplied.
 
-Any FAIL blocks. There is no severity arithmetic in a standalone install: fix it or report it as blocking.
+Any FAIL blocks. There is no severity arithmetic in a standalone install: fix it or report it as blocking. This is deliberately stricter than the filter's P0-or-3+ rule, which applies when the filter is installed.
 
 ## Precedence & Conflict Resolution
 This skill is the palette; `Anti-AI-Slop` is the filter and authority. Its bans win every conflict; state the compliant substitution.

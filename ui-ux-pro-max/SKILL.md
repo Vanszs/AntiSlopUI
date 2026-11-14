@@ -281,7 +281,7 @@ Apply [`POST-FILTER.md`](POST-FILTER.md) to every result before implementation. 
 
 ## Bans this skill must apply when the filter is absent
 
-If `anti-ai-slop-ui-ux` is installed, its list is authoritative and this block is redundant; if not, this block is the minimum contract. A minimum is not exhaustive: the filter's full gate table has 12 rows, this block has 10. Any item here blocks on its own — there is no severity arithmetic in a standalone install.
+If `anti-ai-slop-ui-ux` is installed, its list is authoritative and this block is redundant; if not, this block is the minimum contract. A minimum is not exhaustive: the filter's full gate table has 12 rows, this block has 10. Any item here blocks on its own — there is no severity arithmetic in a standalone install. This is deliberately stricter than the filter's P0-or-3+ rule, which applies when the filter is installed.
 
 - Purple/indigo/violet accents
 - Gradient-text headlines
