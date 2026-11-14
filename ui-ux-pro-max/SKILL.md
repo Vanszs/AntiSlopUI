@@ -10,7 +10,7 @@ metadata:
   suite_version: "2.2.0"
   updated: "2026-11-14"
   references: "POST-FILTER.md"
-  attribution: "vendored from https://github.com/nextlevelbuilder/ui-ux-pro-max-skill with minimal local fixes (paths, CSV quoting, docstrings) — see git history."
+  attribution: "vendored from https://github.com/nextlevelbuilder/ui-ux-pro-max-skill with local fixes: paths, CSV quoting, docstrings, and a compliance post-filter inside the generator — see git history."
 ---
 # ui-ux-pro-max
 

@@ -36,7 +36,7 @@ Record each item as **PASS / FAIL / N-A + evidence**:
 2. No gradient-text headline.
 3. No glass surface except one over imagery with an `@supports` fallback.
 4. Motion stays within the canonical table; reduced-motion renders static.
-5. No hover enlargement in a grid (filter K3).
+5. No hover enlargement on any interactive element (shadow, colour or border feedback only).
 6. Radius uses a scale, not one radius everywhere.
 7. Shipped palette meets WCAG AA contrast.
 8. No invented proof; record `NO-PROOF` when evidence was not supplied.

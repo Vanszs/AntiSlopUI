@@ -1,6 +1,6 @@
 ---
 name: anti-ai-slop-ui-ux
-description: "Hard ban filter for AI-slop UI defaults. Load FIRST, before any UI code is written or reviewed; it owns the ban list that component-reference-design and ui-ux-pro-max defer to. Bans purple/indigo accent gradients, gradient-text headlines, Inter-everywhere, 3-card grids, glassmorphism, emoji icons, pill CTAs, hover:scale-105, invented metrics, and missing prefers-reduced-motion, with severity tiers and a PASS/FAIL pre-delivery audit. Not for backend, API, data-pipeline, or docs-only work."
+description: "Hard ban filter for AI-slop UI defaults. Load FIRST, before any UI code is written or reviewed; it owns the ban list that component-reference-design and ui-ux-pro-max defer to. Bans purple/indigo accent gradients, gradient-text headlines, Inter-everywhere, 3-card grids, glassmorphism, emoji icons, pill CTAs, scaling hover, invented metrics, and missing prefers-reduced-motion, with severity tiers and a PASS/FAIL pre-delivery audit. Not for backend, API, data-pipeline, or docs-only work."
 license: MIT
 metadata:
   author: "Vanszs (catalog by b4r7x)"
@@ -24,7 +24,7 @@ This skill owns the suite's UI ban list. Its rules override conflicting recommen
 - Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception per use.
 - Vendor palettes may include banned indigo/purple hexes, backgrounds, or text tints; reject unless user-supplied brand assets contain the value.
 - Playfair Display + Inter pairing remains banned.
-- `hover:scale-105` remains banned. When a recommendation conflicts with a P0/HIGH ban, the ban wins.
+- Scaling hover (`hover:scale-*`) remains banned. When a recommendation conflicts with a P0/HIGH ban, the ban wins.
 
 ## How to use
 
@@ -190,7 +190,7 @@ Report `PASS`, `FAIL`, or `N-A` plus an evidence pointer per item. `N-A` is vali
 
 **Motion & accessibility**
 - [ ] Motion follows the motion table; reduced-motion renders static.
-- [ ] No `hover:scale-105`; focus states visible; forms have labels and validation states.
+- [ ] No scaling hover (`hover:scale-*`); focus states visible; forms have labels and validation states.
 - [ ] Images have appropriate alt text; color is not the only indicator.
 
 **Gestalt**
