@@ -65,12 +65,12 @@ def post_filter_colors(colors, seed=""):
     """Replace vendor indigo/violet values with the filter's domain hue."""
     out = dict(colors or {})
     base = domain_hue(seed)
-    idx = _seed_index(seed, len(_ACCENT_HUES))
+    idx = _seed_index(seed, len(_ACCENT_HUES))  # accents rotate with the product domain only
     rotations = [base, _ACCENT_HUES[(idx + 1) % len(_ACCENT_HUES)], _ACCENT_HUES[(idx + 2) % len(_ACCENT_HUES)]]
     # The filter's step 2 always decides the hue, so the primary is the domain hue
     # even when the vendor palette was not itself banned.
     if isinstance(out.get("primary"), str) and out["primary"].strip().upper() != base.upper():
-        _note_override("OVERRIDE: vendor primary {} → {} [C1]".format(out["primary"], base))
+        _note_override("OVERRIDE: vendor primary {} → {} [domain table]".format(out["primary"], base))
         out["primary"] = base
     accent_roles = ("primary", "secondary", "cta")
     accent_i = 0
@@ -342,7 +342,7 @@ class DesignSystemGenerator:
                 "background": best_color.get("Background (Hex)", "#F8FAFC"),
                 "text": best_color.get("Text (Hex)", "#1E293B"),
                 "notes": best_color.get("Notes", "")
-            }, seed=project_name or query),
+            }, seed=query),
             "typography": post_filter_typography({
                 "heading": best_typography.get("Heading Font", "Inter"),
                 "body": best_typography.get("Body Font", "Inter"),

@@ -325,6 +325,32 @@ def main():
             if table_domains != domain_choices:
                 problems.append("domain table mismatch: documented {} vs CSV_CONFIG {}".format(sorted(table_domains), sorted(domain_choices)))
 
+        # the brand-hue table must match the generator, and -p must not change the hue
+        try:
+            import importlib.util as _ilu
+            spec = _ilu.spec_from_file_location("ds_mod", str(ROOT / "ui-ux-pro-max/scripts/design_system.py"))
+            ds = _ilu.module_from_spec(spec); spec.loader.exec_module(ds)
+            code_hues = {hue.upper() for _, hue in ds._DOMAIN_HUES} | {"#0F766E"}
+            filter_doc = (ROOT / "anti-ai-slop-ui-ux/SKILL.md").read_text(encoding="utf-8")
+            table_hues = {h.upper() for h in re.findall(r"`(#[0-9A-Fa-f]{6})`", filter_doc)}
+            missing = code_hues - table_hues
+            if missing:
+                problems.append("hue table out of sync: generator uses {} not documented in the filter".format(sorted(missing)))
+            script = ROOT / "ui-ux-pro-max/scripts/search.py"
+            outs = []
+            for name in ("Alpha", "Omega"):
+                proc = subprocess.run([sys.executable, str(script), "healthcare clinic", "--design-system", "-p", name],
+                                      cwd=_probe_cwd(), capture_output=True, text=True, timeout=60)
+                found = re.search(r"Primary:\s+(#[0-9A-Fa-f]{6})", proc.stdout)
+                outs.append(found.group(1).upper() if found else "none")
+            if len(set(outs)) != 1:
+                problems.append("primary hue depends on -p: {} vs {}".format(outs[0], outs[1]))
+            expected = ds.domain_hue("healthcare clinic").upper()
+            if outs[0] != expected:
+                problems.append("primary hue does not follow the domain table: got {}, expected {}".format(outs[0], expected))
+        except Exception as exc:
+            problems.append("cannot verify hue table: {}".format(exc))
+
         for doc in (ROOT / "ui-ux-pro-max/SKILL.md", ROOT / "README.md"):
             if not doc.exists():
                 continue

@@ -46,7 +46,7 @@ A **tell** is one row in `references/slop-uiux-patterns.md` sections 1–10 with
 Absence rows do not match. A row that describes something missing (a form without states, a page without numbers) only counts when the page *claims* that capability; otherwise it is `N-A`, same as in the audit.
 
 
-A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, or a gate id such as `H2`.
+A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, `domain table`, or a gate id such as `H2`.
 
 Vendor prose describes intent, never implementation: never copy a duration, effect or style name out of generated text, and apply the substitution table instead.
 
@@ -194,7 +194,7 @@ Report `PASS`, `FAIL`, or `N-A` plus an evidence pointer per item. `N-A` is vali
 - [ ] Images have appropriate alt text; color is not the only indicator.
 
 **Gestalt**
-- [ ] Could a competitor swap the logo without notice? If yes, FAIL.
+- [ ] Could a competitor swap the logo without notice? If yes, record `WARN-BRAND-SWAP` and fix it if a name exists — never a blocking FAIL.
 - [ ] Counted catalog tells; **any P0 tell or 3+ P0/HIGH tells = block**.
 
 ## References

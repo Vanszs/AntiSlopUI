@@ -16,6 +16,6 @@ Treat generated recommendations as proposals. Apply these substitutions before c
 
 Record each substitution exactly: `OVERRIDE: <from> → <to> [<reason>]`.
 
-Determinism: same query + same `-p` = identical output.
-Different `-p` may change the substituted hue; without `-p`, the query seeds it.
+Determinism: the hue is decided by the product domain in the query. `-p` names the output folder and never changes the palette; same query = identical output.
+without `-p`, the query seeds it.
 The substitution set is a fixed 8-hue list; the seed is unused when the vendor palette is already legal.
