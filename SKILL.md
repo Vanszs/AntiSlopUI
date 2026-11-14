@@ -32,30 +32,40 @@ recorded, not blocking.** `WARN-BRAND-SWAP` is a warning, never a block.
 
 ## Deterministic terms
 
-A **tell** is one catalog row in `references/slop-uiux-patterns.md` sections 1–10, or
-one finding in `references/slop-code-patterns.md` — any P0, plus the four a11y HIGH
-rows (focus states, form labels, alt text, colour-only indicators) — with severity
-exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity vocabulary is closed.
+A **tell** is one catalog row in `references/slop-uiux-patterns.md` sections 1–10, or one
+code-level finding with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity
+vocabulary is closed.
+
+The code-level findings you must count without opening the code catalogue are these four
+HIGH items, each visible on the page and each already an audit line below: focus states
+not visible, form inputs without labels or validation states, images without alt text,
+colour as the only state indicator. `references/slop-code-patterns.md` remains the full
+React/TSX catalogue and is optional reading — the count is completable from this file and
+the tell catalogue alone.
 
 Count **per element**, not per row: if one element matches several rows (a 3-card grid
 with emoji icons is both K1 and I1), it is one tell at the highest matching severity.
 Rows that describe the whole page rather than one element (layout rhythm, copy voice,
-motion series) count **once for the page**. Absence rows do not match unless the page
-claims the capability; otherwise they are `N-A`.
+motion series) count **once for the page**. When two rows describe the same defect (the
+catalogue overlaps, e.g. a left-border accent appears as both K6 and X3), count it once at
+the **higher** severity. Absence rows do not match unless the page claims the capability;
+otherwise they are `N-A`.
 
 Banned purple, indigo or violet counts as "real brand" only when the value appears in
 user-supplied brand assets — a logo file, existing CSS tokens, or a brand PDF. Otherwise
 it is a violation. Record exceptions exactly as `OVERRIDE: <from> → <to> [<reason>]`,
 where `<reason>` is `brand: <source>`, `craft tier §5`, `domain table`, `display table`,
-`catalog <ID>`, `prose`, or a gate id such as `H2`.
+`catalog <ID>`, or `prose`. A gate id is not a reason: gates are prohibitions, not
+justifications.
 
 Never invent a product name, customer name, metric, logo or testimonial. If the user
-supplied a name, use it exactly; otherwise write `Your product`, label it once, and
-record `NO-BRAND: user supplied no name` — a page that records `NO-BRAND` is `N-A` on
+supplied a name, use it exactly; otherwise write `Your product` in the wordmark, label
+it once on the page, and record `NO-BRAND: user supplied no name` — a page that records `NO-BRAND` is `N-A` on
 the logo-swap item. Unknown proof is omitted and recorded `NO-PROOF: user supplied none`;
-invention is P0. Placeholder content is allowed only when visibly labelled and
-structurally distinct (`<figcaption>Sample data — replace before launch</figcaption>` or
-`data-sample="true"`); `[placeholder]`, lorem ipsum and TODO stay banned.
+invention is P0. Placeholder content — including representative numbers — is allowed only when visibly
+labelled and structurally distinct (`<figcaption>Sample data — replace before launch</figcaption>`
+or `data-sample="true"`); `[placeholder]`, lorem ipsum and TODO stay banned. A labelled
+sample is not an invented metric.
 
 ## Hard gates
 
@@ -63,7 +73,7 @@ structurally distinct (`<figcaption>Sample data — replace before launch</figca
 |---|---|---|---|
 | H2 | Gradient-text headline | Solid, high-contrast headline | P0 |
 | C1 | Purple/indigo/violet primary accent without a supplied brand asset | A non-purple brand hue from the domain table | P0 |
-| C2 | Canonical purple/indigo or blue/cyan gradient combinations | Flat colour, or one intentional compliant gradient | P0 |
+| C2 | Canonical purple/indigo or blue/cyan gradient combinations | Flat colour, or one intentional compliant gradient per page | P0 |
 | C7 | Low-contrast body text | 4.5:1 body, 3:1 large/UI, checked | P0 |
 | K6 | Purple left-border card accent | Remove; left borders only for semantic alerts | P0 |
 | MO10 | Missing `prefers-reduced-motion` support | Gate animation; render static under reduced motion | P0 |
@@ -76,8 +86,8 @@ structurally distinct (`<figcaption>Sample data — replace before launch</figca
 
 Also enforced from the catalog: mono/technical faces as display (§3), indigo-950 or
 violet-50 tints as text or background (values come from the vendor palette; the
-research post-filter lists substitutions), typewriter-style copy animation and
-multi-layer parallax (§8 MOTION, rows MO8 and MO12). These are catalog rows, not a
+research post-filter lists substitutions), typewriter-style copy animation (MO12) and
+multi-layer parallax (MO8), both in §8 MOTION. These are catalog rows, not a
 second list.
 
 For the full catalogue: `cd <skill-dir> && grep -nE '^## |^\| ?[A-Z]{1,3}[0-9]+' references/slop-uiux-patterns.md`.
@@ -107,10 +117,11 @@ point here instead of restating durations.
 
 ## Text measure
 
-`max-w-3xl` for prose containers, `max-w-prose` for paragraphs, `max-w-6xl` for grids.
-A column in a two-column hero split may use `max-w-2xl`. A grid section may repeat
-`max-w-6xl`; what is banned is every section sharing one container, which flattens the
-page into a single column.
+`max-w-3xl` for prose containers, `max-w-prose` for paragraphs, `max-w-5xl` for wide
+single-column blocks, `max-w-6xl` for grids. A column in a two-column hero split may use
+`max-w-2xl`; the 65ch paragraph rule applies to paragraphs inside it, not to the column.
+A grid section may repeat `max-w-6xl`; what is banned is every section sharing one
+container, which flattens the page into a single column.
 
 ## Palette and type: who decides
 
@@ -148,8 +159,9 @@ Display face is chosen by product category, not taste:
 | Neutral B2B, enterprise, docs | Bricolage Grotesque | Inter or the palette's body face |
 | Playful, consumer, education, gaming, e-commerce | Cabinet Grotesk | Inter or the palette's body face |
 
-Two families maximum. Any single non-display body face is legal; Inter is legal only
-when a different display face is present. If the category is genuinely ambiguous, use
+Two families maximum. Default body is **Inter 400/500**; any single non-display sans is
+legal (the generator's body face counts), and Inter is legal only when a different display
+face is present. If the category is genuinely ambiguous, use
 Bricolage Grotesque and say why. If the display face is not loadable, use Bricolage
 Grotesque rather than a vendor face.
 
@@ -165,6 +177,9 @@ compute a custom pair, move the value until it matches one of these.
 - Surfaces: `#F8FAFC` page, `#FFFFFF` card, border `#E2E8F0`, text `#0F172A`, muted `#475569`.
 - Type: one display face ≠ Inter, body Inter 400/500, two families, three weights, 1.25 scale.
 - Layout: prose `max-w-3xl`, grids `max-w-6xl`, section padding `py-32`/`py-16`/`py-12`.
+- Radius scale: badges and avatars `rounded-full` (or `rounded-sm` for rectangular badges),
+  inputs and buttons `rounded-md`, cards and tables `rounded-lg`, modals and drawers
+  `rounded-xl`. No other values.
 - Interaction: `cursor-pointer` on anything clickable, visible `focus-visible` ring, hover
   feedback by colour or shadow only.
 - Responsive: verify 375 / 768 / 1024 / 1440 with no horizontal scroll.
@@ -197,8 +212,10 @@ for counting) plus one library file. Ceiling: **20k tokens** of skill text per t
 add them up, divide by 4. Without a shell, use the structural rule: the catalogue plus
 one reference, and prefer the smaller of two candidates.
 
-Never read a whole reference file. Read its `## Contents`, grep the heading, read that
-range:
+When a number appears here and in a reference, **this file wins**; reference values are
+examples at their own scale (a hero example may show `py-24 sm:py-32 lg:py-40`, which is
+the same intent). Never read a whole reference file. Read its `## Contents`, grep the
+heading, read that range:
 
 ```bash
 cd <skill-dir> && grep -nE '^#{1,2} ' references/layouts.md   # every section heading

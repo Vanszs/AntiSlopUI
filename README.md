@@ -38,7 +38,7 @@ For agents without a skills mechanism, point them at the file:
 ```markdown
 ## UI work
 Read `<skill-dir>/SKILL.md` before writing or reviewing any UI code. It is a hard filter
-that owns the ban list, not advice. Open at most one file from `<skill-dir>/references/` per task. Run the Pre-Delivery Audit and report PASS/FAIL/N-A/UNVERIFIED per item with
+that owns the ban list, not advice. Open at most two files from `<skill-dir>/references/` per task (the tell catalogue plus one library file). Run the Pre-Delivery Audit and report PASS/FAIL/N-A/UNVERIFIED per item with
 evidence. Never invent social proof; omit it and record `NO-PROOF: user supplied none`.
 ```
 

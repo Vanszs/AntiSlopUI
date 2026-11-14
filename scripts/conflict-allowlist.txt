@@ -3,7 +3,5 @@
 references/charts.md:animate gridlines/axes
 references/animation.md:purposeful short motion
 references/dashboards.md:whole-page scroll
-SKILL.md:`transition: all`
-SKILL.md:Motion outside the canonical table
 references/dashboards.md:purple/indigo accent
 references/dashboards.md:| `transition: all` |
