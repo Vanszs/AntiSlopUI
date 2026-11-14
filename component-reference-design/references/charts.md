@@ -1,5 +1,20 @@
 # Charts — Beautiful, Modern, Clean Statistical Visualization
 
+Companion to `../SKILL.md`. The reference for building **beautiful** charts (Recharts-first)
+that read as Linear/Vercel/Stripe/Tremor quality — not "basic HTML chart" and not AI-slop.
+Synthesized from web research (2025–2026): Recharts 3.x docs, Tremor, shadcn/ui charts, Nivo,
+Apache ECharts, Observable, IBM Carbon Data-Viz, ColorBrewer, Okabe-Ito, Vercel/Linear/Stripe
+dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
+
+> Quality bar: derive one hue from the product; never use purple/indigo or impose a fixed client palette. Keep labels accessible, data real, motion reduced-aware, chrome legible.
+
+> Quality bar: one product-derived hue (never purple/indigo) · subtle dashed horizontal grid · gradient
+> area fills · hover-only dots · custom tooltip card · `tabular-nums` · `prefers-reduced-motion`
+> gated · `role="img"`+`aria-label` · real data only. If a chart could be swapped into any
+> generic dashboard and nobody notices, it's slop.
+
+---
+
 ## Contents
 
 - 0. THE 15-POINT ANTI-SLOP CHART SCAN (run before shipping any chart)

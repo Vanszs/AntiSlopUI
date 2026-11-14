@@ -1,5 +1,11 @@
 # Design Systems Index + Tokens + Marketing Sections
 
+Companion to `../SKILL.md`. Which library to reach for, how to structure tokens, and varied marketing-section anatomies. Sources: official docs of each system, W3C DTCG, Evil Martians (100 dev-tool landing pages study), Tailwind UI.
+
+> Quality bar: choose systems by product fit, accessibility, theming, and license; use tokens consistently and vary section anatomy.
+
+---
+
 ## Contents
 
 - PART A — TRUSTED DESIGN SYSTEM INDEX (18)

@@ -23,9 +23,14 @@ def remove_contents(lines):
     out, i = [], 0
     while i < len(lines):
         if lines[i].strip() == CONTENTS:
+            start = i
             i += 1
             while i < len(lines) and not lines[i].startswith("#"):
                 i += 1
+            removed = i - start
+            if removed > 40:
+                # Refuse to delete what is not an index: a Contents block is short.
+                out.extend(lines[start:i])
             continue
         out.append(lines[i])
         i += 1

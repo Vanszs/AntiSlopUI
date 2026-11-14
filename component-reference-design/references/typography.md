@@ -1,5 +1,13 @@
 # Typography — Modern Systems & Font Pairings
 
+Companion to `../SKILL.md`. Sources: Refactoring UI, Material Design 3, Apple HIG, IBM Carbon, MUI, Utopia, Typewolf, Fontshare, Google Fonts, Smashing.
+
+> Quality bar: distinctive display + neutral body; max 2 families and 3 weights; modular scale; readable measure and accessible contrast.
+
+> Rule of thumb: distinctive display font (NOT Inter-everywhere) + neutral body; max 2 families; max 3 weights: 400/500/600 for dense UI; 400/500/700 for marketing; modular scale; `max-w-prose` (~65ch); left-aligned body.
+
+---
+
 ## Contents
 
 - (A) PROVEN FONT PAIRINGS (display + body)

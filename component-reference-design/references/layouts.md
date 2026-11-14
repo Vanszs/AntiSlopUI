@@ -1,5 +1,13 @@
 # Layouts — Modern Page & App Skeletons
 
+Companion to `../SKILL.md`. Every pattern: NAME · when-to-use · concrete CSS/Tailwind · responsive · motion. Sources: Every-Layout.dev, Josh Comeau, web.dev, Tailwind UI, MDN, NNG, Refactoring UI, Smashing.
+
+> Quality bar: semantic, responsive skeletons; vary anatomy and content-sized widths; preserve full-bleed breaks and reduced-motion support.
+
+> Anti-monotony rule of thumb: never repeat the same skeleton in consecutive sections; vary container width and section padding; ≥1 full-bleed break per page.
+
+---
+
 ## Contents
 
 - 1. HOLY GRAIL (header / nav / main / aside / footer)

@@ -1,5 +1,11 @@
 # Components — Cards, Buttons, Forms, Navigation, Data Display
 
+Companion to `../SKILL.md`. Every entry: NAME · when-to-use · concrete accessible Tailwind. Sources: MUI, shadcn/ui, Radix, Headless UI, Ant Design, Material Design 3, IBM Carbon, Tailwind UI, Inclusive Components, TanStack Table, Tremor, W3C WAI-ARIA APG.
+
+> Quality bar: real `<button>`/`<a>` (never `<div onClick>`), `focus-visible` ring on every interactive, labels wired, radius is a scale, hover = shadow/color not `scale-105`.
+
+---
+
 ## Contents
 
 - 1. CARDS (17 variants)

@@ -1,5 +1,9 @@
 # Awards Craft Tier — Opt-In
 
+Companion to `../SKILL.md`. This is the **only** file in the suite that is allowed to
+raise the craft ceiling. It is opt-in and gated, because award-grade detail and
+slop are separated by one thing: whether the detail pays for itself.
+
 ## Contents
 
 - 0. When this tier applies

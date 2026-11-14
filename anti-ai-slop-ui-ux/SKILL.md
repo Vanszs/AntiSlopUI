@@ -103,9 +103,9 @@ Apply the deterministic terms above. Do not invent metrics, testimonials, custom
 
 ## Reference budget
 
-Budget formula, suite-wide: **per skill, at most one reference file**; when auditing, the tell catalog is a second file. That is two files total for a full run, never the whole reference tree.
+Budget formula, suite-wide: **per skill, at most one reference file**; when auditing, the tell catalog is a second file. Two files total for a full run, never the whole reference tree.
 
-Budget ceiling: at most two references and roughly 12k tokens of skill text per task. If opening the next file would cross that line, grep the heading and read the range instead.
+Budget ceiling: **20k tokens** of skill text per task (4 characters ≈ 1 token). Self-check in one command: `wc -c` the files you have loaded, add them up, divide by 4. If the next file crosses 20k, grep the heading and read only that range. The ceiling accommodates the three entry files plus one large reference (≈17k); it does not accommodate two large references, which is what the grep recipe is for.
 
 ## Palette and type: who decides
 
