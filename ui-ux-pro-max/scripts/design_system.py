@@ -534,7 +534,7 @@ def format_markdown(design_system: dict) -> str:
     if pattern.get('cta_placement'):
         lines.append(f"- **CTA Placement:** {pattern.get('cta_placement', '')}")
     if pattern.get('color_strategy'):
-        lines.append(f"- **Color Strategy:** {pattern.get('color_strategy', '')}")
+        lines.append(f"- **Color Strategy:** {sanitize_prose(pattern.get('color_strategy', ''))}")
     lines.append(f"- **Sections:** {pattern.get('sections', '')}")
     lines.append("")
 
@@ -1229,6 +1229,9 @@ _PROSE_SUBS = [
     (r"include photo \+ name \+ role", "omit customer details unless supplied"),
     (r"subscriber count[^.,;]*", "omit subscriber figures unless supplied"),
     (r"ratings? \(4\.5\+?[^)]*\)", "omit ratings unless supplied"),
+    (r"verified badge[^.,;]*", "omit verification cues unless accounts are verified"),
+    (r"member photos?[^.,;]*", "omit member imagery unless supplied"),
+    (r"review sentiment[^.,;]*", "omit sentiment mapping unless supplied"),
     (r"indigo primary", "brand primary"),
     (r"purple tech", "brand accent"),
     (r"\b(?:indigo|violet|purple|lavender)\b", "brand"),
@@ -1261,12 +1264,19 @@ def sanitize_result(design_system):
     for section, keys in (("style", ("effects", "keywords", "best_for")),
                           ("colors", ("notes",)),
                           ("typography", ("mood",)),
-                          ("pattern", ("name", "conversion", "sections", "cta_placement"))):
+                          ("pattern", ("name", "conversion", "sections", "cta_placement", "color_strategy"))):
         block = design_system.get(section)
         if isinstance(block, dict):
             for key in keys:
                 if key in block:
                     block[key] = sanitize_prose(block[key])
+    pattern_block = design_system.get("pattern")
+    if isinstance(pattern_block, dict) and isinstance(pattern_block.get("conversion"), str):
+        conversion = pattern_block["conversion"]
+        cleaned = _re.sub(r"\b\d+(?:\.\d+)?%|\b\d+(?:\.\d+)?x\b", "a measured result (supply the figure)", conversion)
+        if cleaned != conversion:
+            _note_override("OVERRIDE: vendor conversion metric → a measured result [prose]")
+            pattern_block["conversion"] = cleaned
     for key in ("key_effects",):
         if key in design_system:
             design_system[key] = sanitize_prose(design_system.get(key))
