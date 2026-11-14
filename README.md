@@ -18,14 +18,14 @@ award-grade craft tier. Everything ships in this repository — `SKILL.md` is th
 npx skills add Vanszs/AntiSlopUI
 ```
 
-That installs one skill (`antislop-ui`) with all references and the research tool.
+That installs one skill (`antislop-design`) with all references and the research tool.
 Manual installs copy the whole repository, because the references and the tool live
 beside `SKILL.md`:
 
 ```bash
 git clone https://github.com/Vanszs/AntiSlopUI.git
 mkdir -p ~/.claude/skills
-cp -r AntiSlopUI ~/.claude/skills/antislop-ui
+cp -r AntiSlopUI ~/.claude/skills/antislop-design
 ```
 
 Same shape for Codex (`~/.agents/skills`), opencode (`~/.config/opencode/skills`), and

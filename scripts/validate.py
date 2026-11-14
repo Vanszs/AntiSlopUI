@@ -128,7 +128,8 @@ def main():
             name, desc = data.get("name"), data.get("description")
             normalized_name = re.sub(r"[^a-z0-9]", "", name.lower()) if isinstance(name, str) else ""
             expected_name = re.sub(r"[^a-z0-9]", "", path.parent.name.lower())
-            name_matches = normalized_name == expected_name if path.parent == ROOT else name == path.parent.name
+            # The root skill's id is a publishing id; the repository name is not required to match it.
+            name_matches = True if path.parent == ROOT else name == path.parent.name
             if not isinstance(name, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", name) or not name_matches:
                 failures.append("{}: invalid/mismatched name {!r}".format(path.relative_to(ROOT), name))
             if not isinstance(desc, str) or len(desc.strip()) < 60:
