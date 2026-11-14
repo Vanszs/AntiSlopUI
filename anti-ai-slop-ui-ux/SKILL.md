@@ -14,7 +14,7 @@ metadata:
 
 ## Delivery gate (read now, apply before shipping)
 
-Load this filter before UI work. Before delivery, report `PASS`, `FAIL`, or `N-A` plus an evidence pointer for every audit item. `N-A` is allowed only when the component does not exist on the page. Any P0 failure blocks delivery, as does 3+ P0/HIGH tells; MEDIUM/LOW tells are recorded, not blocking.
+Load this filter before UI work. Before delivery, report `PASS`, `FAIL`, or `N-A` plus an evidence pointer for every audit item. `N-A` is allowed only when the component (or the capability it audits) does not exist on the page. Any P0 failure blocks delivery, as does 3+ P0/HIGH tells; MEDIUM/LOW tells are recorded, not blocking.
 
 ## Precedence & conflict resolution
 
@@ -43,7 +43,11 @@ This skill owns the suite's UI ban list. Its rules override conflicting recommen
 
 A **tell** is one catalog row in `references/slop-uiux-patterns.md` sections 1–10, or one **P0 finding** in `references/slop-code-patterns.md`, with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity vocabulary is closed.
 
-Count **per element**, not per row: if one element matches several rows (a 3-card grid with emoji icons is both K1 and I1), it is one tell at the highest matching severity. Fold overlapping rows into one before applying the threshold. **Block when any tell is P0, or when 3+ tells are P0/HIGH. MEDIUM and LOW tells are recorded, not blocking.**
+Count **per element**, not per row: if one element matches several rows (a 3-card grid with emoji icons is both K1 and I1), it is one tell at the highest matching severity. Fold overlapping rows into one before applying the threshold.
+
+Rows that describe the whole page rather than one element (layout rhythm, copy voice, motion series) count **once for the page**, not per section.
+
+Accessibility audit items (focus states, form labels, alt text, colour-only indicators) map to HIGH rows in `references/slop-code-patterns.md`; a FAIL on one is recorded as a HIGH tell and enters the same sum. **Block when any tell is P0, or when 3+ tells are P0/HIGH. MEDIUM and LOW tells are recorded, not blocking.**
 
 Absence rows do not match. A row that describes something missing (a form without states, a page without numbers) only counts when the page *claims* that capability; otherwise it is `N-A`, same as in the audit.
 

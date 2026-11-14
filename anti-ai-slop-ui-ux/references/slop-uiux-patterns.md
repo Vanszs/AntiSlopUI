@@ -298,7 +298,7 @@ WHY, it's slop.
 ### Card hover
 ```css
 /* SLOP */ .card { @apply rounded-2xl shadow-lg border border-gray-200 hover:scale-105 transition-transform duration-200; }
-/* CORRECT */ .card { @apply rounded-lg border border-border hover:shadow-md hover:border-primary/30 transition-colors duration-200 ease-out; }
+/* CORRECT */ .card { @apply rounded-lg border border-border hover:shadow-md hover:border-primary/30 transition-colors duration-150 ease-out; }
 ```
 
 ### Motion (reduced-motion)
