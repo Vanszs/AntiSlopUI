@@ -22,12 +22,28 @@ RULES = [
 EXTENSIONS = {".css", ".html", ".tsx", ".md"}
 
 
+# Docs quote banned values on purpose (ban tables, substitution tables), so a
+# directory scan only looks at shipped artifacts. An explicitly named file is
+# always scanned, which is how CI audits a generated MASTER.md.
+DOC_EXTENSIONS = {".md"}
+
+
 def files_for(paths):
     for item in paths:
         path = Path(item)
-        candidates = path.rglob("*") if path.is_dir() else [path]
+        if path.is_dir():
+            candidates = path.rglob("*")
+            explicit = False
+        else:
+            candidates = [path]
+            explicit = True
         for file in candidates:
-            if file.is_file() and file.suffix.lower() in EXTENSIONS and not ({".git", "__pycache__"} & set(file.parts)):
+            if not file.is_file() or ({".git", "__pycache__"} & set(file.parts)):
+                continue
+            suffix = file.suffix.lower()
+            if explicit and suffix in (EXTENSIONS | DOC_EXTENSIONS):
+                yield file
+            elif not explicit and suffix in EXTENSIONS - DOC_EXTENSIONS:
                 yield file
 
 
