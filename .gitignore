@@ -39,3 +39,6 @@ Thumbs.db
 
 # Design system output (from --persist)
 design-system/
+
+# ad-hoc design-system output from documented examples
+design/

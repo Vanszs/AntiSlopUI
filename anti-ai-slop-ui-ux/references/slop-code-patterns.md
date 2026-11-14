@@ -1,3 +1,25 @@
+## Contents
+
+- 0. ROOT CAUSE
+- 1. STATE MANAGEMENT & HOOKS
+- 2. DATA FETCHING
+- 3. MEMORY LEAKS (AI-specific)
+- 4. COMPONENT ARCHITECTURE
+- 5. TYPESCRIPT QUALITY
+- 6. HTML SEMANTICS & ACCESSIBILITY
+- 7. CSS / TAILWIND MARKUP QUALITY
+- 8. SECURITY & HYGIENE
+- 9. PERFORMANCE & NEXT.JS PATTERNS
+- 10. TESTING & DX TELLS
+- 11. PROJECT STRUCTURE TELLS
+- 12. FORM HANDLING
+- 13. META-TELLS (GESTALT INDICATORS)
+- 14. ENFORCEMENT (STOP THE SLOP)
+- 15. SOURCES
+- Creative Freedom Within the Bans
+
+---
+
 # Anti-AI-Slop Code Patterns — React/TSX/Next.js
 
 Companion to `slop-uiux-patterns.md` (visual tells). This file catalogs
@@ -40,7 +62,7 @@ Accessibility Issues (6.1%). All violate SRP, SoC, DRY.
 | # | Tell | Why-slop | Fix | Severity |
 |---|------|----------|-----|----------|
 | S1 | Derived state stored in `useState` + synced via `useEffect` | #1 documented AI anti-pattern (react-japan.dev, react.dev). Extra render cycle, infinite-loop risk, obscures intent | Compute during render: `const item = items.find(i => i.id === selectedId)` | **HIGH** |
-| S2 | 5+ `useState` declarations in one component ("state soup") | AI generates one state per data field; makes re-render tracking impossible | Group into single object, or extract to custom hook, or use reducer, or data-fetching lib (TanStack Query) | **HIGH** |
+| S2 | five or more `useState` declarations in one component ("state soup") | AI generates one state per data field; makes re-render tracking impossible | Group into single object, or extract to custom hook, or use reducer, or data-fetching lib (TanStack Query) | **HIGH** |
 | S3 | `useCallback` on every handler with `[]` deps | AI cargo-cults memoization; empty deps freeze stale closures; wrapper allocates dep array every render for nothing | Plain inline function unless: (a) passed to `memo`-wrapped child, (b) used as hook dependency, (c) passed to child's hook dep array. That's it. | **HIGH** |
 | S4 | `useMemo` on trivial computations (`useMemo(() => a + b, [a, b])`) | "Performance optimization ALWAYS comes with a cost but does NOT always come with a benefit" (Kent C. Dodds). AI wraps everything defensively | Remove unless computation is genuinely expensive (sort/filter 1000+ items) or stabilizing reference for memo'd child | **MEDIUM** |
 | S5 | Neither `useMemo` nor `useCallback` anywhere (opposite extreme) | AI in "minimal" mode; expensive list transforms recalculate on every keystroke | Profile first; memoize only measured bottlenecks | **LOW** |
@@ -109,7 +131,7 @@ export default async function UsersPage() {
 | # | Tell | Why-slop | Fix | Severity |
 |---|------|----------|-----|----------|
 | A1 | God Component (500+ lines, manages state + fetches + renders everything) | AI generates in one shot; violates SRP; can't reuse, can't test, can't scale. CMU found this as top structural issue | Decompose: presentational components + custom hooks + container | **HIGH** |
-| A2 | Prop drilling 4+ levels deep | AI passes state top-down through every intermediate; intermediates don't use the prop | Composition (children), Context for truly global, or component inversion | **HIGH** |
+| A2 | Prop drilling four or more levels deep | AI passes state top-down through every intermediate; intermediates don't use the prop | Composition (children), Context for truly global, or component inversion | **HIGH** |
 | A3 | `index` as key in dynamic lists | AI uses `key={index}` by default; breaks reconciliation on reorder/insert/delete; subtle bugs | Use stable unique ID (`key={item.id}`) | **HIGH** |
 | A4 | Missing keys entirely | React warns; AI sometimes omits; list won't reconcile correctly | Always provide `key` with stable identity | **HIGH** |
 | A5 | Everything in one file, no separation | AI produces single-file solutions; no feature/concern separation | Feature-based folders: `components/`, `hooks/`, `types/`, `lib/` | **MEDIUM** |
@@ -321,7 +343,7 @@ These aren't single-line bugs but structural patterns that together scream
 7. **No loading/error/empty states** — component either shows data or crashes
 8. **Console artifacts** — `console.log`, `// TODO`, commented-out code blocks
 
-If 4+ of these appear together → the codebase is vibe-coded without human review.
+These are contextual indicators, not a second threshold.
 
 ---
 
@@ -407,13 +429,6 @@ If 4+ of these appear together → the codebase is vibe-coded without human revi
 
 ---
 
-## Creative Freedom
+## Creative Freedom Within the Bans
 
-These patterns and rules are **bare minimum guidelines**. You are encouraged to:
-
-- **Improvise beyond what's documented** — use your own creativity and judgment
-- **Experiment with novel solutions** — don't feel constrained to only what's listed here
-- **Adapt to context** — every project has unique requirements that may warrant different approaches
-- **Invent new patterns** — if you discover a better solution, use it
-
-Treat this reference as a **foundation, not a ceiling**. The goal is to avoid AI slop while still producing innovative, intentional design — not to limit you to a fixed set of "approved" solutions.
+Inventing new patterns is allowed. Nothing here overrides a P0/HIGH ban. If a new pattern conflicts with a ban, the ban wins.

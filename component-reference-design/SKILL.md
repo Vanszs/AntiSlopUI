@@ -1,28 +1,11 @@
 ---
 name: component-reference-design
-description: >-
-  Positive reference library of modern, non-monotonous UI — the constructive
-  companion to Anti-AI-Slop. Curated, copy-pasteable, accessible patterns sourced
-  from trusted design authorities (MUI, shadcn/ui, Radix, Headless UI, Ant Design,
-  Chakra, Mantine, Tailwind UI, Material Design 3, Apple HIG, IBM Carbon, NNG,
-  Refactoring UI). Covers layout skeletons (with/without animation), typography
-  systems & font pairings, every card variant, buttons & forms, navigation,
-  data-display, overlays & feedback, tasteful accessible motion, a design-system
-  index, and varied marketing-section anatomies. Use when designing or building
-  any UI and you want a reference for "what good looks like."
+description: "Positive pattern library: copy-pasteable, accessible Tailwind markup for layouts, typography, card variants, buttons, forms, navigation, data display, overlays, charts, dashboards, and an opt-in award-tier rubric. Load only when you need a concrete pattern for UI you are already building, and load it alongside anti-ai-slop-ui-ux (which owns the ban list). Not a starting point for deciding whether to build UI, and not for backend or data work."
 metadata:
-  author: b4r7x
-  version: 1.1.0
-  updated: 2026-11-14
-  references:
-    - references/layouts.md
-    - references/typography.md
-    - references/components.md
-    - references/animation.md
-    - references/design-systems.md
-    - references/charts.md
-    - references/dashboards.md
-    - references/awards-craft.md
+  author: "b4r7x"
+  version: "1.2.0"
+  updated: "2026-11-14"
+  references: "references/layouts.md, references/typography.md, references/components.md, references/animation.md, references/design-systems.md, references/charts.md, references/dashboards.md, references/awards-craft.md"
 license: MIT
 ---
 
@@ -48,7 +31,7 @@ component variant, and tasteful accessible motion — all copy-pasteable and a11
 ## Precedence & Conflict Resolution
 This skill is the palette; `Anti-AI-Slop` is the filter and authority. Its bans win every conflict; state the compliant substitution.
 Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception.
-Vary container widths by content; never use uniform `max-w-7xl`/`max-w-6xl` across sections. Never use `hover:scale-105` in grids/lists or `transition-all`.
+Vary container widths by content; never use uniform `max-w-7xl`/`max-w-6xl` across sections. Never scale on hover anywhere or use `transition-all`; pills are for tags and avatars only.
 
 ### Craft tier is opt-in
 `references/awards-craft.md` is the only file allowed to raise the craft ceiling, and only when the user explicitly asks for premium / award-grade / "wow" / studio / launch work. It carries a scored rubric (Design 40 · Usability 30 · Creativity 20 · Content 10), hard performance and a11y gates that deny the tier on failure, and a cost table for every craft pattern. It never buys a ban, and its two permitted relaxations are declared in `OVERRIDE:` form. Do not load it for dashboards, admin tools, docs, checkout, or forms.
@@ -68,7 +51,7 @@ Use Category Map to select the narrowest relevant reference.
 | Card, button, form, nav, table, list, badge | `references/components.md` | Card variants (17), buttons (10), form controls (13), navigation (13), data-display (16) |
 | Modal, drawer, toast, tooltip, popover, animation | `references/animation.md` | Overlay/feedback components + tasteful motion patterns (timing, easing, reduced-motion, 13 motion recipes) |
 | Choosing a library / design tokens | `references/design-systems.md` | 18 design-system index (ecosystem, styling, a11y, theming, license, URL) + W3C DTCG tokens + decision matrix |
-| Charts, graphs, KPI cards, sparklines, data-viz | `references/charts.md` | Beautiful modern Recharts patterns: color systems (teal/Okabe-Ito/OKLCH), premium chrome (custom tooltip/legend/axes/grid), bar/line/area/donut/radial, KPI+sparkline cards, specialty (heatmap/treemap/funnel/radar/scatter/bullet/waffle), motion, dark-mode/responsive, a11y, 15-point anti-slop scan |
+| Charts, graphs, KPI cards, sparklines, data-viz | `references/charts.md` | Beautiful modern Recharts patterns: product-derived hue/Okabe-Ito/OKLCH color systems, premium chrome (custom tooltip/legend/axes/grid), bar/line/area/donut/radial, KPI+sparkline cards, specialty (heatmap/treemap/funnel/radar/scatter/bullet/waffle), motion, dark-mode/responsive, a11y, 15-point anti-slop scan |
 | Admin dashboard — app shell, sidebar, topbar, widgets, tables, filters | `references/dashboards.md` | Modern clean admin dashboard: 15 clean-dashboard principles, app shell (grid sidebar+header), sidebar nav (collapsible/rail/groups/footer), topbar (breadcrumb/⌘K search/notif/avatar/org-switcher), command palette, grid composition (KPI→hero+side→table, bento), KPI/stat cards (delta inversion), chart placement/chrome, filters & toolbar (date-range/segmented/chips/saved-views), data table (TanStack/density/sort/selection/pagination), all states (skeleton/empty/error/zero), 3-tier color tokens + dark, anti-pattern cheat sheet |
 | Award-grade / premium / studio page (opt-in only) | `references/awards-craft.md` | Scored rubric (Awwwards weights), hard perf+a11y gates that deny the tier, cost table for kinetic type / transitions / scroll choreography / 3D / video / custom cursor, award-theatre anti-patterns, the only two permitted relaxations |
 
@@ -90,8 +73,9 @@ Use Category Map to select the narrowest relevant reference.
 - **`prefers-reduced-motion`** gates every spatial animation.
 - **Radius is a scale** — inputs/buttons `rounded-md`, cards `rounded-lg`, modals `rounded-xl`, pills `rounded-full`.
 - **Type** — distinctive display font (NOT Inter-everywhere), modular scale, `max-w-prose` body, 2–3 weights.
-- **Motion budget** — hovers 100–150ms, entrances 200–300ms, exits faster; `transform`+`opacity` only.
+- **Motion budget** — see `anti-ai-slop-ui-ux/SKILL.md`; use `transform`+`opacity` only.
 - **WCAG AA contrast** — 4.5:1 body, 3:1 large/UI; test light + dark.
+- **Text measure** — prose `max-w-3xl`, paragraphs `max-w-prose`, grids `max-w-6xl`; a 2-column hero split may use `max-w-2xl`.
 
 ## Trusted Sources (full index in `references/design-systems.md`)
 MUI · shadcn/ui · Radix Primitives & Themes · Headless UI · Ant Design · Chakra UI ·

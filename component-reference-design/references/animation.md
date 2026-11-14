@@ -1,5 +1,14 @@
 # Animation & Overlays — Tasteful Motion + Feedback Components
 
+## Contents
+
+- [Duration & easing reference](#duration--easing-reference)
+- [prefers-reduced-motion (MANDATORY — WCAG 2.3.3)](#prefers-reduced-motion-mandatory--wcag-233)
+- [Motion design tokens](#motion-design-tokens)
+- [OVERLAY A11Y RULES (all)](#overlay-a11y-rules-all)
+- [GOLDEN RULES (motion)](#golden-rules-motion)
+- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
+
 Companion to `../SKILL.md`. Overlay/feedback components + accessible motion. Sources: Radix, Headless UI, shadcn/ui, MUI, Ant Design, Material Design 3, Framer Motion / Motion, Emil Kowalski (Sonner, Vaul, animations.dev), Josh Comeau, NNG, web.dev, W3C WCAG/APG.
 
 > Quality bar: purposeful short motion, `prefers-reduced-motion` support, keyboard-accessible overlays, and no `transition-all`.
@@ -11,15 +20,9 @@ Companion to `../SKILL.md`. Overlay/feedback components + accessible motion. Sou
 # PART A — MOTION FOUNDATIONS
 
 ## Duration & easing reference
-| Context | Duration |
-|---------|----------|
-| Micro-feedback (toggle/check) | 100ms |
-| Hover | 100–150ms |
-| Tooltip/fade | 150–200ms |
-| Dropdown/card/popover | 200–250ms |
-| Modal/drawer enter | 250–300ms |
-| Exits | 25–35% faster than enter |
-| **Max (never exceed)** | 400ms |
+| Context | Reference |
+|---------|-----------|
+| All motion timing | See the canonical motion table in `anti-ai-slop-ui-ux/SKILL.md` |
 
 | Easing | cubic-bezier | Use |
 |--------|--------------|-----|
@@ -32,7 +35,7 @@ Companion to `../SKILL.md`. Overlay/feedback components + accessible motion. Sou
 ```css
 /* additive: only add motion when allowed */
 @media (prefers-reduced-motion: no-preference){
-  .reveal{opacity:0;transform:translateY(8px);transition:opacity 250ms ease-out,transform 250ms ease-out}
+  .reveal{opacity:0;transform:translateY(8px);transition:opacity 200ms ease-out,transform 200ms ease-out}
   .reveal.visible{opacity:1;transform:none}
 }
 /* subtractive safety net */
@@ -44,13 +47,13 @@ Companion to `../SKILL.md`. Overlay/feedback components + accessible motion. Sou
 // Framer Motion / Motion
 import { useReducedMotion } from "motion/react";
 const reduce = useReducedMotion();
-<motion.div initial={reduce ? false : {opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.25,ease:[0,0,0.2,1]}} />
+<motion.div initial={reduce ? false : {opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.2,ease:[0,0,0.2,1]}} />
 ```
 
 ## Motion design tokens
 ```css
 :root{
-  --dur-fast:150ms; --dur-normal:250ms; --dur-slow:350ms;
+  --dur-fast:150ms; --dur-normal:200ms; --dur-slow:200ms;
   --ease-out:cubic-bezier(0,0,0.2,1); --ease-in:cubic-bezier(0.4,0,1,1);
   --ease-energetic:cubic-bezier(0.16,1,0.3,1);
 }
@@ -64,24 +67,24 @@ button,a,.interactive{transition:color var(--dur-fast) var(--ease-out),backgroun
 
 | # | Pattern | When | Spec |
 |---|---------|------|------|
-| 1 | Entrance fade+slide | content first appears | opacity 0→1 + translateY 8px, 250ms ease-out |
-| 2 | Staggered list | grids, nav, results | 30–50ms/child, ≤300ms total |
+| 1 | Entrance fade+slide | content first appears | opacity 0→1 + translateY 8px, 200ms ease-out |
+| 2 | Staggered list | grids, nav, results | subtle stagger, within canonical motion limits |
 | 3 | Page transition | route/tab change | View Transitions API or `AnimatePresence` crossfade 200ms |
 | 4 | Layout / shared element | reorder, card→modal | Motion `layout` / `layoutId` (transform-based) |
 | 5 | Scroll reveal | long pages | animate **section containers**, fire once, `IntersectionObserver`/`whileInView once` |
 | 6 | Hover micro | buttons, cards | shadow + ≤1px translate, 150ms (never `scale-105`) |
 | 7 | Skeleton/shimmer | loading | gated `motion-safe`, `aria-busy`, 3:1 contrast |
 | 8 | Accordion expand | FAQ, panels | height 0↔auto (`interpolate-size`/Radix var), 200ms |
-| 9 | Modal/drawer | dialogs, sheets | scale 0.95→1 + fade enter 250ms, exit 180ms |
+| 9 | Modal/drawer | dialogs, sheets | scale 0.95→1 + fade, 200ms |
 | 10 | Toast slide-in | feedback | y 14→0 + fade 200ms, `role="status"` |
 | 11 | Subtle parallax | hero only | factor 0.1–0.2, never on text, reduced-motion off |
-| 12 | Number count-up | KPIs entering view | 1–1.5s ease-out, static for reduced-motion |
-| 13 | Accessible marquee | logo strips | duplicate `aria-hidden`, pause on hover/focus, >30s, reduced-motion off |
+| 12 | Number count-up | KPIs entering view | 200ms ease-out, static for reduced-motion |
+| 13 | Accessible marquee | logo strips | duplicate `aria-hidden`, pause on hover/focus, reduced-motion off |
 
 ### Entrance + stagger (Motion)
 ```tsx
 const container={hidden:{},show:{transition:{staggerChildren:0.04}}};
-const item={hidden:{opacity:0,y:6},show:{opacity:1,y:0,transition:{duration:0.25,ease:[0,0,0.2,1]}}};
+const item={hidden:{opacity:0,y:6},show:{opacity:1,y:0,transition:{duration:0.2,ease:[0,0,0.2,1]}}};
 <motion.ul variants={container} initial="hidden" whileInView="show" viewport={{once:true,margin:"-100px"}}>
   {items.map(i=><motion.li key={i.id} variants={item}>{i.name}</motion.li>)}
 </motion.ul>
@@ -180,7 +183,7 @@ No interactive content inside tooltips — use a Popover for that.
 - Animate ≤30% of visible elements; if everything moves, nothing is emphasized.
 - `transform`+`opacity` only (never width/height/top/left/filter).
 - ease-out in, ease-in out; exits faster.
-- Hovers 100–150ms, entrances 200–300ms, never >400ms.
+- Hovers 150ms, entrances 200ms, canonical limits.
 - 0–1 ambient infinite animation per page; must pause on hover + respect reduced-motion.
 - Every animation must answer "what user task does this support?" — else remove it.
 
@@ -188,13 +191,6 @@ Sources: Radix UI, Headless UI, shadcn/ui, MUI, Ant Design, Material Design 3, m
 
 ---
 
-## Creative Freedom
+## Creative Freedom Within the Bans
 
-These patterns and rules are **bare minimum guidelines**. You are encouraged to:
-
-- **Improvise beyond what's documented** — use your own creativity and judgment
-- **Experiment with novel solutions** — don't feel constrained to only what's listed here
-- **Adapt to context** — every project has unique requirements that may warrant different approaches
-- **Invent new patterns** — if you discover a better solution, use it
-
-Treat this reference as a **foundation, not a ceiling**. The goal is to avoid AI slop while still producing innovative, intentional design — not to limit you to a fixed set of "approved" solutions.
+Invent new patterns when useful. Nothing here overrides a P0/HIGH ban; on conflict, the ban wins.

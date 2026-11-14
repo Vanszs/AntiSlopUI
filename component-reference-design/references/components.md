@@ -1,5 +1,10 @@
 # Components — Cards, Buttons, Forms, Navigation, Data Display
 
+## Contents
+
+- [CROSS-CUTTING PRINCIPLES](#cross-cutting-principles)
+- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
+
 Companion to `../SKILL.md`. Every entry: NAME · when-to-use · concrete accessible Tailwind. Sources: MUI, shadcn/ui, Radix, Headless UI, Ant Design, Material Design 3, IBM Carbon, Tailwind UI, Inclusive Components, TanStack Table, Tremor, W3C WAI-ARIA APG.
 
 > Quality bar: real `<button>`/`<a>` (never `<div onClick>`), `focus-visible` ring on every interactive, labels wired, radius is a scale, hover = shadow/color not `scale-105`.
@@ -51,7 +56,7 @@ Entire card clickable, heading stays the semantic link, `:focus-within` mirrors 
 ### Stat/KPI
 ```html
 <div class="rounded-lg border border-gray-200 p-5">
-  <p class="text-sm font-medium text-gray-500">Siswa Berisiko Tinggi</p>
+  <p class="text-sm font-medium text-gray-500">Users Flagged Tinggi</p>
   <p class="mt-1 text-2xl font-semibold tabular-nums text-gray-900">24</p>
   <p class="mt-2 flex items-center gap-1 text-xs">
     <svg aria-hidden="true" class="h-3.5 w-3.5 text-red-500"><!-- arrow-up --></svg>
@@ -171,10 +176,10 @@ Top navbar (decision matrix: compact→bottom nav/hamburger, medium→rail, expa
 ```html
 <header class="fixed top-0 inset-x-0 z-50 border-b border-gray-200 bg-white">
   <nav aria-label="Global" class="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
-    <a href="/"><img class="h-8 w-auto" src="/logo.svg" alt="SchoolTrack home" /></a>
+    <a href="/"><img class="h-8 w-auto" src="/logo.svg" alt="Product home" /></a>
     <ul role="list" class="hidden md:flex md:gap-x-8">
       <li><a href="/dashboard" aria-current="page" class="text-sm font-medium text-gray-900">Dashboard</a></li>
-      <li><a href="/siswa" class="text-sm font-medium text-gray-600 hover:text-gray-900">Siswa</a></li>
+      <li><a href="/users" class="text-sm font-medium text-gray-600 hover:text-gray-900">Users</a></li>
     </ul>
     <button type="button" class="md:hidden p-2" aria-label="Open menu" aria-expanded="false" aria-controls="m-menu">
       <svg aria-hidden="true" class="h-6 w-6"><!-- hamburger --></svg>
@@ -208,7 +213,7 @@ Tabs (W3C APG keyboard: arrows move, Home/End, Enter/Space activate):
 | Chip (removable) | filters | tag + close `<button aria-label>` |
 | Notification badge | counts | absolute overlay `rounded-full bg-red-600` |
 | Avatar + group | users | `rounded-full`; group `flex -space-x-2 ring-2 ring-white` |
-| Tooltip | label icon-only/abbr | `role="tooltip"` + `aria-describedby`, hover+focus, 300–700ms |
+| Tooltip | label icon-only/abbr | `role="tooltip"` + `aria-describedby`, hover+focus; timing follows canonical motion limits |
 | Popover | rich anchored content | `aria-expanded`, focus mgmt, Esc |
 | Empty state | no data/first-use | icon + title + description + action (never blank) |
 | Skeleton | loading | match shape, `aria-busy`, `motion-reduce` |
@@ -223,14 +228,14 @@ Tabs (W3C APG keyboard: arrows move, Home/End, Enter/Space activate):
   <table class="min-w-full divide-y divide-gray-200 text-sm">
     <thead class="sticky top-0 bg-gray-50">
       <tr>
-        <th scope="col" aria-sort="ascending" class="px-4 py-3 text-left font-medium text-gray-700">Nama</th>
+        <th scope="col" aria-sort="ascending" class="px-4 py-3 text-left font-medium text-gray-700">Name</th>
         <th scope="col" class="px-4 py-3 text-left font-medium text-gray-700">Status</th>
         <th scope="col" class="px-4 py-3 text-right font-medium text-gray-700">Skor</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-100">
       <tr class="odd:bg-white even:bg-gray-50/50 hover:bg-blue-50/50">
-        <td class="px-4 py-3 font-medium text-gray-900">Ahmad Fauzi</td>
+        <td class="px-4 py-3 font-medium text-gray-900">Alex Morgan</td>
         <td class="px-4 py-3"><span class="inline-flex rounded-md bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">Waspada</span></td>
         <td class="px-4 py-3 text-right tabular-nums">72</td>
       </tr>
@@ -246,9 +251,9 @@ For complex tables (sort/filter/paginate/virtualize) use **TanStack Table** (hea
   <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
     <svg aria-hidden="true" class="h-6 w-6 text-gray-400"><!-- icon --></svg>
   </div>
-  <h3 class="mt-4 text-sm font-medium text-gray-900">Belum ada data siswa</h3>
-  <p class="mt-1 text-sm text-gray-500">Impor data dari Dapodik untuk mulai memantau.</p>
-  <button type="button" class="mt-4 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">Impor data</button>
+  <h3 class="mt-4 text-sm font-medium text-gray-900">No data yet</h3>
+  <p class="mt-1 text-sm text-gray-500">Import a data file to get started.</p>
+  <button type="button" class="mt-4 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">Import data</button>
 </div>
 ```
 
@@ -268,13 +273,6 @@ Sources: MUI, shadcn/ui, Radix, Headless UI, Ant Design, Material Design 3, IBM 
 
 ---
 
-## Creative Freedom
+## Creative Freedom Within the Bans
 
-These patterns and rules are **bare minimum guidelines**. You are encouraged to:
-
-- **Improvise beyond what's documented** — use your own creativity and judgment
-- **Experiment with novel solutions** — don't feel constrained to only what's listed here
-- **Adapt to context** — every project has unique requirements that may warrant different approaches
-- **Invent new patterns** — if you discover a better solution, use it
-
-Treat this reference as a **foundation, not a ceiling**. The goal is to avoid AI slop while still producing innovative, intentional design — not to limit you to a fixed set of "approved" solutions.
+Invent new patterns when useful. Nothing here overrides a P0/HIGH ban; on conflict, the ban wins.

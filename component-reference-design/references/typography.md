@@ -1,10 +1,21 @@
 # Typography — Modern Systems & Font Pairings
 
+## Contents
+
+- [(A) PROVEN FONT PAIRINGS (display + body)](#a-proven-font-pairings-display--body)
+- [(B) MODULAR SCALE RECIPES](#b-modular-scale-recipes)
+- [(C) PER-ROLE RULES (leading / measure / tracking / weight)](#c-per-role-rules-leading--measure--tracking--weight)
+- [(D) FLUID TYPE — clamp() RECIPES (Utopia method, 360→1240px)](#d-fluid-type--clamp-recipes-utopia-method-3601240px)
+- [(E) TAILWIND CONFIG](#e-tailwind-config)
+- [(F) DESIGN-SYSTEM SCALES COMPARED (reference values)](#f-design-system-scales-compared-reference-values)
+- [KEY PRINCIPLES](#key-principles)
+- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
+
 Companion to `../SKILL.md`. Sources: Refactoring UI, Material Design 3, Apple HIG, IBM Carbon, MUI, Utopia, Typewolf, Fontshare, Google Fonts, Smashing.
 
 > Quality bar: distinctive display + neutral body; max 2 families and 3 weights; modular scale; readable measure and accessible contrast.
 
-> Rule of thumb: distinctive display font (NOT Inter-everywhere) + neutral body; max 2 families; max 3 weights (400/500/700); modular scale; `max-w-prose` (~65ch); left-aligned body.
+> Rule of thumb: distinctive display font (NOT Inter-everywhere) + neutral body; max 2 families; max 3 weights: 400/500/600 for dense UI; 400/500/700 for marketing; modular scale; `max-w-prose` (~65ch); left-aligned body.
 
 ---
 
@@ -31,7 +42,7 @@ Companion to `../SKILL.md`. Sources: Refactoring UI, Material Design 3, Apple HI
   --font-mono:'JetBrains Mono', ui-monospace, monospace;
 }
 ```
-> For SchoolTrack (gov/edu, trustworthy): pairing #5 Libre Franklin + Libre Baskerville, or #2 Fraunces + Inter.
+> For institutional products, pair #5 Libre Franklin + Libre Baskerville, or #2 Fraunces + Inter.
 
 ---
 
@@ -66,7 +77,9 @@ Rules: 4–6 distinct sizes; each level visibly distinct without relying on weig
 | Body (14–18) | p | 1.5–1.75 | 0 to +0.5px | 400 |
 | Label/Button | sm | 1.3–1.45 | +0.1 to +0.5px | 500 |
 | Caption (11–14) | meta | 1.3–1.45 | +0.1 to +0.5px | 400 |
-| ALL-CAPS label | <14 | 1.4 | +0.5 to +1.5px | 500 |
+| ALL-CAPS label | <14 | 1.4 | 0.02–0.06em (ALL-CAPS only) | 500 |
+
+ALL-CAPS tracking at 0.02–0.06em is limited to those labels; “wide letter-spacing” means ≥0.1em on body/headings and remains banned.
 
 **Universal laws:** line-height *decreases* as size *increases*; tracking *tightens* as size *increases*; body measure ~65ch (never full-width prose); body always left-aligned.
 
@@ -155,7 +168,7 @@ body1 16/1.5 · body2 14/1.43 · button 14 w500 UPPERCASE · caption 12 · overl
 
 ## KEY PRINCIPLES
 1. Two font families max (display + body); mono free for code.
-2. Max 3 weights; never Light body on screen.
+2. Max 3 weights: 400/500/600 for dense UI; 400/500/700 for marketing. Never Light body on screen.
 3. Line-height inverse to size; tracking tighter at large sizes.
 4. Body measure ~65ch; left-aligned; `max-w-prose`.
 5. Fluid type needs min AND max (clamp), test zoom.
@@ -165,13 +178,6 @@ Sources: Refactoring UI, m3.material.io, Apple HIG, carbondesignsystem.com, mui.
 
 ---
 
-## Creative Freedom
+## Creative Freedom Within the Bans
 
-These patterns and rules are **bare minimum guidelines**. You are encouraged to:
-
-- **Improvise beyond what's documented** — use your own creativity and judgment
-- **Experiment with novel solutions** — don't feel constrained to only what's listed here
-- **Adapt to context** — every project has unique requirements that may warrant different approaches
-- **Invent new patterns** — if you discover a better solution, use it
-
-Treat this reference as a **foundation, not a ceiling**. The goal is to avoid AI slop while still producing innovative, intentional design — not to limit you to a fixed set of "approved" solutions.
+Invent new patterns when useful. Nothing here overrides a P0/HIGH ban; on conflict, the ban wins.

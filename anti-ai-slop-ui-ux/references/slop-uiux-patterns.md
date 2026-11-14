@@ -1,3 +1,22 @@
+## Contents
+
+- 0. THE ROOT CAUSE & THE GESTALT
+- 1. HERO / ABOVE-THE-FOLD
+- 2. COLOR & GRADIENT
+- 3. TYPOGRAPHY
+- 4. CARDS
+- 5. LAYOUT & SPACING
+- 6. ICONS, ILLUSTRATION & IMAGERY
+- 7. MICROCOPY & CONTENT
+- 8. MOTION & ANIMATION
+- 9. BUTTONS / FORMS / NAV / FOOTER
+- 10. SLOP-vs-CORRECT TAILWIND SNIPPETS
+- 11. SLOP-DETECT SCORING AXES (quick self-scan)
+- 12. SOURCES
+- Creative Freedom Within the Bans
+
+---
+
 # Anti-AI-Slop UI/UX — Exhaustive Pattern Catalog
 
 Companion to `../SKILL.md`. Format for every entry: **TELL → WHY-SLOP → FIX → SEVERITY**.
@@ -17,8 +36,7 @@ LLMs generate UI by computing a weighted average across their training distribut
 Output **collapses toward the visual mean**. Every unspecified decision is filled with
 the single most probable token. This is structural math, not a bug.
 
-3+ tells = block and regenerate; 5+ = unmistakable slop that fails any review.
-The canonical tell list lives in `../SKILL.md`; this section adds research context, not a second list.
+A tell is one catalog row in sections 1–10 with severity P0, HIGH, MEDIUM, or LOW. **3+ tells = block and regenerate.** The canonical threshold is defined in `../SKILL.md`.
 
 **The cure (one rule to rule them all):** every spacing value, color, font, grid,
 and animation must be *chosen for a content-specific reason*. If you can't explain
@@ -51,7 +69,7 @@ WHY, it's slop.
 | C4 | Neon glow `box-shadow: 0 0 40px rgba(purple)` on cards/buttons/text | SaaS WordArt; when everything glows nothing is emphasized | Shadows = elevation only; neutral `shadow-sm/md`; glow only on focus ring | MEDIUM |
 | C5 | Aurora blobs / mesh gradient washes (`blur(100px)` saturated circles) | Named slop-detect pattern; every vibe-coder default for "modern" bg | Noise texture / single-tone radial ≤10%; never animate (paint storms) | MEDIUM |
 | C6 | `bg-gradient-to-br from-X to-Y` on every surface | Most common gradient direction in tutorials; kills hierarchy | Flat solids for 90% of surfaces; `to-b` if any; ONE gradient bg per page | MEDIUM |
-| C7 | Low-contrast `text-gray-400`/`slate-400` body on white/dark | 83.9% of homepages fail WCAG contrast (WebAIM 2026); "elegant to you, invisible to millions" | Body ≥ `gray-700` (light) / `gray-200` (dark); verify 4.5:1 | P0 (a11y) |
+| C7 | Low-contrast `text-gray-400`/`slate-400` body on white/dark | 83.9% of homepages fail WCAG contrast (WebAIM 2026); "elegant to you, invisible to millions" | Body ≥ `gray-700` (light) / `gray-200` (dark); verify 4.5:1 | P0 |
 | C8 | "Just slate-900 + indigo accent" default dark mode | Every Tailwind dark-mode tutorial; zero brand intent | Warmer dark surface (`zinc-900`); brand-matched accent; 2–3 surface elevations | HIGH |
 | C9 | Oversaturated "vibrant" palette (every accent at -500) | AI stacks every high-performing color at once; busy & artificial | 60-30-10; desaturate to -700/-800 text, -50/-100 bg; max 2 saturated/viewport | MEDIUM |
 | C10 | No brand color system (random hex, interchangeable identity) | "Nobody made a decision here"; meta-tell enabling all other color slop | Define 1 primary + ramp, 1–2 accents, 8–10 greys, semantic colors; tokens in config | HIGH |
@@ -66,16 +84,16 @@ WHY, it's slop.
 | T2 | Gradient `bg-clip-text text-transparent` headline | Every v0/Lovable/Bolt output; +6 on slop-detect | Solid color, high contrast | P0 |
 | T3 | `text-5xl font-extrabold tracking-tighter` on every heading | "Crushed display tracking"; max-impact formula = sameness | Modular scale (1.25); bold(700) max weight; `tracking-tight` not tighter | HIGH |
 | T4 | Flat/arbitrary type scale (8–12 random sizes, or H1≈H2) | No ratio, no rhythm; hierarchy breaks | Modular scale, 4–6 sizes: 12/14/16/20/25/31/39 | HIGH |
-| T5 | 5–6 font weights on one page | Each component generated in isolation; eye can't anchor | Max 3 weights (400/500/700); never Light body | MEDIUM-HIGH |
-| T6 | Centered multi-line body paragraphs | "Safe" symmetry; ragged left edge kills readability (WebAIM) | Body always `text-left`; center only single-line headings/taglines | MEDIUM-HIGH |
+| T5 | 5–6 font weights on one page | Each component generated in isolation; eye can't anchor | Max 3 weights (400/500/700); never Light body | HIGH |
+| T6 | Centered multi-line body paragraphs | "Safe" symmetry; ragged left edge kills readability (WebAIM) | Body always `text-left`; center only single-line headings/taglines | HIGH |
 | T7 | Uniform `leading` on everything (1.5 on headings too) | One value applied universally; no proportional adjustment | Headings `leading-tight` (1.25); body `leading-relaxed` (1.625) | MEDIUM |
-| T8 | Full-width body text (80–120 chars/line) | AI ignores measure; tracking fails >75 chars | `max-w-prose` (65ch) on every text block | MEDIUM-HIGH |
+| T8 | Full-width body text (80–120 chars/line) | AI ignores measure; tracking fails >75 chars | `max-w-prose` (65ch) on every text block | HIGH |
 | T9 | `tracking-widest uppercase text-xs` eyebrow above every section | When every section has one, none stand out; auto-applied everywhere | 1–2 per page; `tracking-wide` max; `text-muted-foreground` | MEDIUM |
 | T10 | Emoji as heading/section icons (`🚀 Features`) | Renders per-OS; zero semantics; demo-quality | SVG icons (Lucide/Heroicons/Phosphor), `currentColor`, fixed viewBox | HIGH |
-| T11 | Playfair Display + Inter "tasteslop" pairing | WIRED-coined; most-suggested serif; "premium mediocre" new default | Non-Playfair serif (Fraunces/Instrument Serif/Newsreader); shared x-height | MEDIUM-HIGH |
+| T11 | Playfair Display + Inter "tasteslop" pairing | WIRED-coined; most-suggested serif; "premium mediocre" new default | Non-Playfair serif (Fraunces/Instrument Serif/Newsreader); shared x-height | HIGH |
 | T12 | Positive `tracking-wide` on body copy | "Wide body tracking" slop-detect tell; loses word-shape | `tracking-normal`/`tight` on body; wide only on <14px caps labels | MEDIUM |
 | T13 | Monospace for non-code "tech vibes" | Decoration; reduces prose readability | Mono ONLY for `<code>/<pre>/<kbd>` | MEDIUM |
-| T14 | Inconsistent type across components (nav Inter, hero Poppins…) | Token drift; "isolated statistical events" | Define typography once in config; max 2 families site-wide | MEDIUM-HIGH |
+| T14 | Inconsistent type across components (nav Inter, hero Poppins…) | Token drift; "isolated statistical events" | Define typography once in config; max 2 families site-wide | HIGH |
 
 > **Type slop fingerprint (slop-detect):** Geist/Inter default + crushed display tracking + wide body tracking + flat hierarchy = "Heavy" on type axis alone.
 
@@ -87,15 +105,15 @@ WHY, it's slop.
 |---|------|----------|-----|----------|
 | K1 | Identical 3-col feature grid (icon-in-rounded-square + title + blurb) | THE #1 AI layout fingerprint; statistical mean of every SaaS features section | Vary card sizes (one `col-span-2`); remove some containers; use list/table for uniform items | HIGH |
 | K2 | Uniform `rounded-2xl shadow-lg border` on every card | One safe shadow + radius applied everywhere; flattens hierarchy | Shadow hierarchy (`shadow-sm` cards, `shadow-xl` modals); drop border OR shadow | HIGH |
-| K3 | `hover:scale-105` in a grid | Tutorial-grade; overlaps neighbors; CLS | `hover:shadow-md` or `hover:border-primary/50`, ≤200ms | HIGH |
-| K4 | Glassmorphism cards (`bg-white/10 backdrop-blur-lg`) | Peak-Dribbble 2021–22; fails contrast; GPU cost; invisible in light mode | Solid `bg-card`; ⚠ exception (state it): ONE glass surface over imagery only, `bg-white/80` or higher, with an `@supports` fallback | HIGH |
-| K5 | Gradient-border cards (purple→blue wrapper hack) | "Safest choice AI can make"; pure decoration | Solid border conveying state; `ring-1 ring-primary/20` for emphasis | MEDIUM-HIGH |
+| K3 | `hover:scale-105` in a grid | Tutorial-grade; overlaps neighbors; CLS | `hover:shadow-md` or `hover:border-primary/50`, `../SKILL.md` motion table | HIGH |
+| K4 | Glassmorphism cards (`bg-white/10 backdrop-blur-lg`) | Peak-Dribbble 2021–22; fails contrast; GPU cost; invisible in light mode | Solid `bg-card`; Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception. | HIGH |
+| K5 | Gradient-border cards (purple→blue wrapper hack) | "Safest choice AI can make"; pure decoration | Solid border conveying state; `ring-1 ring-primary/20` for emphasis | HIGH |
 | K6 | `border-l-4 border-purple-500` left accent | "Almost as reliable a sign as em-dashes for text" (Krebs); lazy accent | Remove; left-border only for semantic alert/callout state | P0 |
 | K7 | Emoji icons in cards | Inconsistent cross-platform; can't theme; amateur | Consistent SVG set, monochrome, `w-5 h-5` | HIGH |
-| K8 | Identical pricing cards + middle "Most Popular" `ring-2` | Most-templated SaaS section; lists 15+ features (people compare 3–5) | 5 features max; differentiate by bg fill not ring; full table below | MEDIUM |
-| K9 | Testimonial cards w/ fake avatars ("Sarah M., CEO", 5/5 stars) | AI invents personas; FTC fines $51k per undisclosed fake | Real quotes + company logos > faces; mark placeholders explicitly; mixed ratings | MEDIUM-HIGH |
+| K8 | Identical pricing cards + middle "Most Popular" `ring-2` | Most-templated SaaS section; lists 15 or more features (people compare 3–5) | Up to five features; differentiate by bg fill not ring; full table below | MEDIUM |
+| K9 | Testimonial cards w/ fake avatars ("Sarah M., CEO", 5/5 stars) | AI invents personas; FTC fines $51k per undisclosed fake | Real quotes + company logos > faces; omit unknown proof and record `NO-PROOF: user supplied none`; labeled sample data only | HIGH |
 | K10 | Over-nested card-in-card (padding bloat) | AI wraps everything; flattens hierarchy | Max 1 nesting level; use `space-y` + dividers, not nested containers | MEDIUM |
-| K11 | Dramatic hover lift (`-translate-y-2 shadow-xl duration-500`) | "Impressive" in isolation; sluggish; shifts row | ≤2px translate, shadow-only, ≤200ms, no bounce easing | MEDIUM |
+| K11 | Dramatic hover lift (`-translate-y-2 shadow-xl duration-200`) | "Impressive" in isolation; sluggish; shifts row | ≤2px translate, shadow-only, `../SKILL.md` motion table, no bounce easing | MEDIUM |
 | K12 | Meaningless "Live"/"New" pulsing pills | "Decoration cosplaying as information" | Badges only for real status; kill `animate-pulse` on static data | MEDIUM |
 
 ---
@@ -105,7 +123,7 @@ WHY, it's slop.
 | # | Tell | Why-slop | Fix | Severity |
 |---|------|----------|-----|----------|
 | L1 | Uniform `py-20` on every section | Metronomic rhythm; no semantic weight | Vary: hero `py-40` → features `py-16` → CTA `pt-12 pb-16`; no two adjacent equal | HIGH |
-| L2 | Everything in `max-w-7xl mx-auto` | Single centered column; "average of all design ever fed in" | Vary by content: text `max-w-3xl`, grids `max-w-6xl`, ≥1 full-bleed/page | HIGH |
+| L2 | Everything in `max-w-7xl mx-auto` | Single centered column; "average of all design ever fed in" | Follow the text-measure defaults in `../SKILL.md`; add ≥1 full-bleed/page | HIGH |
 | L3 | Symmetric `grid-cols-3` for every section | Most over-represented layout in training data | Mix cols (2/4/asymmetric spans); one hero cell `md:col-span-2`; never repeat consecutively | HIGH |
 | L4 | Endless alternating image-left/text-right | Z-pattern to absurd repetition; stale after 2 | Max 2 alternations → break w/ full-width / grid / stats bar; vary split ratios | HIGH |
 | L5 | Equal visual weight everywhere | No focal point; eye bounces & leaves | 3-size system; ONE dominant element ≥1.5× weight per section | HIGH |
@@ -146,10 +164,10 @@ WHY, it's slop.
 
 | # | Tell | Why-slop | Fix | Severity |
 |---|------|----------|-----|----------|
-| M1 | Hype verbs: Supercharge/Unlock/Revolutionize/Elevate/Empower/Unleash | Training saturated w/ SaaS marketing; generic | Concrete action verb + metric: "reduces load 40%" | HIGH |
+| M1 | Hype verbs: Supercharge/Unlock/Revolutionize/Elevate/Empower/Unleash | Training saturated w/ SaaS marketing; generic | Concrete action verb; use only user-supplied verified metrics | HIGH |
 | M2 | "Seamless/Effortless/Frictionless" | Vague intensifiers, no mechanism | State the mechanism ("one API call") | HIGH |
-| M3 | "in seconds/instantly/blazing fast" | Unmeasured time claims = filler | Real benchmark ("avg 2.3s cold start") | HIGH |
-| M4 | "Robust/Scalable/Powerful/Cutting-edge/World-class" | Hollow superlatives; 90%+ of AI copy | Quantify ("10K concurrent connections") | HIGH/MED |
+| M3 | "in seconds/instantly/blazing fast" | Unmeasured time claims = filler | Use a user-supplied verified benchmark, or omit and record `NO-PROOF: user supplied none` | HIGH |
+| M4 | "Robust/Scalable/Powerful/Cutting-edge/World-class" | Hollow superlatives; 90%+ of AI copy | Quantify ("10K concurrent connections") | HIGH |
 | M5 | "for modern teams" | 97% AI match (shitfa.st); could be any product | Name who & what specifically | HIGH |
 | M6 | "X plays a crucial role in shaping Y" / "rather than" / "ensuring that" | Strongest corpus-proven AI trigrams (WriteHuman) | Direct causation; active verbs; cut hedges | HIGH |
 | M7 | "In today's ever-evolving landscape…" openers | Template scaffolding | Start with the specific thing; no throat-clearing | HIGH |
@@ -158,7 +176,7 @@ WHY, it's slop.
 | M10 | Headline + subhead saying the same thing | Redundant pair | Headline=WHAT, subhead=HOW/FOR-WHOM | HIGH |
 | M11 | Generic testimonials ("Sarah M.", "transformed our workflow!") | Invented archetypes, no specifics | Real name+company+photo+specific outcome, or none | HIGH |
 | M12 | Generic feature names ("Advanced Analytics", "Powerful Integrations") | Adjective padding, no differentiator | Name the thing ("Funnel drop-off heatmap") | HIGH |
-| M13 | Zero concrete numbers anywhere | AI can't invent real metrics so avoids them | ≥1 real number/limit/benchmark per feature section | HIGH |
+| M13 | Zero concrete numbers anywhere | AI can't invent real metrics so avoids them | Use user-supplied verified numbers only; otherwise omit and record `NO-PROOF: user supplied none` | HIGH |
 | M14 | Emoji bullets (🚀✨💡⚡) | Decorative; vibe-coded | Plain bullets or SVG icons | HIGH |
 | M15 | Leftover Lorem ipsum / `[placeholder]` / TODO | Generated skeleton never filled | grep "lorem/placeholder/[/TODO" pre-delivery | HIGH |
 | M16 | Em-dash overuse (2+/paragraph) | 18.5% AI text vs 7.1% human (WriteHuman) | Max 1 per 3 paragraphs; commas/periods/parens | MEDIUM |
@@ -176,21 +194,21 @@ WHY, it's slop.
 
 | # | Tell | Why-slop | Fix | Severity |
 |---|------|----------|-----|----------|
-| MO1 | Universal fade-in-up on scroll (AOS on everything) | Most common scroll pattern; uniformity kills hierarchy; delays content | Animate section containers not elements; ≤2–3/viewport; fire once; 200–300ms, 8–12px | HIGH |
-| MO2 | `hover:scale-105` on every card | First Tailwind hover example; tutorial-grade; CLS | `hover:shadow-md` or `hover:border-primary/50`, 150ms; no scaling in grids/lists | HIGH |
+| MO1 | Universal fade-in-up on scroll (AOS on everything) | Most common scroll pattern; uniformity kills hierarchy; delays content | Animate section containers not elements; ≤2–3/viewport; fire once; `../SKILL.md` motion table, 8–12px | HIGH |
+| MO2 | `hover:scale-105` on every card | First Tailwind hover example; tutorial-grade; CLS | `hover:shadow-md` or `hover:border-primary/50`, `../SKILL.md` motion table; no scaling in grids/lists | HIGH |
 | MO3 | Gratuitous Framer-Motion wrappers (default spring on all) | Same `y:20, opacity:0` copy-pasted; library defaults everywhere | 3–4 motion primitives; custom cubic-bezier; `useReducedMotion`; transform/opacity only | HIGH |
-| MO4 | Infinite floating/bobbing blobs | Cheap "dynamic" feel; drains battery; vestibular trigger | Remove; max 1 ambient/page; must pause on hover + reduced-motion | HIGH |
-| MO5 | Marquee logo scrollers | Template staple; unreadable moving targets; WCAG 2.2.2 | Static grid; if used: pause on hover/focus, control, >30s, reduced-motion fallback | MEDIUM-HIGH |
-| MO6 | Animated gradient backgrounds (`background-size:400%`) | Signature of vibe-coded sites; NOT GPU-composited, constant repaint | Static gradient; if animated use `@property`, hero only, 20s+, reduced-motion | HIGH |
+| MO4 | Infinite floating/bobbing blobs | Cheap "dynamic" feel; drains battery; vestibular trigger | Remove; max 1 ambient/page; pause on hover/focus and render static under reduced motion | HIGH |
+| MO5 | Marquee logo scrollers | Template staple; unreadable moving targets; WCAG 2.2.2 | Static grid; if used: pause on hover/focus, provide controls, follow the motion table in `../SKILL.md` | HIGH |
+| MO6 | Animated gradient backgrounds | Signature of vibe-coded sites; NOT GPU-composited, constant repaint | Static gradient; if animated, hero only and follow the motion table in `../SKILL.md` | HIGH |
 | MO7 | Shimmer/shine on non-loading content | Confuses skeleton-loader w/ decoration | Shimmer = loading state ONLY | MEDIUM |
 | MO8 | Parallax overuse / scroll-jacking | NNG/WCAG 2.3.3: dizziness, nausea, migraines | Max 1 subtle hero parallax (0.1–0.2); never text; reduced-motion disables | HIGH |
-| MO9 | Spring bounce on everything | Framer default `type:spring`; toylike for all UI | Tween + custom easing for standard UI; spring only for drag snap-back | MEDIUM-HIGH |
-| MO10 | **No `prefers-reduced-motion` support** | Almost never in AI code; physical harm to ~5% of users | EVERY animation gated; additive (`no-preference`) or subtractive reset | **P0 (a11y)** |
-| MO11 | 500ms+ transitions | "Safe" round number; feels sluggish (NNG) | Hovers 100–150ms, entrances 200–300ms, never >400ms | HIGH |
-| MO12 | Typewriter text effects | 2015 novelty / "my first portfolio"; delays info | Remove; if kept ≤1/page, 30–50ms/char, static fallback | MEDIUM |
-| MO13 | Uniform stagger 100ms on all lists | One pattern learned; page feels still-loading | 30–50ms stagger, ≤300ms total; long lists animate as group | MEDIUM |
+| MO9 | Spring bounce on everything | Framer default `type:spring`; toylike for all UI | Tween + custom easing for standard UI; spring only for drag snap-back | HIGH |
+| MO10 | **No `prefers-reduced-motion` support** | Almost never in AI code; physical harm to ~5% of users | EVERY animation gated; additive (`no-preference`) or subtractive reset | P0 |
+| MO11 | transitions outside the motion table | "Safe" round number; feels sluggish (NNG) | Follow the motion table in `../SKILL.md` | HIGH |
+| MO12 | Typewriter text effects | 2015 novelty / "my first portfolio"; delays info | Remove; if kept ≤1/page, follow the motion table in `../SKILL.md`, static fallback | MEDIUM |
+| MO13 | Uniform stagger 100ms on all lists | One pattern learned; page feels still-loading | Follow the motion table in `../SKILL.md`; long lists animate as group | MEDIUM |
 | MO14 | Identical enter/exit timing (`ease-in-out` both) | No physics distinction | Exit 25–35% faster; `ease-out` in, `ease-in` out | MEDIUM |
-| MO15 | `transition-all` globally | Safety blanket; transitions layout props, thrash | Explicit `transition-colors/shadow/opacity`; only interactive elements | MEDIUM-HIGH |
+| MO15 | `transition-all` globally | Safety blanket; transitions layout props, thrash | Explicit `transition-colors/shadow/opacity`; only interactive elements | HIGH |
 
 > **Golden rules:** animate ≤30% of elements · transform+opacity only (never width/height/top/left/filter) · ease-out in / ease-in out · reduced-motion mandatory · every animation must answer "what user task does this support?"
 
@@ -228,7 +246,7 @@ WHY, it's slop.
 | # | Tell | Why-slop | Fix | Severity |
 |---|------|----------|-----|----------|
 | FO1 | 4-column mega-footer of dead `#` links + unused social icons | "Real companies have big footers" cargo-cult; fiction for MVP | Only real links; logo + 3–4 links + copyright until 16+ real pages | HIGH |
-| FO2 | Cookie-banner cliché w/ dark-pattern asymmetry | Copies common banner incl. dark patterns; usually non-functional | No banner if no tracking; equal-weight Accept/Reject; must be functional | MEDIUM (HIGH if asymmetric) |
+| FO2 | Cookie-banner cliché w/ dark-pattern asymmetry | Copies common banner incl. dark patterns; usually non-functional | No banner if no tracking; equal-weight Accept/Reject; must be functional | HIGH |
 
 ### Cross-cutting
 | # | Tell | Why-slop | Fix | Severity |
@@ -281,21 +299,21 @@ WHY, it's slop.
 
 ### Card hover
 ```css
-/* SLOP */ .card { @apply rounded-2xl shadow-lg border border-gray-200 hover:scale-105 transition-transform duration-300; }
-/* CORRECT */ .card { @apply rounded-lg border border-border hover:shadow-md hover:border-primary/30 transition-colors duration-150 ease-out; }
+/* SLOP */ .card { @apply rounded-2xl shadow-lg border border-gray-200 hover:scale-105 transition-transform duration-200; }
+/* CORRECT */ .card { @apply rounded-lg border border-border hover:shadow-md hover:border-primary/30 transition-colors duration-200 ease-out; }
 ```
 
 ### Motion (reduced-motion)
 ```css
 /* SLOP — no guard, layout props, slow */
-* { @apply transition-all duration-500; }
+* { @apply transition-all duration-200; }
 
 /* CORRECT — additive + guarded */
 @media (prefers-reduced-motion: no-preference) {
-  .reveal { opacity: 0; transform: translateY(8px); transition: opacity 250ms ease-out, transform 250ms ease-out; }
+  .reveal { opacity: 0; transform: translateY(8px); transition: opacity 200ms ease-out, transform 200ms ease-out; }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
 ```
 
@@ -349,13 +367,6 @@ single signals he found: colored left-borders, gradient text, indigo accent, eye
 
 ---
 
-## Creative Freedom
+## Creative Freedom Within the Bans
 
-These patterns and rules are **bare minimum guidelines**. You are encouraged to:
-
-- **Improvise beyond what's documented** — use your own creativity and judgment
-- **Experiment with novel solutions** — don't feel constrained to only what's listed here
-- **Adapt to context** — every project has unique requirements that may warrant different approaches
-- **Invent new patterns** — if you discover a better solution, use it
-
-Treat this reference as a **foundation, not a ceiling**. The goal is to avoid AI slop while still producing innovative, intentional design — not to limit you to a fixed set of "approved" solutions.
+Inventing new patterns is allowed. Nothing here overrides a P0/HIGH ban. If a new pattern conflicts with a ban, the ban wins.

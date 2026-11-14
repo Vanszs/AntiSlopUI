@@ -1,5 +1,18 @@
 # Design Systems Index + Tokens + Marketing Sections
 
+## Contents
+
+- [3-tier token architecture (recommended)](#3-tier-token-architecture-recommended)
+- [Hero (4 variants — break the centered-dual-CTA mold)](#hero-4-variants--break-the-centered-dual-cta-mold)
+- [Features (5 variants)](#features-5-variants)
+- [Social proof (4)](#social-proof-4)
+- [Testimonials (3)](#testimonials-3)
+- [Pricing (3)](#pricing-3)
+- [FAQ (2)](#faq-2)
+- [CTA (2)](#cta-2)
+- [Footer (2)](#footer-2)
+- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
+
 Companion to `../SKILL.md`. Which library to reach for, how to structure tokens, and varied marketing-section anatomies. Sources: official docs of each system, W3C DTCG, Evil Martians (100 dev-tool landing pages study), Tailwind UI.
 
 > Quality bar: choose systems by product fit, accessibility, theming, and license; use tokens consistently and vary section anatomy.
@@ -121,13 +134,13 @@ Minimal (MVP, <16 pages: logo + 3–5 real links + copyright) · structured (16+
         Identify at-risk students 6 weeks earlier
       </h1>
       <p class="mt-5 max-w-prose text-lg leading-relaxed text-gray-600">
-        SchoolTrack scores attendance, grades, and economic data so homeroom teacher can intervene before a student drops out.
+        Product scores attendance, grades, and economic data so homeroom teacher can intervene before a student drops out.
       </p>
       <a href="/demo" class="mt-8 inline-block rounded-md bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 transition-colors">
         See demo with sample data
       </a>
     </div>
-    <img src="/dashboard.png" alt="SchoolTrack risk-score dashboard" class="rounded-lg border border-gray-200 shadow-sm lg:justify-self-end" />
+    <img src="/dashboard.png" alt="Product risk-score dashboard" class="rounded-lg border border-gray-200 shadow-sm lg:justify-self-end" />
   </div>
 </section>
 ```
@@ -136,13 +149,6 @@ Sources: official design-system docs; W3C DTCG (tr.designtokens.org); Evil Marti
 
 ---
 
-## Creative Freedom
+## Creative Freedom Within the Bans
 
-These patterns and rules are **bare minimum guidelines**. You are encouraged to:
-
-- **Improvise beyond what's documented** — use your own creativity and judgment
-- **Experiment with novel solutions** — don't feel constrained to only what's listed here
-- **Adapt to context** — every project has unique requirements that may warrant different approaches
-- **Invent new patterns** — if you discover a better solution, use it
-
-Treat this reference as a **foundation, not a ceiling**. The goal is to avoid AI slop while still producing innovative, intentional design — not to limit you to a fixed set of "approved" solutions.
+Invent new patterns when useful. Nothing here overrides a P0/HIGH ban; on conflict, the ban wins.

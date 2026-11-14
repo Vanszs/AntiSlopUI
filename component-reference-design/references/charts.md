@@ -1,14 +1,32 @@
 # Charts — Beautiful, Modern, Clean Statistical Visualization
 
+## Contents
+
+- [0. THE 15-POINT ANTI-SLOP CHART SCAN (run before shipping any chart)](#0-the-15-point-anti-slop-chart-scan-run-before-shipping-any-chart)
+- [1. COLOR SYSTEM (the #1 thing that makes charts beautiful or slop)](#1-color-system-the-1-thing-that-makes-charts-beautiful-or-slop)
+- [2. THE "PREMIUM MINIMAL" CHROME (shared presets — apply to every chart)](#2-the-premium-minimal-chrome-shared-presets--apply-to-every-chart)
+- [3. BAR & COLUMN](#3-bar--column)
+- [4. LINE & AREA](#4-line--area)
+- [5. DONUT / PIE / RADIAL](#5-donut--pie--radial)
+- [6. KPI / STAT CARDS + SPARKLINES (the dashboard's first impression)](#6-kpi--stat-cards--sparklines-the-dashboards-first-impression)
+- [7. SPECIALTY (use when the data story needs it; always pair with a data table)](#7-specialty-use-when-the-data-story-needs-it-always-pair-with-a-data-table)
+- [8. MOTION (tasteful — guides the eye, never entertains)](#8-motion-tasteful--guides-the-eye-never-entertains)
+- [9. DARK MODE & RESPONSIVE](#9-dark-mode--responsive)
+- [10. ACCESSIBILITY (mandatory on every chart)](#10-accessibility-mandatory-on-every-chart)
+- [11. EMPTY / LOADING / ERROR STATES (never a blank chart box)](#11-empty--loading--error-states-never-a-blank-chart-box)
+- [12. DECISION MATRIX — which chart for which question](#12-decision-matrix--which-chart-for-which-question)
+- [SOURCES (selected)](#sources-selected)
+- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
+
 Companion to `../SKILL.md`. The reference for building **beautiful** charts (Recharts-first)
 that read as Linear/Vercel/Stripe/Tremor quality — not "basic HTML chart" and not AI-slop.
 Synthesized from web research (2025–2026): Recharts 3.x docs, Tremor, shadcn/ui charts, Nivo,
 Apache ECharts, Observable, IBM Carbon Data-Viz, ColorBrewer, Okabe-Ito, Vercel/Linear/Stripe
 dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
 
-> Quality bar: one intentional brand hue, accessible contrast and labels, real data, reduced-motion support, and chart chrome that preserves legibility.
+> Quality bar: derive one hue from the product; never use purple/indigo or impose a fixed client palette. Keep labels accessible, data real, motion reduced-aware, chrome legible.
 
-> Quality bar: one brand hue (teal, NOT purple) · subtle dashed horizontal grid · gradient
+> Quality bar: one product-derived hue (never purple/indigo) · subtle dashed horizontal grid · gradient
 > area fills · hover-only dots · custom tooltip card · `tabular-nums` · `prefers-reduced-motion`
 > gated · `role="img"`+`aria-label` · real data only. If a chart could be swapped into any
 > generic dashboard and nobody notices, it's slop.
@@ -17,7 +35,7 @@ dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
 
 ## 0. THE 15-POINT ANTI-SLOP CHART SCAN (run before shipping any chart)
 
-- [ ] Primary color is brand teal `#005D4C` — **NOT** purple/indigo (`#6366f1`/`#8b5cf6`)
+- [ ] Derive one hue from the product; never purple/indigo and never impose a fixed client palette
 - [ ] ≤4 colors in any single chart (no rainbow-per-series)
 - [ ] Gridlines: **horizontal only**, dashed `"3 3"`, `#e5e7eb`/`#eef2f6`
 - [ ] One focal series visually dominant (others muted / lower opacity)
@@ -31,16 +49,16 @@ dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
 - [ ] No pie/donut with >5 slices (use bar instead)
 - [ ] Axis lines + tick lines removed (`axisLine={false} tickLine={false}`)
 - [ ] Hidden numeric axis ALWAYS has explicit `domain` (see §3 PITFALL)
-- [ ] Data is real (or clearly marked "data contoh")
+- [ ] Data is real (or clearly marked "clearly labeled sample data")
 
 ---
 
 ## 1. COLOR SYSTEM (the #1 thing that makes charts beautiful or slop)
 
-### 1a. Brand + semantic tokens (SchoolTrack)
+### 1a. Product hue + semantic tokens
 ```ts
 const CHART = {
-  brand:   "#005D4C",  // teal — primary/focal series
+  brand:   "var(--product-hue-700)",  // derive from product identity
   brandDk: "#004D40",
   merah:   "#ef4444",  // risk high (semantic only)
   kuning:  "#f59e0b",  // risk medium
@@ -52,29 +70,24 @@ const CHART = {
 ```
 
 ### 1b. Single-hue SEQUENTIAL ramp (heatmaps, intensity, multi-series same metric)
-Fixed hue ~170°, vary lightness only. Use 4–5 steps, never rainbow.
-```
-#E0F5F0 → #B3E8DD → #7AD4C4 → #45BBA8 → #1A9E8B → #008272 → #005D4C → #004438 → #002E25
-```
-(IBM Carbon Teal monochromatic equivalent. For multi-series "same metric across Kelas A/B/C"
-use `#005D4C`, `#0d9488`, `#5eead4` — one hue, descending lightness.)
+Derive hue from the product; vary lightness only. Use 4–5 steps, never rainbow. For multi-series, use one hue at descending lightness.
 
 ### 1c. CATEGORICAL palette (max ~5–7, colorblind-safe, brand-anchored)
-Modified Okabe-Ito, teal first, **no purple as primary**:
+Modified Okabe-Ito, product-derived hue first, **no purple/indigo**:
 ```ts
-const CATEGORICAL = ["#005D4C","#0072B2","#D55E00","#009E73","#CC79A7","#E69F00","#6B7280"];
+const CATEGORICAL = ["var(--product-hue-700)","#0072B2","#D55E00","#009E73","#CC79A7","#E69F00","#6B7280"];
 ```
 
 ### 1d. Emphasis hierarchy for multi-series (Linear/Stripe pattern)
 Primary series full strength; context series muted/dashed:
 ```tsx
-<Line dataKey="tahunIni"  stroke="#005D4C" strokeWidth={2.5} />
-<Line dataKey="tahunLalu" stroke="#9CA3AF" strokeWidth={1.5} strokeDasharray="4 4" strokeOpacity={0.7} />
+<Line dataKey="current"  stroke="var(--product-hue-700)" strokeWidth={2.5} />
+<Line dataKey="previous" stroke="#9CA3AF" strokeWidth={1.5} strokeDasharray="4 4" strokeOpacity={0.7} />
 ```
 
 ### 1e. OKLCH for perceptual uniformity (advanced)
 `oklch(L C H)` — L maps to *perceived* brightness, so equal-L colors look equally bright.
-Teal brand ≈ `oklch(0.38 0.08 170)`. Generate sequential by varying only L. Always ship a hex
+Product hue is derived from the brand identity. Generate sequential colors by varying only L. Always ship a hex
 fallback. Sources: evilmartians.com/opensource/oklch-color-picker, ColorBrewer, Okabe-Ito.
 
 ### Color BANS (instant slop)
@@ -93,7 +106,7 @@ Extract once, reuse everywhere. This is what separates Tremor/Linear from a defa
 export const axisProps = { tick:{fill:"#94a3b8",fontSize:11}, axisLine:false as const, tickLine:false as const };
 export const yAxisProps = { ...axisProps, width:30, allowDecimals:false as const };
 export const gridProps  = { stroke:"#eef2f6", strokeDasharray:"4 4", vertical:false as const };
-export const ANIM_MS = 600;
+export const ANIM_MS = 200;
 ```
 
 ### 2a. Custom tooltip card (the single biggest "premium" upgrade)
@@ -109,7 +122,7 @@ function ChartTooltip({ active, payload, label, unit="" }) {
             <span className="h-2 w-2 shrink-0 rounded-full" style={{backgroundColor:p.color}} aria-hidden="true" />
             <span className="text-slate-500">{p.name}</span>
             <span className="ml-auto pl-3 font-semibold tabular-nums text-slate-900">
-              {Number(p.value).toLocaleString("id-ID")}{unit}
+              {Number(p.value).toLocaleString("en-US")}{unit}
             </span>
           </li>
         ))}
@@ -118,14 +131,14 @@ function ChartTooltip({ active, payload, label, unit="" }) {
   );
 }
 ```
-Usage: `<Tooltip content={<ChartTooltip unit=" siswa" />} cursor={{stroke:"#94a3b8",strokeWidth:1,strokeDasharray:"4 4"}} />`
+Usage: `<Tooltip content={<ChartTooltip unit=" users" />} cursor={{stroke:"#94a3b8",strokeWidth:1,strokeDasharray:"4 4"}} />`
 Dark variant: bg `#1f2937`, border `#374151`, text `#f3f4f6`.
 
 ### 2b. Cursor styles
 | Chart | cursor |
 |---|---|
 | Line/Area | `{ stroke:"#94a3b8", strokeWidth:1, strokeDasharray:"4 4" }` (dashed crosshair) |
-| Bar | `{ fill:"#005D4C", fillOpacity:0.05 }` (subtle highlight band) |
+| Bar | `{ fill:"var(--product-hue-700)", fillOpacity:0.05 }` (subtle highlight band) |
 | Scatter | `false` (dot-only) |
 
 ### 2c. Legend — circle icons, not squares/lines
@@ -166,14 +179,14 @@ Beauty = rounded caps + breathing room + value labels + ONE focal color.
 |---|---|
 | Rounded caps | vertical `radius={[4,4,0,0]}` · horizontal `[0,6,6,0]` · pill `radius={6}` |
 | Gap | `barCategoryGap="20–28%"`, `barGap={2–4}` |
-| Value labels | `<LabelList position="top"|"right">` + `tabular-nums`; hide tiny values via formatter |
+| Value labels | `<LabelList position="top"\|"right">` + `tabular-nums`; hide tiny values via formatter |
 | Stacked | shared `stackId`; only TOP segment rounded; `stackOffset="expand"` for 100% |
 | Diverging | per-`Cell` color (emerald ≥0 / red <0) + `ReferenceLine y={0}` + `stackOffset="sign"` |
 | Track/progress | `background={{ fill:"#f1f5f9", radius:4 }}` |
 | Emphasis | dim others to `fillOpacity 0.3` on hover, OR `<Cell>` highlight one |
 | Gradient (single-series hero) | vertical `linearGradient` brand 100%→60% |
 
-### 3·PITFALL (this is the bug that made SchoolTrack bars look "empty")
+### 3·PITFALL (this is the bug that made hidden-axis bars look "empty")
 > Setting `<XAxis type="number" hide />` (or `<YAxis hide />`) makes Recharts **drop the
 > domain → bars render 0-width / invisible** (labels still show). **ALWAYS** add an explicit
 > domain when hiding a numeric axis: `domain={[0, "dataMax"]}`. Affects ranking bars,
@@ -189,15 +202,15 @@ Beauty = smooth monotone curve + gradient fill + hidden dots (hover ring) + dash
 <AreaChart data={data} margin={{top:8,right:12,bottom:0,left:-10}}>
   <defs>
     <linearGradient id={`a-${gid}`} x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%"  stopColor="#005D4C" stopOpacity={0.28} />
-      <stop offset="100%" stopColor="#005D4C" stopOpacity={0.02} />
+      <stop offset="0%"  stopColor="var(--product-hue-700)" stopOpacity={0.28} />
+      <stop offset="100%" stopColor="var(--product-hue-700)" stopOpacity={0.02} />
     </linearGradient>
   </defs>
   <CartesianGrid {...gridProps} />
   <XAxis dataKey="label" {...axisProps} dy={4} minTickGap={16} />
   <YAxis {...yAxisProps} />
   <Tooltip content={<ChartTooltip />} cursor={{stroke:"#94a3b8",strokeWidth:1,strokeDasharray:"4 4"}} />
-  <Area type="monotone" dataKey="value" stroke="#005D4C" strokeWidth={2.5}
+  <Area type="monotone" dataKey="value" stroke="var(--product-hue-700)" strokeWidth={2.5}
     fill={`url(#a-${gid})`} dot={false}
     activeDot={{ r:5, strokeWidth:2, stroke:"#fff" }}
     isAnimationActive={!reduced} animationDuration={ANIM_MS} />
@@ -213,7 +226,7 @@ Beauty = smooth monotone curve + gradient fill + hidden dots (hover ring) + dash
 | Multi-line | smooth, hover dots, **no purple in palette**, circle legend |
 | Stacked area | per-series gradient fills (`sa-${gid}-${key}`), `stackId="stack"` |
 | Gaps | `connectNulls` true for attendance/trend; false when data genuinely missing |
-| Thresholds | `<ReferenceLine y={85} stroke="#f59e0b" strokeDasharray="6 4" label="Batas 85%" />` |
+| Thresholds | `<ReferenceLine y={85} stroke="#f59e0b" strokeDasharray="6 4" label="Target 85%" />` |
 | Danger zone | `<ReferenceArea y1={0} y2={40} fill="#ef4444" fillOpacity={0.06} stroke="none" />` |
 | Dual-axis | **AVOID** — use two stacked charts sharing X, or indexed values, or scatter |
 
@@ -292,16 +305,16 @@ Progress vs target: `role="progressbar"` + colored fill (teal on-track, amber be
 
 ## 7. SPECIALTY (use when the data story needs it; always pair with a data table)
 
-| Chart | When (SchoolTrack) | Library | Beauty notes | Data? |
+| Chart | When | Library | Beauty notes | Data? |
 |---|---|---|---|---|
-| **Calendar heatmap** | 365-day attendance per siswa | `react-activity-calendar` | block radius 2, gap 3px, teal 5-step theme | ✅ Absensi |
+| **Calendar heatmap** | year-long daily activity | `react-activity-calendar` | block radius 2, gap 3px, teal 5-step theme | ✅ |
 | **Heatmap matrix** | day×week absence, subject×student | `@nivo/heatmap` or custom SVG | rect cells radius 2, single-hue sequential, empty=`#f8fafc` | ✅ |
-| **Treemap** | risk distribution per kelas/sekolah | Recharts `Treemap` (`content` prop) | `rx={4}`, white 2px stroke, labels only if cell big | ✅ |
+| **Treemap** | risk distribution across categories | Recharts `Treemap` (`content` prop) | `rx={4}`, white 2px stroke, labels only if cell big | ✅ |
 | **Funnel** | dropout/intervention pipeline | Recharts `FunnelChart` | semantic red→amber→teal→emerald, conversion-% labels | ✅ |
-| **Radar** | per-student ABC+D profile vs class avg | Recharts `RadarChart` | polygon grid `"3 3"`, fill 0.15, ≤2 overlays, dashed reference | ✅ |
+| **Radar** | entity profile vs group average | Recharts `RadarChart` | polygon grid `"3 3"`, fill 0.15, ≤2 overlays, dashed reference | ✅ |
 | **Scatter/bubble** | risk score vs attendance, outliers | Recharts `ScatterChart` | `ReferenceArea` danger quadrant, dashed threshold lines, ZAxis bubble | ✅ |
-| **Bullet** | KPI vs target (kehadiran/intervensi) | `@nivo/bullet` | pastel ranges + teal measure + dark marker; beats gauges for multi-KPI | ✅ |
-| **Waffle** | "24 of 200 at-risk" part-of-whole | `@nivo/waffle` | 10×10, cell radius 2, empty `#f1f5f9`, 3 risk colors | ✅ |
+| **Bullet** | KPI vs target (metric/target) | `@nivo/bullet` | pastel ranges + teal measure + dark marker; beats gauges for multi-KPI | ✅ |
+| **Waffle** | "24 of 200 flagged" part-of-whole | `@nivo/waffle` | 10×10, cell radius 2, empty `#f1f5f9`, 3 risk colors | ✅ |
 | **Geo / choropleth** | risk by kecamatan/coordinates | — | — | ⚠️ **NEEDS-DATA** (no lat/lng) |
 
 ---
@@ -310,10 +323,10 @@ Progress vs target: `role="progressbar"` + colored fill (teal on-track, amber be
 
 - **Recharts 3.x default `isAnimationActive="auto"` respects `prefers-reduced-motion`** — leave it,
   or pass `!reduced` from a `usePrefersReducedMotion()` hook for explicit control. Never `={true}`.
-- Durations: bar grow 400–600ms · line draw / pie sweep 600–800ms · hover 150ms · KPI count-up 1–1.5s.
+- Motion timings follow `anti-ai-slop-ui-ux/SKILL.md`; normalize snippets to 200ms (hover 150ms).
 - Easing: `ease-out` (entrances) / `cubic-bezier(0,0,0.2,1)` (premium deceleration). Exits faster.
-- Stagger series via `animationBegin` (80–150ms offset, ≤5 items, total ≤1200ms).
-- Hover: highlight active series, dim siblings to `opacity 0.3` via `transition: ... 150ms ease-out`.
+- Stagger series via `animationBegin` (≤5 items; overall timing follows canonical motion limits).
+- Hover: highlight active series, dim siblings to `opacity 0.3` using canonical hover timing.
 - Scroll-reveal: `IntersectionObserver` `triggerOnce` → set `isAnimationActive` on enter.
 - **NEVER:** >2s animations · spring/bounce on data · infinite pulse · re-animate on every update ·
   `hover:scale-105` (CLS) · animate gridlines/axes · `transition-all` on SVG · typewriter/parallax.
@@ -390,13 +403,6 @@ evilmartians OKLCH picker · WCAG 1.1.1/1.4.1/1.4.11/2.3.3 · W3C SVG ARIA roles
 
 ---
 
-## Creative Freedom
+## Creative Freedom Within the Bans
 
-These patterns and rules are **bare minimum guidelines**. You are encouraged to:
-
-- **Improvise beyond what's documented** — use your own creativity and judgment
-- **Experiment with novel solutions** — don't feel constrained to only what's listed here
-- **Adapt to context** — every project has unique requirements that may warrant different approaches
-- **Invent new patterns** — if you discover a better solution, use it
-
-Treat this reference as a **foundation, not a ceiling**. The goal is to avoid AI slop while still producing innovative, intentional design — not to limit you to a fixed set of "approved" solutions.
+Invent new patterns when useful. Nothing here overrides a P0/HIGH ban; on conflict, the ban wins.

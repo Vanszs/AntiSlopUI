@@ -3,6 +3,14 @@
 import argparse
 import csv
 from pathlib import Path
+
+# Directories that hold generated artifacts, never documentation.
+_EXCLUDED_PARTS = {".git", "__pycache__", "design-system", "design", "node_modules"}
+
+
+def _excluded(path):
+    return any(part in _EXCLUDED_PARTS for part in path.parts)
+
 import re
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -14,8 +22,8 @@ def compute(root=ROOT):
     rows = lambda path: sum(1 for _ in csv.reader((root / path).open(encoding="utf-8"))) - 1
     values = [
         ("Skills", sum(1 for p in root.iterdir() if p.is_dir() and (p / "SKILL.md").is_file())),
-        ("Markdown files", sum(1 for p in root.rglob("*.md") if ".git" not in p.parts)),
-        ("Reference files", sum(1 for p in root.rglob("*/references/*.md") if ".git" not in p.parts)),
+        ("Markdown files", sum(1 for p in root.rglob("*.md") if not _excluded(p))),
+        ("Reference files", sum(1 for p in root.rglob("*/references/*.md") if not _excluded(p))),
         ("Reasoning rules", rows("ui-ux-pro-max/data/ui-reasoning.csv")),
         ("UI styles", rows("ui-ux-pro-max/data/styles.csv")),
         ("Color palettes", rows("ui-ux-pro-max/data/colors.csv")),

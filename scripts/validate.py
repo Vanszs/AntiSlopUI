@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Repository structural checks; intentionally uses only stdlib + optional PyYAML."""
 import csv
+import shlex
 import json
+import os
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
@@ -71,6 +74,26 @@ def check(name, failures):
     return True
 
 
+def run_check(results, name, fn):
+    try:
+        failures = fn()
+    except Exception as exc:
+        failures = ["{}: {}".format(type(exc).__name__, exc)]
+    results.append(check(name, failures))
+
+
+def persisted_probe():
+    out = Path(tempfile.mkdtemp(prefix="persist-", dir="/tmp/opencode" if Path("/tmp/opencode").exists() else None))
+    cmd = [sys.executable, str(ROOT / "ui-ux-pro-max/scripts/search.py"), "saas dashboard", "--design-system", "--persist", "-p", "ValidateProbe", "-o", str(out)]
+    proc = subprocess.run(cmd, cwd="/tmp/opencode/validate-cwd" if Path("/tmp/opencode/validate-cwd").exists() else str(ROOT), capture_output=True, text=True, timeout=90)
+    if proc.returncode:
+        raise RuntimeError("persist probe exit {}: {}".format(proc.returncode, (proc.stdout + proc.stderr)[-1500:]))
+    master = out / "design-system/validateprobe/MASTER.md"
+    if not master.is_file():
+        raise RuntimeError("persist probe did not create promised {}".format(master))
+    return out, master
+
+
 def main():
     results = []
     skills = sorted(p for p in ROOT.glob("*/SKILL.md") if p.is_file())
@@ -94,8 +117,12 @@ def main():
     failures = []
     for path, data in parsed.items():
         refs = ((data.get("metadata") or {}).get("references") or [])
+        # The Agent Skills spec requires metadata to be string->string, so reference
+        # lists are stored as a comma-separated string. Accept both forms.
         if isinstance(refs, str):
-            refs = [refs]
+            refs = [part.strip() for part in refs.split(",") if part.strip()]
+        elif isinstance(refs, list):
+            pass
         for ref in refs:
             if isinstance(ref, dict):
                 ref = ref.get("path", "")
@@ -203,7 +230,7 @@ def main():
     failures = []
     for path in (p for p in ROOT.rglob("*") if p.is_file() and ".git" not in p.parts and p.suffix not in (".pyc",)):
         rel = path.relative_to(ROOT).as_posix()
-        if rel.startswith(exempt_prefixes) or rel in exempt_files:
+        if rel.startswith(exempt_prefixes) or rel in exempt_files or rel == "scripts/audit.py":
             continue
         try:
             lines = path.read_text(encoding="utf-8").splitlines()
@@ -237,6 +264,152 @@ def main():
             if label not in text:
                 failures.append("missing required section/term {!r}".format(label))
     results.append(check("10 RUBRIC INTEGRITY", failures))
+
+    def csv_structure():
+        problems = []
+        csv_paths = sorted(set((ROOT / "ui-ux-pro-max/data").glob("*.csv")) | set((ROOT / "data/stacks").glob("*.csv")))
+        for path in csv_paths:
+            with path.open(encoding="utf-8-sig", newline="") as stream:
+                rows = list(csv.reader(stream, strict=True))
+            if not rows:
+                problems.append("{}: empty CSV".format(path.relative_to(ROOT)))
+                continue
+            width = len(rows[0])
+            ids = [row[0] for row in rows[1:] if row]
+            if any(len(row) != width for row in rows[1:]):
+                problems.append("{}: row field count differs from header ({})".format(path.relative_to(ROOT), width))
+            if len(ids) != len(set(ids)):
+                problems.append("{}: duplicate first-column IDs".format(path.relative_to(ROOT)))
+            nums = sorted(int(value) for value in ids if value.isdigit())
+            if nums and nums != list(range(nums[0], nums[-1] + 1)):
+                problems.append("{}: numeric ID gaps".format(path.relative_to(ROOT)))
+        return problems
+    run_check(results, "11 CSV STRUCTURE", csv_structure)
+
+    def documented_cli():
+        problems = []
+        script = ROOT / "ui-ux-pro-max/scripts/search.py"
+        source = script.read_text(encoding="utf-8")
+        domains = re.search(r"--domain[^\n]*choices=\s*list\(CSV_CONFIG\.keys\(\)\)", source)
+        stacks = re.search(r"--stack[^\n]*choices=\s*AVAILABLE_STACKS", source)
+        sys.path.insert(0, str(script.parent))
+        try:
+            from core import CSV_CONFIG, AVAILABLE_STACKS
+            domain_choices, stack_choices = set(CSV_CONFIG), set(AVAILABLE_STACKS)
+        finally:
+            sys.path.pop(0)
+        for doc in (ROOT / "ui-ux-pro-max/SKILL.md", ROOT / "README.md"):
+            if not doc.exists():
+                continue
+            text = doc.read_text(encoding="utf-8")
+            for line_no, line in enumerate(text.splitlines(), 1):
+                if "search.py" not in line:
+                    continue
+                for value in re.findall(r"--domain\s+([\w-]+)", line):
+                    if value not in domain_choices:
+                        problems.append("{}:{} undocumented domain {}".format(doc.relative_to(ROOT), line_no, value))
+                for value in re.findall(r"--stack\s+([\w-]+)", line):
+                    if value not in stack_choices:
+                        problems.append("{}:{} undocumented stack {}".format(doc.relative_to(ROOT), line_no, value))
+                match = re.search(r"(?:python3?\s+)?(?:[\w./-]*search\.py\s+.+)", line)
+                if match and not re.search(r"<[^>]+>", match.group(0)):
+                    command = match.group(0).strip().strip("`")
+                    command = re.sub(r"(?:[\w./-]*search\.py)", shlex.quote(str(script)), command, count=1)
+                    try:
+                        proc = subprocess.run(shlex.split(command), cwd="/tmp/opencode/validate-cwd" if Path("/tmp/opencode/validate-cwd").exists() else str(ROOT), capture_output=True, text=True, timeout=30)
+                        if proc.returncode:
+                            problems.append("{}:{} command exit {}: {}".format(doc.relative_to(ROOT), line_no, proc.returncode, (proc.stderr or proc.stdout)[:300]))
+                    except Exception as exc:
+                        problems.append("{}:{} {}".format(doc.relative_to(ROOT), line_no, exc))
+        return problems
+    run_check(results, "12 DOCUMENTED CLI TRUTH", documented_cli)
+
+    probe = {}
+    def persist_contract():
+        out, master = persisted_probe()
+        probe.update(out=out, master=master)
+        promised = [out / "design-system/validateprobe/MASTER.md", out / "design-system/validateprobe/pages"]
+        missing = [str(p) for p in promised if not p.exists()]
+        text = master.read_text(encoding="utf-8")
+        for item in re.findall(r"(?:design-system/)[\w./-]+", text):
+            rel = item.rstrip(".,)`]")
+            actual = out / rel
+            if rel == "design-system/pages/":
+                actual = out / "design-system/validateprobe/pages"
+            if rel and not actual.exists() and not rel.endswith(("[page].md", "MASTER.md")):
+                missing.append("generated artifact references absent path {}".format(rel))
+        return missing
+    run_check(results, "13 PERSIST CONTRACT", persist_contract)
+
+    def frontmatter_types():
+        failures = []
+        for path in skills:
+            data, raw = frontmatter(path)
+            metadata = data.get("metadata", {})
+            if not isinstance(metadata, dict) or any(not isinstance(k, str) or not isinstance(v, str) for k, v in metadata.items()):
+                failures.append("{}: metadata must be string-to-string map".format(path.relative_to(ROOT)))
+            if "yaml" not in sys.modules:
+                section = re.search(r"(?ms)^metadata:\s*\n(.*?)(?=^\S|\Z)", raw)
+                if section and (re.search(r"(?m)^\s*-", section.group(1)) or re.search(r"(?m)^\s*\w+:\s*\d{4}-\d\d-\d\d\s*$", section.group(1))):
+                    failures.append("{}: fallback metadata list/date is not string-map safe".format(path.relative_to(ROOT)))
+        return failures
+    run_check(results, "14 FRONTMATTER TYPES", frontmatter_types)
+
+    run_check(results, "15 TOC PRESENCE", lambda: ["{}: missing ## Contents in first 20 lines".format(p.relative_to(ROOT)) for p in ROOT.glob("*/references/*.md") if not any(line.strip() == "## Contents" for line in p.read_text(encoding="utf-8").splitlines()[:20])])
+
+    def ban_voiding():
+        findings = []
+        for path in md_files:
+            for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                if re.search(r"bare minimum guidelines|Improvise beyond what's documented", line, re.I) and "within the bans" not in line.casefold():
+                    findings.append("{}:{} ban-voiding phrase".format(path.relative_to(ROOT), n))
+        return findings
+    run_check(results, "16 NO BAN-VOIDING CLAUSE", ban_voiding)
+
+    def single_motion():
+        failures = []
+        for path in md_files:
+            if path == ROOT / "anti-ai-slop-ui-ux/SKILL.md":
+                continue
+            for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                if "OVERRIDE" not in line and re.search(r"600ms|500ms|1–1\.5s|duration-(?:[5-9])\d\d\b", line):
+                    failures.append("{}:{} noncanonical duration".format(path.relative_to(ROOT), number))
+        return failures
+    run_check(results, "17 SINGLE MOTION CANON", single_motion)
+
+    def description_disjointness():
+        descriptions = []
+        failures = []
+        for path in skills:
+            desc = str(parsed.get(path, {}).get("description", ""))
+            descriptions.append((path, desc))
+            has_negative_space = re.search(r"not for", desc, re.I) is not None
+            has_load_order = re.search(r"\bload\w*\b|\bafter\b", desc, re.I) is not None
+            if not (has_negative_space and has_load_order):
+                failures.append("{}: description needs Not for and load-order clause".format(path.relative_to(ROOT)))
+        for i, (left, a) in enumerate(descriptions):
+            for right, b in descriptions[i+1:]:
+                if re.search(r"\bany UI\b", a, re.I) and re.search(r"\bany UI\b", b, re.I):
+                    failures.append("{} and {} share phrase 'any UI'".format(left.relative_to(ROOT), right.relative_to(ROOT)))
+        return failures
+    run_check(results, "18 DESCRIPTION DISJOINTNESS", description_disjointness)
+
+    def readme_claim_sync():
+        text = readme.read_text(encoding="utf-8")
+        failures = ["README.md contains --write# (missing shell-comment space)"] if "--write#" in text else []
+        match = re.search(r"(\d+) structural checks", text, re.I)
+        implemented = len(results) + 2  # This check plus the generated-artifact audit below.
+        if match and int(match.group(1)) != implemented:
+            failures.append("README claims {} checks; implemented {}".format(match.group(1), implemented))
+        return failures
+    run_check(results, "19 README CLAIM SYNC", readme_claim_sync)
+
+    def generated_audit():
+        if "master" not in probe:
+            raise RuntimeError("persist probe unavailable")
+        proc = subprocess.run([sys.executable, str(ROOT / "scripts/audit.py"), str(probe["master"])], capture_output=True, text=True, timeout=30)
+        return [] if proc.returncode == 0 else ["audit exit {}: {}".format(proc.returncode, (proc.stdout + proc.stderr).strip())]
+    run_check(results, "20 GENERATED ARTIFACT AUDIT", generated_audit)
 
     if "--json" in sys.argv:
         print(json.dumps({"passed": sum(results), "failed": len(results) - sum(results), "checks": len(results)}))

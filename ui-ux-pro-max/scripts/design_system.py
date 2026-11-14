@@ -18,6 +18,88 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
+
+# --- Local compliance post-filter (see ../../POST-FILTER.md) -----------------
+# The vendor database is statistically averaged and can recommend values the
+# suite bans. Substitutions happen here, in code, so generated artifacts are
+# compliant by construction instead of by agent discipline.
+import hashlib
+import re as _re
+
+_BANNED_ACCENT = _re.compile(
+    r"^#(?:6366F1|818CF8|8B5CF6|7C3AED|A78BFA|4F46E5|C4B5FD|8B5CF6|6D28D9|5B21B6)$", _re.I)
+_BANNED_TINT = _re.compile(
+    r"^#(?:E0E7FF|EEF2FF|FAF5FF|F5F3FF|EDE9FE|F3E8FF|DDD6FE|C7D2FE)$", _re.I)
+_BANNED_TEXT = _re.compile(r"^#(?:1E1B4B|312E81|3730A3|4C1D95|2E1065)$", _re.I)
+_ACCENT_HUES = ["#0F766E", "#B45309", "#3F6212", "#334155", "#7F1D1D", "#0E7490", "#4D7C0F", "#78350F"]
+_NEUTRAL_BG = "#F8FAFC"
+_NEUTRAL_TINT = "#E2E8F0"
+_NEUTRAL_TEXT = "#0F172A"
+
+
+def _seed_index(seed, size):
+    digest = hashlib.sha256((seed or "default").encode("utf-8")).hexdigest()
+    return int(digest[:8], 16) % size
+
+
+def post_filter_colors(colors, seed=""):
+    """Replace vendor indigo/violet values with brand-safe equivalents."""
+    out = dict(colors or {})
+    idx = _seed_index(seed, len(_ACCENT_HUES))
+    rotations = [(_ACCENT_HUES[(idx + i) % len(_ACCENT_HUES)]) for i in range(3)]
+    accent_roles = ("primary", "secondary", "cta")
+    accent_i = 0
+    for role, value in list(out.items()):
+        if not isinstance(value, str):
+            continue
+        hexv = value.strip()
+        if _BANNED_TINT.match(hexv):
+            out[role] = _NEUTRAL_TINT if "border" in role else _NEUTRAL_BG
+        elif _BANNED_TEXT.match(hexv):
+            out[role] = _NEUTRAL_TEXT
+        elif _BANNED_ACCENT.match(hexv):
+            if role in accent_roles:
+                out[role] = rotations[accent_i % len(rotations)]
+                accent_i += 1
+            else:
+                out[role] = _NEUTRAL_TINT
+    return out
+
+
+def post_filter_typography(typo):
+    """Break Inter-everywhere, Playfair+Inter, and mono-as-display pairings."""
+    out = dict(typo or {})
+    heading = str(out.get("heading") or "")
+    body = str(out.get("body") or "")
+    bad_pairing = "playfair" in heading.lower() and body.strip().lower() == "inter"
+    inter_only = heading.strip().lower() == "inter" and body.strip().lower() == "inter"
+    mono_display = any(k in heading.lower() for k in ("fira code", "mono", "courier", "consolas"))
+    if inter_only or bad_pairing or mono_display:
+        new_heading = "Fraunces" if bad_pairing else "Bricolage Grotesque"
+        out["heading"] = new_heading
+        out["google_fonts_url"] = (
+            "https://fonts.google.com/share?selection.family="
+            + new_heading.replace(" ", "+") + ":wght@400;600;700|Inter:wght@400;500"
+        )
+        out["css_import"] = (
+            "@import url('https://fonts.googleapis.com/css2?"
+            "family=" + new_heading.replace(" ", "+") + ":wght@400;600;700&family=Inter:wght@400;500&display=swap');"
+        )
+        out["post_filter_note"] = "display pairing substituted (banned pairing or Inter-everywhere)"
+    return out
+
+
+def post_filter_style(style):
+    """Drop the vendored Glassmorphism recommendation, keep the rest."""
+    out = dict(style or {})
+    name = str(out.get("name") or "")
+    if "glassmorphism" in name.lower():
+        cleaned = _re.sub(r"glassmorphism\s*\+?\s*", "", name, flags=_re.I).strip(" +")
+        out["name"] = cleaned or "Flat Design"
+        out["post_filter_note"] = "Glassmorphism dropped (banned); solid surfaces retained"
+    return out
+# ---------------------------------------------------------------------------
+
 from core import search, DATA_DIR
 
 
@@ -204,7 +286,7 @@ class DesignSystemGenerator:
                 "color_strategy": best_landing.get("Color Strategy", ""),
                 "conversion": best_landing.get("Conversion Optimization", "")
             },
-            "style": {
+            "style": post_filter_style({
                 "name": best_style.get("Style Category", "Minimalism"),
                 "type": best_style.get("Type", "General"),
                 "effects": style_effects,
@@ -212,23 +294,23 @@ class DesignSystemGenerator:
                 "best_for": best_style.get("Best For", ""),
                 "performance": best_style.get("Performance", ""),
                 "accessibility": best_style.get("Accessibility", "")
-            },
-            "colors": {
+            }),
+            "colors": post_filter_colors({
                 "primary": best_color.get("Primary (Hex)", "#2563EB"),
                 "secondary": best_color.get("Secondary (Hex)", "#3B82F6"),
                 "cta": best_color.get("CTA (Hex)", "#F97316"),
                 "background": best_color.get("Background (Hex)", "#F8FAFC"),
                 "text": best_color.get("Text (Hex)", "#1E293B"),
                 "notes": best_color.get("Notes", "")
-            },
-            "typography": {
+            }, seed=project_name or query),
+            "typography": post_filter_typography({
                 "heading": best_typography.get("Heading Font", "Inter"),
                 "body": best_typography.get("Body Font", "Inter"),
                 "mood": best_typography.get("Mood/Style Keywords", reasoning.get("typography_mood", "")),
                 "best_for": best_typography.get("Best For", ""),
                 "google_fonts_url": best_typography.get("Google Fonts URL", ""),
                 "css_import": best_typography.get("CSS Import", "")
-            },
+            }),
             "key_effects": combined_effects,
             "anti_patterns": reasoning.get("anti_patterns", ""),
             "decision_rules": reasoning.get("decision_rules", {}),
@@ -349,7 +431,7 @@ def format_ascii_box(design_system: dict) -> str:
     checklist_items = [
         "[ ] No emojis as icons (use SVG: Heroicons/Lucide)",
         "[ ] cursor-pointer on all clickable elements",
-        "[ ] Hover states with smooth transitions (150-300ms)",
+        "[ ] Hover timing follows anti-ai-slop-ui-ux/SKILL.md motion table",
         "[ ] Light mode: text contrast 4.5:1 minimum",
         "[ ] Focus states visible for keyboard nav",
         "[ ] prefers-reduced-motion respected",
@@ -448,7 +530,7 @@ def format_markdown(design_system: dict) -> str:
     lines.append("### Pre-Delivery Checklist")
     lines.append("- [ ] No emojis as icons (use SVG: Heroicons/Lucide)")
     lines.append("- [ ] cursor-pointer on all clickable elements")
-    lines.append("- [ ] Hover states with smooth transitions (150-300ms)")
+    lines.append("- [ ] Hover timing follows anti-ai-slop-ui-ux/SKILL.md motion table")
     lines.append("- [ ] Light mode: text contrast 4.5:1 minimum")
     lines.append("- [ ] Focus states visible for keyboard nav")
     lines.append("- [ ] prefers-reduced-motion respected")
@@ -556,7 +638,7 @@ def format_master_md(design_system: dict) -> str:
     # Logic header
     lines.append("# Design System Master File")
     lines.append("")
-    lines.append("> **LOGIC:** When building a specific page, first check `design-system/pages/[page-name].md`.")
+    lines.append("> **LOGIC:** When building a specific page, first check `design-system/<project-slug>/pages/[page-name].md`.")
     lines.append("> If that file exists, its rules **override** this Master file.")
     lines.append("> If not, strictly follow the rules below.")
     lines.append("")
@@ -647,7 +729,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("  padding: 12px 24px;")
     lines.append("  border-radius: 8px;")
     lines.append("  font-weight: 600;")
-    lines.append("  transition: all 200ms ease;")
+    lines.append("  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease;")
     lines.append("  cursor: pointer;")
     lines.append("}")
     lines.append("")
@@ -664,7 +746,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("  padding: 12px 24px;")
     lines.append("  border-radius: 8px;")
     lines.append("  font-weight: 600;")
-    lines.append("  transition: all 200ms ease;")
+    lines.append("  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease;")
     lines.append("  cursor: pointer;")
     lines.append("}")
     lines.append("```")
@@ -679,7 +761,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("  border-radius: 12px;")
     lines.append("  padding: 24px;")
     lines.append("  box-shadow: var(--shadow-md);")
-    lines.append("  transition: all 200ms ease;")
+    lines.append("  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease;")
     lines.append("  cursor: pointer;")
     lines.append("}")
     lines.append("")
@@ -776,7 +858,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("- ❌ **Missing cursor:pointer** — All clickable elements must have cursor:pointer")
     lines.append("- ❌ **Layout-shifting hovers** — Avoid scale transforms that shift layout")
     lines.append("- ❌ **Low contrast text** — Maintain 4.5:1 minimum contrast ratio")
-    lines.append("- ❌ **Instant state changes** — Always use transitions (150-300ms)")
+    lines.append("- ❌ **Instant state changes** — Use purposeful transitions within anti-ai-slop-ui-ux/SKILL.md motion limits")
     lines.append("- ❌ **Invisible focus states** — Focus states must be visible for a11y")
     lines.append("")
     
@@ -790,7 +872,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("- [ ] No emojis used as icons (use SVG instead)")
     lines.append("- [ ] All icons from consistent icon set (Heroicons/Lucide)")
     lines.append("- [ ] `cursor-pointer` on all clickable elements")
-    lines.append("- [ ] Hover states with smooth transitions (150-300ms)")
+    lines.append("- [ ] Hover timing follows anti-ai-slop-ui-ux/SKILL.md motion table")
     lines.append("- [ ] Light mode: text contrast 4.5:1 minimum")
     lines.append("- [ ] Focus states visible for keyboard navigation")
     lines.append("- [ ] `prefers-reduced-motion` respected")
@@ -819,7 +901,7 @@ def format_page_override_md(design_system: dict, page_name: str, page_query: str
     lines.append(f"> **Generated:** {timestamp}")
     lines.append(f"> **Page Type:** {page_overrides.get('page_type', 'General')}")
     lines.append("")
-    lines.append("> ⚠️ **IMPORTANT:** Rules in this file **override** the Master file (`design-system/MASTER.md`).")
+    lines.append("> ⚠️ **IMPORTANT:** Rules in this file **override** the Master file (`design-system/<project-slug>/MASTER.md`).")
     lines.append("> Only deviations from the Master are documented here. For all other rules, refer to the Master.")
     lines.append("")
     lines.append("---")

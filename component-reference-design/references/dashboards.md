@@ -1,8 +1,26 @@
 # Dashboards — Modern Clean Admin Dashboard Patterns
 
+## Contents
+
+- [0. THE 15 CLEAN-DASHBOARD PRINCIPLES (run before shipping any dashboard)](#0-the-15-clean-dashboard-principles-run-before-shipping-any-dashboard)
+- [1. APP SHELL (header + sidebar + content)](#1-app-shell-header--sidebar--content)
+- [2. SIDEBAR NAVIGATION](#2-sidebar-navigation)
+- [3. TOPBAR / HEADER](#3-topbar--header)
+- [4. COMMAND PALETTE (⌘K)](#4-command-palette-k)
+- [5. GRID COMPOSITION (widget layout)](#5-grid-composition-widget-layout)
+- [6. KPI / STAT CARDS](#6-kpi--stat-cards)
+- [7. CHART PLACEMENT & CHROME](#7-chart-placement--chrome)
+- [8. FILTERS & TOOLBAR](#8-filters--toolbar)
+- [9. DATA TABLE](#9-data-table)
+- [10. STATES — empty / loading / error / zero](#10-states--empty--loading--error--zero)
+- [11. COLOR / THEME TOKENS (3-tier + dark)](#11-color--theme-tokens-3-tier--dark)
+- [12. ANTI-PATTERN CHEAT SHEET (teardown-confirmed)](#12-anti-pattern-cheat-sheet-teardown-confirmed)
+- [SOURCES (selected)](#sources-selected)
+- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
+
 Companion to `../SKILL.md`. The reference for building **clean, modern admin dashboards** that read as Linear/Vercel/Stripe/Tremor quality — dense yet calm, not generic SaaS template, not AI-slop. Every pattern: NAME · when-to-use · concrete accessible Tailwind · why-clean · source. Synthesized from web research (2025–2026): Linear (2026 "calmer interface" refresh), Vercel/Geist, Stripe Apps, Tremor, shadcn/ui dashboard, Untitled UI, PostHog "3000", Notion, Retool, Mixpanel, TanStack Table, IBM Carbon, React Aria, W3C WAI-ARIA APG, NNG, SetProduct, Refactoring UI.
 
-> Quality bar: brand teal `#005D4C` accent ONLY on interactive/focal (NOT purple) · sidebar recedes (`bg-slate-50`, content shines) · elevation via surface shade NOT shadow-spam · border-only cards (shadow reserved for floating) · `tabular-nums` on all data · radius scale (md/lg/xl) · `focus-visible:ring-2 ring-teal-600` everywhere · `prefers-reduced-motion` gated · real `<button>`/`<a>` · all states designed (empty/loading/error/zero). If it could be swapped into any generic admin panel and nobody notices, it's slop.
+> Quality bar: product-derived accent hue on interactive/focal only (never purple/indigo; no fixed client palette) · sidebar recedes (`bg-slate-50`, content shines) · elevation via surface shade NOT shadow-spam · border-only cards (shadow reserved for floating) · `tabular-nums` on all data · radius scale (md/lg/xl) · visible focus ring using the product accent · `prefers-reduced-motion` gated · real `<button>`/`<a>` · all states designed (empty/loading/error/zero). If it could be swapped into any generic admin panel and nobody notices, it's slop.
 
 ---
 
@@ -13,19 +31,19 @@ Companion to `../SKILL.md`. The reference for building **clean, modern admin das
 3. **Borders fewer/softer/purposeful** — `border-slate-200` not harsh black; dividers only between semantically different groups. "Structure felt, not seen." (Linear 2026)
 4. **Small purposeful type** — body 13–14px (data-dense), page title `text-lg font-semibold`, section label `text-sm font-medium text-slate-500`. Big titles waste space. (PostHog/Linear density)
 5. **`tabular-nums` on ALL data** — KPIs, tables, badges. Prevents number "dance" on refresh. (Vercel guideline)
-6. **Max 2 fonts, max 3 weights** — 400/500/600. Avoid `font-bold` (700) in dense UI — too heavy.
-7. **One accent + semantic-only hues** — teal for active-nav/CTA/focal-series; red/amber/emerald for STATUS only; everything else gray. Monochromatic content area. (Stripe/Vercel/Linear)
-8. **Sidebar dims, content shines** — nav = muted (`text-slate-500`, `bg-slate-50`), 16–18px icons, active = subtle teal bg. Navigation recedes. (Linear 2026)
+6. **Max 2 fonts, max 3 weights** — 400/500/600 for dense UI; 400/500/700 for marketing only.
+7. **One accent + semantic-only hues** — product-derived hue for active-nav/CTA/focal-series; red/amber/green for STATUS only; everything else gray. Monochromatic content area. (Stripe/Vercel/Linear)
+8. **Sidebar dims, content shines** — nav = muted (`text-slate-500`, `bg-slate-50`), 16–18px icons, active = subtle product-accent bg. Navigation recedes. (Linear 2026)
 9. **Tight internal, generous external** — card padding `p-5` · between cards `gap-4` · between sections `space-y-6/8`. Internal ≤ external (Gestalt proximity).
 10. **Fixed panels, not whole-page scroll** — sidebar + header fixed; `<main>` scrolls independently. Context never lost. (PostHog/Linear/Vercel)
 11. **KPI inverted pyramid** — big value › delta badge › sparkline. Most crucial largest. 4 cards/row max. (Mixpanel/Tremor)
-12. **Motion functional, never decorative** — hover `transition-colors duration-150` (NEVER scale), entrance 200–250ms opacity+translateY, gated by `prefers-reduced-motion`. Never `transition-all`. (Vercel)
+12. **Motion functional, never decorative** — hover `transition-colors duration-150` (NEVER scale), entrance 200ms opacity+translateY, gated by `prefers-reduced-motion`. Never `transition-all`. (Vercel)
 13. **Keyboard-first** — command palette ⌘K, `focus-visible` on every interactive. (PostHog/Linear)
 14. **All states designed** — empty (icon+title+desc+1 CTA), loading (skeleton mirror shape), error (+retry), zero-but-present (render chart with 0). Never a blank area. (Vercel guideline)
 15. **Progressive disclosure** — overview first (KPIs+chart+recent), detail on demand. Never overwhelm. (Stripe)
 
 ### Instant-slop bans (dashboard-specific)
-purple/indigo accent · shadow on every card · `hover:scale-105` · big `text-3xl` page titles · uniform `rounded-2xl` · `transition: all` · whole-page scroll · rainbow chart series · glassmorphic nav · pulsing notification badge · left-border nav active state.
+purple/indigo accent · shadow on every card · any hover scaling · big `text-3xl` page titles · uniform `rounded-2xl` · `transition: all` · whole-page scroll · rainbow chart series · glassmorphic nav · pulsing notification badge · left-border nav active state.
 
 ---
 
@@ -39,7 +57,7 @@ purple/indigo accent · shadow on every card · `hover:scale-105` · big `text-3
     <!-- sidebar §2 -->
   </aside>
   <header class="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-slate-200 bg-white px-4 md:px-6">
-    <button type="button" class="md:hidden -ml-2 rounded-md p-2 text-slate-500 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2" aria-label="Buka menu" aria-expanded="false" aria-controls="mobile-drawer">
+    <button type="button" class="md:hidden -ml-2 rounded-md p-2 text-slate-500 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
       <svg aria-hidden="true" class="h-5 w-5"><!-- hamburger --></svg>
     </button>
     <!-- breadcrumb / title §6 -->
@@ -56,14 +74,14 @@ purple/indigo accent · shadow on every card · `hover:scale-105` · big `text-3
 ### 2a. Collapsible (w-64 ↔ w-16 rail)
 Toggle expanded/rail via CSS var `--sidebar-w`; transition `width` (not transform). Icons always visible; labels hidden in rail (Radix Tooltip shows label on hover/focus).
 ```html
-<aside class="row-span-full flex flex-col border-r border-slate-200 bg-slate-50 transition-[width] duration-200 ease-out motion-reduce:transition-none" style="width:var(--sidebar-w,16rem)" aria-label="Navigasi utama">
+<aside class="row-span-full flex flex-col border-r border-slate-200 bg-slate-50 transition-transform duration-200 ease-out motion-reduce:transition-none" style="width:var(--sidebar-w,16rem)" aria-label="Navigasi utama">
   <nav class="flex-1 overflow-y-auto p-3 space-y-6"><!-- groups --></nav>
   <div class="border-t border-slate-200 p-3"><!-- §2d footer --></div>
 </aside>
 ```
 
 ### 2b. Nav item states (active / inactive)
-NEVER left-border accent (P0 slop), NEVER purple, NEVER bold-color bg. Active = subtle fill + medium weight + teal icon.
+NEVER left-border accent (P0 slop), NEVER purple, NEVER bold-color bg. Active = subtle fill + medium weight + product-accent icon.
 ```html
 <!-- Active -->
 <a href="/dashboard" aria-current="page"
@@ -71,9 +89,9 @@ NEVER left-border accent (P0 slop), NEVER purple, NEVER bold-color bg. Active = 
   <svg aria-hidden="true" class="h-4 w-4 shrink-0 text-teal-700"><!-- icon --></svg>Dashboard
 </a>
 <!-- Inactive -->
-<a href="/siswa"
+<a href="/users"
    class="flex items-center gap-3 rounded-lg px-2.5 py-2 text-[13px] text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2">
-  <svg aria-hidden="true" class="h-4 w-4 shrink-0 text-slate-400"><!-- icon --></svg>Siswa
+  <svg aria-hidden="true" class="h-4 w-4 shrink-0 text-slate-400"><!-- icon --></svg>Users
 </a>
 ```
 
@@ -97,7 +115,7 @@ NEVER left-border accent (P0 slop), NEVER purple, NEVER bold-color bg. Active = 
   <img src="/avatar.jpg" alt="" class="h-8 w-8 rounded-full object-cover" />
   <div class="min-w-0 flex-1">
     <p class="truncate text-[13px] font-medium text-slate-900">Pak Ahmad</p>
-    <p class="truncate text-[11px] text-slate-500">Wali Kelas 6A</p>
+    <p class="truncate text-[11px] text-slate-500">Team lead 6A</p>
   </div>
   <svg aria-hidden="true" class="h-4 w-4 shrink-0 text-slate-400"><!-- chevrons-up-down --></svg>
 </button>
@@ -237,8 +255,8 @@ Dominant ≥`col-span-2 row-span-2` else it's a uniform card grid (slop). Mix co
 `label` (sm muted) → `value` (2xl semibold tabular-nums) → `delta` (arrow+%+period) → `sparkline` (optional, aria-hidden).
 ```html
 <article class="rounded-lg border border-slate-200 bg-white p-5"
-  role="img" aria-label="Siswa Berisiko Tinggi: 24, naik 12% vs bulan lalu">
-  <p class="text-sm font-medium text-slate-500">Siswa Berisiko Tinggi</p>
+  role="img" aria-label="Users Flagged Tinggi: 24, naik 12% vs bulan lalu">
+  <p class="text-sm font-medium text-slate-500">Users Flagged Tinggi</p>
   <p class="mt-1 text-2xl font-semibold tabular-nums text-slate-900">24</p>
   <div class="mt-2 flex items-center gap-1.5">
     <span class="inline-flex items-center gap-0.5 rounded-md bg-red-50 px-1.5 py-0.5 text-xs font-medium tabular-nums text-red-700 ring-1 ring-inset ring-red-600/20">
@@ -252,10 +270,10 @@ Dominant ≥`col-span-2 row-span-2` else it's a uniform card grid (slop). Mix co
 ### Grid
 `grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4` — 4-up desktop, 2×2 tablet, stacked mobile. Hero metric → `sm:col-span-2` + `text-3xl` + embedded sparkline (breaks 4-box monotony, Vercel/Mixpanel).
 
-### ⚠️ Delta semantic INVERSION (critical for SchoolTrack)
+### ⚠️ Delta semantic INVERSION (critical for Product)
 Direction (↑↓) ≠ judgment (good/bad). Decouple them — caller decides intent per metric:
-- **"Siswa Berisiko"**: ↑ = red (bad), ↓ = emerald (good)
-- **"Kehadiran"**: ↑ = emerald (good), ↓ = red (bad)
+- **"Users Flagged"**: ↑ = red (bad), ↓ = emerald (good)
+- **"Completion"**: ↑ = emerald (good), ↓ = red (bad)
 ```ts
 type DeltaIntent = "positive" | "negative" | "neutral";
 const badge: Record<DeltaIntent,string> = {
@@ -269,9 +287,9 @@ Color = intent, arrow = direction. Screen readers get full context via card `ari
 ### Progress vs target (linear, dashboard-dense)
 ```html
 <div class="mt-3">
-  <div class="flex justify-between text-xs text-slate-500"><span>Kehadiran</span><span class="tabular-nums">78% / 85%</span></div>
-  <div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-slate-100" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" aria-label="Kehadiran 78% dari target 85%">
-    <div class="h-full rounded-full bg-[#005D4C] transition-[width] duration-500 ease-out motion-reduce:transition-none" style="width:78%"></div>
+  <div class="flex justify-between text-xs text-slate-500"><span>Completion</span><span class="tabular-nums">78% / 85%</span></div>
+  <div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-slate-100" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" aria-label="Completion 78% of target 85%">
+    <div class="h-full rounded-full bg-[var(--accent-default)] transition-transform duration-200 ease-out motion-reduce:transition-none" style="width:100%;transform:scaleX(.78);transform-origin:left"></div>
   </div>
 </div>
 ```
@@ -289,9 +307,9 @@ Largest block, `aspect-[16/9]` desktop → `4/3` mobile, fixed height `h-64` (av
 ### 7b. Segmented period toggle (inside card header, not external)
 ```html
 <div role="tablist" aria-label="Periode" class="flex rounded-md border border-slate-200 p-0.5">
-  <button role="tab" aria-selected="true" class="rounded px-2.5 py-1 text-xs font-medium text-slate-900 bg-slate-100 focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-1">7h</button>
-  <button role="tab" aria-selected="false" class="rounded px-2.5 py-1 text-xs font-medium text-slate-500 hover:text-slate-700 focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-1">30h</button>
-  <button role="tab" aria-selected="false" class="rounded px-2.5 py-1 text-xs font-medium text-slate-500 hover:text-slate-700 focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-1">90h</button>
+  <button role="tab" aria-selected="true" class="rounded px-2.5 py-1 text-xs font-medium text-slate-900 bg-slate-100 focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-1">7d</button>
+  <button role="tab" aria-selected="false" class="rounded px-2.5 py-1 text-xs font-medium text-slate-500 hover:text-slate-700 focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-1">30d</button>
+  <button role="tab" aria-selected="false" class="rounded px-2.5 py-1 text-xs font-medium text-slate-500 hover:text-slate-700 focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-1">90d</button>
 </div>
 ```
 Compact, inline → chart transitions immediately on switch. (Stripe/Vercel/shadcnblocks)
@@ -309,11 +327,11 @@ Sorted descending = self-explanatory hierarchy. (Tremor BarList)
 ### 7d. Sparkline in KPI (ambient, aria-hidden)
 height 32–48px · `dot={false}` · NO axes/grid/tooltip · `isAnimationActive={false}` · `aria-hidden="true"` (card carries label). Color follows delta sentiment.
 
-### 7e. Calendar heatmap (kehadiran)
-52 weeks × 7 days, cell 11×11px gap 3px, single-hue teal sequential (`#f1f5f9`→`#005D4C`), tooltip on hover, `role="img"`+`aria-label`. Never rainbow. (GitHub graph)
+### 7e. Calendar heatmap (completion)
+52 weeks × 7 days, cell 11×11px gap 3px, single-hue teal sequential (`var(--surface-muted)`→`var(--accent-default)`), tooltip on hover, `role="img"`+`aria-label`. Never rainbow. (GitHub graph)
 
 ### 7f. Hover tooltip card
-`rounded-lg border border-slate-200 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.08)]` — date label + dot+name+value (right-aligned `tabular-nums`). Fade 100ms, no spring/scale. **Source:** Tremor, Vercel, Stripe, charts.md §2.
+`rounded-lg border border-slate-200 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.08)]` — date label + dot+name+value (right-aligned `tabular-nums`). Fade 150ms, no spring/scale. **Source:** Tremor, Vercel, Stripe, charts.md §2.
 
 ---
 
@@ -322,7 +340,7 @@ height 32–48px · `dot={false}` · NO axes/grid/tooltip · `isAnimationActive=
 ### Composite anatomy (top→bottom)
 ```
 SAVED VIEWS TABS (role=tablist, border-b)
-FILTER BAR (sticky, role=toolbar): [📅 date] [Kelas ③] [Status ▾] ··· [🔍 search]
+FILTER BAR (sticky, role=toolbar): [📅 date] [Group ③] [Status ▾] ··· [🔍 search]
 APPLIED CHIPS (conditional, flex-wrap): Filter: [Kelas 6A ×] [Risiko Tinggi ×]  Hapus semua
 ```
 
@@ -340,7 +358,7 @@ APPLIED CHIPS (conditional, flex-wrap): Filter: [Kelas 6A ×] [Risiko Tinggi ×]
 Eliminates sidebar → full content width. (Linear/Stripe/PostHog)
 
 ### 8b. Date-range picker (presets + 2 calendars)
-React Aria DateRangePicker pattern: trigger → `role="dialog"` popover with preset buttons left (Hari ini / 7 hari / Bulan ini / Semester / Tahun ajaran) + 2 month grids. Selected preset `bg-teal-50 text-teal-800`. Presets = 80% of use without touching calendar.
+React Aria DateRangePicker pattern: trigger → `role="dialog"` popover with preset buttons left (Today / 7 days / This month / Quarter / Year) + 2 month grids. Selected preset `bg-teal-50 text-teal-800`. Presets = 80% of use without touching calendar.
 
 ### 8c. Segmented control — semantic choice
 - switches content panel → `role="tablist"` (underline `after:h-0.5 after:bg-teal-700`)
@@ -348,13 +366,13 @@ React Aria DateRangePicker pattern: trigger → `role="dialog"` popover with pre
 Roving tabindex (`tabindex="-1"` on inactive) → arrow-key nav (W3C APG).
 
 ### 8d. Multi-select dropdown
-Trigger shows count badge (`Kelas ③`); `role="listbox" aria-multiselectable="true"`; search inside when >7 options; selected = teal check icon (not checkbox).
+Trigger shows count badge (`Group ③`); `role="listbox" aria-multiselectable="true"`; search inside when >7 options; selected = teal check icon (not checkbox).
 
 ### 8e. Filter chips (removable, appear only when active)
 ```html
 <span class="inline-flex items-center gap-1 rounded-md bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-800 ring-1 ring-inset ring-teal-600/20">
   Kelas 6A
-  <button type="button" aria-label="Hapus filter Kelas 6A" class="ml-0.5 rounded-sm p-0.5 text-teal-600 hover:bg-teal-100 focus-visible:ring-2 focus-visible:ring-teal-600">
+  <button type="button" aria-label="Remove Group 6 filter" class="ml-0.5 rounded-sm p-0.5 text-teal-600 hover:bg-teal-100 focus-visible:ring-2 focus-visible:ring-teal-600">
     <svg aria-hidden="true" class="h-3 w-3"><!-- x --></svg>
   </button>
 </span>
@@ -362,7 +380,7 @@ Trigger shows count badge (`Kelas ③`); `role="listbox" aria-multiselectable="t
 `ring-1 ring-inset` (not border-l-4). Status chip uses semantic color + text label. "Hapus semua" = text-link at END of row.
 
 ### 8f. Search (expand-on-focus)
-`type="search"` + leading icon + `w-48 focus:w-64 transition-[width] duration-200 motion-reduce:transition-none` + `sr-only` label. **Source:** Baymard, Pencil&Paper, React Aria, W3C APG (Tabs/Radio), Linear/PostHog/Stripe.
+`type="search"` + leading icon + `w-48 focus:w-64` + `sr-only` label. **Source:** Baymard, Pencil&Paper, React Aria, W3C APG (Tabs/Radio), Linear/PostHog/Stripe.
 
 ---
 
@@ -372,13 +390,13 @@ Trigger shows count badge (`Kelas ③`); `role="listbox" aria-multiselectable="t
 
 ### 9a. Base (semantic + scrollable)
 ```html
-<div class="overflow-x-auto rounded-lg border border-slate-200" role="region" aria-label="Daftar siswa berisiko" tabindex="0">
+<div class="overflow-x-auto rounded-lg border border-slate-200" role="region" aria-label="Daftar users flagged" tabindex="0">
   <table class="min-w-full divide-y divide-slate-200 text-sm">
     <thead class="sticky top-0 z-10 bg-slate-50">
-      <tr><th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">Nama</th></tr>
+      <tr><th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">Name</th></tr>
     </thead>
     <tbody class="divide-y divide-slate-100 bg-white">
-      <tr class="hover:bg-teal-50/40 transition-colors duration-100"><td class="px-4 py-3 text-slate-900">Ahmad Fauzi</td></tr>
+      <tr class="hover:bg-teal-50/40 transition-colors duration-150"><td class="px-4 py-3 text-slate-900">Alex Morgan</td></tr>
     </tbody>
   </table>
 </div>
@@ -394,7 +412,7 @@ Trigger shows count badge (`Kelas ③`); `role="listbox" aria-multiselectable="t
 | Selection | checkbox col + floating bottom bar | Linear/shadcn; non-intrusive |
 | Row actions | ellipsis `⋮` → Radix dropdown (max 5–7, destructive last+red) | declutters row |
 | Pagination | numbered + prev/next (25 default) | jump-to-page for admin; infinite breaks sort/selection |
-| Sticky column | first col (Nama) only when horizontal scroll | prevents disorientation |
+| Sticky column | first col (Name) only when horizontal scroll | prevents disorientation |
 | Column visibility | dropdown checkboxes, localStorage; essential cols non-hideable | TanStack `getToggleVisibilityHandler` |
 
 ### 9c. Inline status badge
@@ -437,9 +455,9 @@ Mirror final shape → no CLS. `aria-busy` announces once. Neutral gray (no bran
   <div class="flex h-12 w-12 items-center justify-center rounded-full bg-teal-50">
     <svg aria-hidden="true" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
   </div>
-  <h3 class="mt-4 text-sm font-medium text-slate-900">Belum ada data siswa</h3>
-  <p class="mt-1 max-w-[28ch] text-sm text-slate-500">Impor data dari Dapodik untuk mulai memantau risiko.</p>
-  <button type="button" class="mt-5 rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">Impor data</button>
+  <h3 class="mt-4 text-sm font-medium text-slate-900">No data yet</h3>
+  <p class="mt-1 max-w-[28ch] text-sm text-slate-500">Import a data file to begin monitoring activity.</p>
+  <button type="button" class="mt-5 rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">Import data</button>
 </div>
 ```
 
@@ -451,7 +469,7 @@ Mirror final shape → no CLS. `aria-busy` announces once. Neutral gray (no bran
   </div>
   <h3 class="mt-3 text-sm font-medium text-slate-900">Gagal memuat data</h3>
   <p class="mt-1 text-sm text-slate-500">Periksa koneksi internet atau coba lagi.</p>
-  <button type="button" class="mt-4 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">Coba lagi</button>
+  <button type="button" class="mt-4 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">Try again</button>
 </div>
 ```
 Outlined retry (non-aggressive); human copy; red semantic only on icon.
@@ -484,10 +502,10 @@ Each widget = independent `<Suspense fallback={<Skeleton/>}>` boundary → fast 
 :root{
   /* semantic surfaces — elevation via lightness, NOT shadow */
   --surface-page:#f8fafc; --surface-card:#ffffff; --surface-elevated:#fcfcfd; --surface-overlay:#ffffff;
-  --border-default:#e2e8f0; --border-muted:#f1f5f9; --border-focus:#005D4C;
+  --border-default:#e2e8f0; --border-muted:#f1f5f9; --border-focus:var(--accent-default);
   --text-primary:#0f172a; --text-body:#334155; --text-muted:#64748b; --text-on-accent:#fff;
   /* accent restrained: interactive + focal only */
-  --accent-default:#005D4C; --accent-hover:#004D40; --accent-subtle:#f0fdfa; --accent-muted:#ccfbf1;
+  --accent-default:var(--product-hue-700); --accent-hover:var(--product-hue-800); --accent-subtle:var(--product-hue-50); --accent-muted:var(--product-hue-100);
   /* risk — semantic state only, never decorative */
   --risk-high-bg:#fef2f2;  --risk-high-text:#b91c1c;
   --risk-medium-bg:#fffbeb; --risk-medium-text:#b45309;
@@ -495,9 +513,9 @@ Each widget = independent `<Suspense fallback={<Skeleton/>}>` boundary → fast 
 }
 .dark{
   --surface-page:#0f1419; --surface-card:#1c2127; --surface-elevated:#242a31; --surface-overlay:#1c2127;
-  --border-default:rgba(255,255,255,.08); --border-muted:rgba(255,255,255,.04); --border-focus:#2dd4bf;
+  --border-default:rgba(255,255,255,.08); --border-muted:rgba(255,255,255,.04); --border-focus:var(--accent-default);
   --text-primary:#f1f5f9; --text-body:#cbd5e1; --text-muted:#94a3b8; --text-on-accent:#0f172a;
-  --accent-default:#2dd4bf; --accent-hover:#99f6e4; --accent-subtle:rgba(45,212,191,.1); --accent-muted:rgba(45,212,191,.06);
+  --accent-default:var(--product-hue-300); --accent-hover:var(--product-hue-200); --accent-subtle:var(--product-hue-alpha-10); --accent-muted:var(--product-hue-alpha-6);
   --risk-high-bg:rgba(239,68,68,.1); --risk-high-text:#fca5a5;
   --risk-medium-bg:rgba(245,158,11,.1); --risk-medium-text:#fcd34d;
   --risk-low-bg:rgba(16,185,129,.1); --risk-low-text:#6ee7b7;
@@ -505,17 +523,17 @@ Each widget = independent `<Suspense fallback={<Skeleton/>}>` boundary → fast 
 ```
 
 ### Surface elevation model
-Light: page `#f8fafc` < card `#fff` < inset `#fcfcfd`. Dark: `#0f1419` < `#1c2127` < `#242a31` (warm dark, NEVER pure black). Teal lightened to `#2dd4bf` in dark (keeps 4.5:1).
+Light: page `#f8fafc` < card `#fff` < inset `#fcfcfd`. Dark: `#0f1419` < `#1c2127` < `#242a31` (warm dark, NEVER pure black). Use the product hue lightened in dark mode to meet contrast.
 
 ### Accent restraint rule
-Teal `#005D4C` ONLY at: primary buttons · active nav · focus rings · chart primary series · link hover · success badge. **Never:** card/section backgrounds, gradients, borders-everywhere, icon-bg squares. Accent = signal, not decoration.
+Product accent ONLY at: primary buttons · active nav · focus rings · chart primary series · link hover · success badge. **Never:** card/section backgrounds, gradients, borders-everywhere, icon-bg squares. Accent = signal, not decoration.
 
 ### Contrast verified (WCAG AA)
 | Pair | Ratio |
 |---|---|
 | text-body #334155 on white | 7.4:1 AAA |
 | text-muted #64748b on white | 4.6:1 AA |
-| accent #005D4C on white | 7.1:1 AAA |
+| Product accent on white | verify contrast for the selected hue |
 | accent-dark #2dd4bf on #1c2127 | 6.8:1 AAA |
 | risk-high #b91c1c on #fef2f2 | 5.9:1 AA |
 **Source:** shadcn theming, Tremor, IBM Carbon (3-tier/4-theme), Linear "calmer interface", MD3 surface tint, WebAIM, Refactoring UI.
@@ -526,15 +544,15 @@ Teal `#005D4C` ONLY at: primary buttons · active nav · focus rings · chart pr
 
 | ❌ Slop | ✅ Clean | Source |
 |---|---|---|
-| purple/indigo accent | teal `#005D4C` | Linear/Stripe/Vercel |
+| purple/indigo accent | product-derived hue | product identity |
 | shadow on every card | border only; shadow for floating | Geist Materials |
-| `hover:scale-105` | `hover:bg-slate-50` / `hover:shadow-sm` | Vercel guidelines |
+| any hover scaling | `hover:bg-slate-50` / `hover:shadow-sm` | Vercel guidelines |
 | big `text-3xl` page title | `text-lg font-semibold` | PostHog/Linear density |
 | uniform `rounded-2xl` | scaled radii md/lg/xl | Geist |
 | `transition: all` | explicit `transition-colors` | Vercel |
 | whole-page scroll | fixed sidebar + scrollable main | PostHog/Linear/Vercel |
-| rainbow chart series | teal sequential + muted context | Stripe/Tremor |
-| left-border nav active | fill `bg-slate-100` + teal icon | slop §9 |
+| rainbow chart series | one product-derived hue + muted context | Stripe/Tremor |
+| left-border nav active | fill `bg-slate-100` + product-accent icon | slop §9 |
 | pulsing notification badge | static red dot | slop K12 |
 | blank widget on no-data | empty state icon+title+CTA | NNG/Carbon |
 
@@ -545,13 +563,6 @@ Linear — "A calmer interface for a product in motion" (Mar 2026) + UI redesign
 
 ---
 
-## Creative Freedom
+## Creative Freedom Within the Bans
 
-These patterns and rules are **bare minimum guidelines**. You are encouraged to:
-
-- **Improvise beyond what's documented** — use your own creativity and judgment
-- **Experiment with novel solutions** — don't feel constrained to only what's listed here
-- **Adapt to context** — every project has unique requirements that may warrant different approaches
-- **Invent new patterns** — if you discover a better solution, use it
-
-Treat this reference as a **foundation, not a ceiling**. The goal is to avoid AI slop while still producing innovative, intentional design — not to limit you to a fixed set of "approved" solutions.
+Invent new patterns when useful. Nothing here overrides a P0/HIGH ban; on conflict, the ban wins.

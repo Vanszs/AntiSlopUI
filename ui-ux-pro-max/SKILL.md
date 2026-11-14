@@ -1,18 +1,31 @@
 ---
 name: ui-ux-pro-max
-description: Searches a design-system database for UI styles, color palettes, typography, UX guidance, charts, and stack-specific implementation patterns. Use when planning or implementing a web or mobile interface that needs evidence-backed design recommendations. Treat generated recommendations as proposals and apply the suite's mandatory post-filter before coding.
+description: "CSV-backed design-system generator: searches UI styles, color palettes, font pairings, UX guidelines, chart types, and 13 stack-specific guides, then proposes a design system for a product type. Use only when you need industry-specific style/palette/typography evidence, after anti-ai-slop-ui-ux is loaded; every result is a proposal that must pass POST-FILTER.md before use. Not a pattern library (use component-reference-design) and not for code review."
 license: MIT
 metadata:
   upstream: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
   author: NextLevelBuilder (vendored)
-  version: 1.1.0
-  updated: 2026-11-14
-  references:
-    - POST-FILTER.md
+  version: "1.2.0"
+  updated: "2026-11-14"
+  references: "POST-FILTER.md"
+  attribution: "vendored from https://github.com/nextlevelbuilder/ui-ux-pro-max-skill with minimal local fixes (paths, CSV quoting, docstrings) — see git history."
 ---
 # ui-ux-pro-max
 
-Comprehensive design guide for web and mobile applications. Contains 67 styles, 96 color palettes, 57 font pairings, 99 UX guidelines, and 25 chart types across 13 technology stacks. Searchable database with priority-based recommendations.
+Comprehensive design guide for web and mobile applications. Contains 66 styles, 96 color palettes, 57 font pairings, 99 UX guidelines, and 25 chart types across 13 technology stacks. Searchable database with priority-based recommendations.
+
+## Contents
+
+- [Path Convention](#path-convention)
+- [Context Budget](#context-budget)
+- [Prerequisites](#prerequisites)
+- [How to Use This Workflow](#how-to-use-this-workflow)
+- [Search Reference](#search-reference)
+- [Example Workflow](#example-workflow)
+- [Output Formats](#output-formats)
+- [Tips for Better Results](#tips-for-better-results)
+- [If You Cannot Run Commands](#if-you-cannot-run-commands)
+- [Post-Filter](#post-filter)
 
 ## Path Convention
 
@@ -74,7 +87,7 @@ python3 ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" -
 
 This command:
 1. Searches 5 domains in parallel (product, style, color, landing, typography)
-2. Applies reasoning rules from `ui-reasoning.csv` to select best matches
+2. Uses product/style reasoning rules where available; color and typography are top BM25 matches, not reasoned selections
 3. Returns complete design system: pattern, style, colors, typography, effects
 4. Includes anti-patterns to avoid
 
@@ -92,8 +105,8 @@ python3 ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "
 ```
 
 This creates:
-- `design-system/MASTER.md` — Global Source of Truth with all design rules
-- `design-system/pages/` — Folder for page-specific overrides
+`design-system/<project-slug>/MASTER.md` and `design-system/<project-slug>/pages/`.
+The base directory is `Path.cwd()` unless `-o/--output-dir` is passed.
 
 **With page-specific override:**
 ```bash
@@ -101,12 +114,12 @@ python3 ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "
 ```
 
 This also creates:
-- `design-system/pages/dashboard.md` — Page-specific deviations from Master
+`design-system/<project-slug>/pages/dashboard.md` — page-specific deviations from Master.
 
 **How hierarchical retrieval works:**
-1. When building a specific page (e.g., "Checkout"), first check `design-system/pages/checkout.md`
+1. When building a specific page (e.g., "Checkout"), first check `design-system/<project-slug>/pages/checkout.md`
 2. If the page file exists, its rules **override** the Master file
-3. If not, use `design-system/MASTER.md` exclusively
+3. If not, use `design-system/<project-slug>/MASTER.md` exclusively
 
 ### Step 3: Supplement with Detailed Searches (as needed)
 
@@ -157,7 +170,9 @@ Treat every `--design-system` and domain-search result as a proposal: apply [`PO
 | `ux` | Best practices, anti-patterns | animation, accessibility, z-index, loading |
 | `react` | React/Next.js performance | waterfall, bundle, suspense, memo, rerender, cache |
 | `web` | Web interface guidelines | aria, focus, keyboard, semantic, virtualize |
-| `prompt` | AI prompts, CSS keywords | (style name) |
+| `icons` | Icon names and usage | search, settings, chart, navigation |
+
+Supported flags: `--json` emits JSON for domain/stack search but is silently ignored with `--design-system`; `-o/--output-dir` sets persistence base; `-ds` aliases `--design-system`; `--max-results` aliases `-n`.
 
 ### Available Stacks
 
@@ -240,80 +255,10 @@ python3 ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system -f mark
 5. **Use stack flag** - Get implementation-specific best practices
 6. **Iterate** - If first search doesn't match, try different keywords
 
----
+## If You Cannot Run Commands
 
-## Common Rules for Professional UI
+Do not read CSV files by hand. Fall back to the pattern library and authored defaults, and state this limitation in the output.
 
-These are frequently overlooked issues that make UI look unprofessional:
+## Post-Filter
 
-### Icons & Visual Elements
-
-| Rule | Do | Don't |
-|------|----|----- |
-| **No emoji icons** | Use SVG icons (Heroicons, Lucide, Simple Icons) | Use emojis like 🎨 🚀 ⚙️ as UI icons |
-| **Stable hover states** | Use color/opacity transitions on hover | Use scale transforms that shift layout |
-| **Correct brand logos** | Research official SVG from Simple Icons | Guess or use incorrect logo paths |
-| **Consistent icon sizing** | Use fixed viewBox (24x24) with w-6 h-6 | Mix different icon sizes randomly |
-
-### Interaction & Cursor
-
-| Rule | Do | Don't |
-|------|----|----- |
-| **Cursor pointer** | Add `cursor-pointer` to all clickable/hoverable cards | Leave default cursor on interactive elements |
-| **Hover feedback** | Provide visual feedback (color, shadow, border) | No indication element is interactive |
-| **Motion budget** | Hovers 100–150ms; entrances 200–300ms; exits faster; animate `transform`/`opacity` only | Never use `transition-all`, layout-shifting motion, or slow exits |
-
-### Light/Dark Mode Contrast
-
-| Rule | Do | Don't |
-|------|----|----- |
-| **Glass card light mode (exception)** | At most ONE `bg-white/80` surface over imagery, with `@supports` fallback; ordinary cards are solid | Multiple glass surfaces or `bg-white/10` |
-| **Text contrast light** | Use `#0F172A` (slate-900) for text | Use `#94A3B8` (slate-400) for body text |
-| **Muted text light** | Use `#475569` (slate-600) minimum | Use gray-400 or lighter |
-| **Border visibility** | Use `border-gray-200` in light mode | Use `border-white/10` (invisible) |
-
-### Layout & Spacing
-
-| Rule | Do | Don't |
-|------|----|----- |
-| **Fixed solid navbar** | Use `fixed top-0 border-b` and offset content for nav height | Let content hide behind fixed elements |
-| **Content padding** | Account for fixed navbar height | Let content hide behind fixed elements |
-| **Vary container widths** | Match content: text `max-w-3xl`, grids `max-w-6xl`, with ≥1 full-bleed break | One uniform container width for every section |
-
----
-
-## Pre-Delivery Checklist
-
-Before delivering UI code, verify these items:
-
-### Visual Quality
-- [ ] No emojis used as icons (use SVG instead)
-- [ ] All icons from consistent icon set (Heroicons/Lucide)
-- [ ] Brand logos are correct (verified from Simple Icons)
-- [ ] Hover states don't cause layout shift
-- [ ] Use theme colors directly (bg-primary) not var() wrapper
-
-### Interaction
-- [ ] All clickable elements have `cursor-pointer`
-- [ ] Hover states provide clear visual feedback
-- [ ] Hovers use 100–150ms; entrances 200–300ms; exits faster; only `transform`/`opacity`, never `transition-all`
-- [ ] Focus states visible for keyboard navigation
-
-### Light/Dark Mode
-- [ ] Light mode text has sufficient contrast (4.5:1 minimum)
-- [ ] Glass/transparent elements visible in light mode
-- [ ] Borders visible in both modes
-- [ ] Test both modes before delivery
-
-### Layout
-- [ ] Fixed nav is solid, `fixed top-0 border-b`, with content offset for its height
-- [ ] Container widths vary by content, including at least one full-bleed break
-- [ ] No content hidden behind fixed navbars
-- [ ] Responsive at 375px, 768px, 1024px, 1440px
-- [ ] No horizontal scroll on mobile
-
-### Accessibility
-- [ ] All images have alt text
-- [ ] Form inputs have labels
-- [ ] Color is not the only indicator
-- [ ] `prefers-reduced-motion` respected
+Apply [`POST-FILTER.md`](POST-FILTER.md) to every result before implementation. For common rules and the pre-delivery checklist, use `anti-ai-slop-ui-ux/SKILL.md`; its rules own any conflict.

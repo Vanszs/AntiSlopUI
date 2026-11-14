@@ -1,144 +1,123 @@
 # AntiSlopUI
 
-![Version](https://img.shields.io/badge/version-2.1.0-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-2.2.0-blue?style=for-the-badge)
 ![3 Skills](https://img.shields.io/badge/skills-3-green?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
 [![validate](https://github.com/Vanszs/AntiSlopUI/actions/workflows/validate.yml/badge.svg)](https://github.com/Vanszs/AntiSlopUI/actions/workflows/validate.yml)
 
-A three-skill suite for AI coding agents that eliminates "AI slop" and produces
-intentional, branded, accessible UI/UX — instead of the statistical-mean defaults
-that make machine-generated interfaces instantly recognizable.
+Three skills for AI coding agents that remove "AI slop" from generated UI and replace it
+with intentional, branded, accessible work — plus a mechanical gate that fails the build
+when a banned default slips through.
 
 > If you could swap the logo with a competitor and nobody would notice — it's slop.
 
-## The problem
+## What problem this solves
 
-LLMs generate UI by averaging across training data dominated by Tailwind docs,
-shadcn/ui examples, abandoned repos with unchanged defaults, and 2020–2024 Dribbble
-SaaS shots. Output **collapses toward the visual mean**: purple/indigo gradients,
-Inter everywhere, centered dual-CTA heroes, 3-card feature grids, glassmorphism
-navbars, and copy like "Supercharge your workflow."
+LLMs generate UI by averaging training data dominated by Tailwind docs, shadcn/ui examples,
+abandoned repos with unchanged defaults, and 2020–2024 Dribbble SaaS shots. Output collapses
+toward the visual mean: purple gradients, Inter everywhere, centered dual-CTA heroes, 3-card
+grids, glass navbars, "Supercharge your workflow" copy.
 
-That is structural, not a bug — every decision left unspecified gets filled with the
-single most probable token. **The cure is deliberate, content-specific variation.**
+That is structural. Every decision left unspecified gets the most probable token. The cure is
+deliberate, content-specific variation — enforced, not suggested.
 
-## The suite
+## Which skill loads when
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│  FILTER — Anti-AI-Slop                                           │
-│  What to AVOID. Hard bans, severity tiers, pre-delivery audit.   │
-│  AUTHORITY on conflicts.                                         │
-└──────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌──────────────────────────────────────────────────────────────────┐
-│  PALETTE — Component Reference Design                            │
-│  What to BUILD. Copy-pasteable, accessible patterns from MUI,    │
-│  shadcn, Radix, MD3, Apple HIG, Carbon, NNG, Refactoring UI.     │
-└──────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌──────────────────────────────────────────────────────────────────┐
-│  RESEARCH — UI/UX Pro Max                                        │
-│  Design intelligence. Design-system generator over CSV data.     │
-│  Output is a PROPOSAL — it must pass the post-filter.            │
-└──────────────────────────────────────────────────────────────────┘
-```
+Routing is the part most skill suites get wrong. These three descriptions are disjoint on
+purpose; load order is stated inside the descriptions because a router never reads a README.
 
-Filter out slop → build from proven patterns → research industry-specific solutions.
+| Skill id | Load when | Do not load for |
+|---|---|---|
+| `anti-ai-slop-ui-ux` | **First**, before any UI code is written or reviewed. Owns the ban list, severity tiers and the PASS/FAIL audit | Backend, API, data pipelines, docs-only work |
+| `component-reference-design` | You need a concrete pattern/markup for UI you are already building | Deciding whether to build UI; backend or data work |
+| `ui-ux-pro-max` | You need industry-specific style/palette/typography evidence, after the filter is loaded | Code review; pattern lookup (use the palette skill) |
+
+If you load only one skill, load the filter. The other two defer to it.
 
 ## Precedence & conflict policy
 
-This is the rule that keeps the three skills from fighting each other. It is
-deliberate and non-negotiable:
-
-1. **`Anti-AI-Slop` is the authority.** It owns the ban list (P0/HIGH/MEDIUM/LOW).
-2. **Palette patterns conform to it.** A pattern is never a license to ship a banned
-   default; it is a starting point that must pass the filter.
-3. **Research output is a proposal, not a verdict.** Every `--design-system` result
-   goes through [`ui-ux-pro-max/POST-FILTER.md`](ui-ux-pro-max/POST-FILTER.md) before
-   it reaches code. Known substitutions: indigo `#6366F1` primary → a brand-safe hue;
-   uniform `max-w-7xl` → varied container widths; floating glass navbar → fixed solid
-   nav; glassmorphism → solid surfaces; `hover:scale-105` → color/border/shadow.
-4. **Craft is opt-in, not a bypass.** `component-reference-design/references/awards-craft.md`
-   raises the ceiling only when the user asks for premium/award-grade work, and only
-   after the filter audit passes. It may request exactly two relaxations (400ms hero
-   choreography, one pausable ambient animation); both must be declared as
-   `OVERRIDE:`. Its hard gates — LCP ≤2.5s, CLS ≤0.1, INP ≤200ms, reduced-motion
-   parity, keyboard, 390px parity, contrast — deny the tier on any failure.
-5. **Exceptions must be stated.** One glass surface over imagery, a real brand purple,
-   a genuinely time-bound eyebrow badge — allowed, but say
-   `OVERRIDE: <value> → <replacement> (<rule>)` so the decision is auditable.
-6. **The pre-delivery audit runs last**, after palette and research have contributed.
-
-If you load only one skill, load the filter. The other two are useless without it.
+1. **`anti-ai-slop-ui-ux` is the authority.** It owns the bans and the closed severity
+   vocabulary (`P0` / `HIGH` / `MEDIUM` / `LOW`).
+2. **Palette patterns conform.** A pattern is a starting point that must pass the filter.
+3. **Research output is a proposal.** Every `--design-system` result passes through
+   [`ui-ux-pro-max/POST-FILTER.md`](ui-ux-pro-max/POST-FILTER.md) before it reaches code —
+   including its **style** field, which the vendor database reliably fills with
+   `Glassmorphism` for SaaS.
+4. **Craft is opt-in.** `component-reference-design/references/awards-craft.md` raises the
+   ceiling only for explicitly premium/award work, only after the audit passes, and only via
+   declared `OVERRIDE:` lines. Its hard gates (LCP ≤2.5s, CLS ≤0.1, INP ≤200ms,
+   reduced-motion parity, keyboard, 390px parity, contrast) deny the tier on any failure.
+5. **Exceptions are mechanical, not vibes.** A brand purple is legal only if the hex appears
+   in user-supplied brand assets, recorded as `OVERRIDE: <value> → <value> [brand: <source>]`.
+   Unknown proof is omitted and recorded `NO-PROOF: user supplied none`; inventing it is P0.
+6. **The audit runs last and reports `PASS`/`FAIL`/`N-A`** with an evidence pointer per item.
+   One P0 FAIL blocks delivery.
 
 ## Context budget
 
-Skill files are dense on purpose and expensive to load whole. Read deliberately:
-
-- **Always:** the `SKILL.md` of the skills relevant to the task (≤3 files).
-- **On demand:** at most **one** reference file per task (two only when combining
-  dashboards + charts). Grep to the section you need — do not read a 680-line
-  reference file end to end.
-- **Never:** load the CSVs by hand. Query them through `search.py` (2–3 targeted
-  queries per task), not by reading the database.
+- **Always:** the `SKILL.md` of skills that apply (≤3 files).
+- **On demand:** one reference file per task (two only for dashboards + charts). Every
+  reference starts with a `## Contents` index — grep to the section you need.
+- **Never:** read the CSVs by hand. Query them through `search.py` (2–3 targeted queries).
 
 ## Installation
 
-Each skill is a directory whose **name must match the `name` in its frontmatter**
-(lowercase, hyphens only) — that is what agent platforms key on.
+Every skill directory name equals its frontmatter `name` — the two must stay in sync.
+Put the directory in the platform's skills root (or symlink it there).
 
-### Kiro (steering)
-
-```bash
-git clone https://github.com/Vanszs/AntiSlopUI.git
-cp -r AntiSlopUI/anti-ai-slop-ui-ux your-project/.kiro/steering/
-cp -r AntiSlopUI/component-reference-design your-project/.kiro/steering/
-cp -r AntiSlopUI/ui-ux-pro-max your-project/.kiro/steering/
-```
-
-### Claude Code / Codex / opencode / Hermes (skills dirs)
-
-Copy (or symlink) the skill directory into the platform's skills root:
+### Claude Code
 
 ```bash
 git clone https://github.com/Vanszs/AntiSlopUI.git
-
-# Claude Code
-cp -r AntiSlopUI/anti-ai-slop-ui-ux ~/.claude/skills/anti-ai-slop-ui-ux
-
-# Codex
-cp -r AntiSlopUI/anti-ai-slop-ui-ux ~/.codex/skills/anti-ai-slop-ui-ux
-
-# opencode
-cp -r AntiSlopUI/anti-ai-slop-ui-ux ~/.config/opencode/skills/anti-ai-slop-ui-ux
-```
-
-Do the same for `component-reference-design` and `ui-ux-pro-max` if you want all
-three. Symlinks work on all four platforms and keep a single source of truth:
-
-```bash
+mkdir -p ~/.claude/skills
 ln -s "$PWD/AntiSlopUI/anti-ai-slop-ui-ux" ~/.claude/skills/anti-ai-slop-ui-ux
+```
+
+### Codex
+
+```bash
+mkdir -p ~/.agents/skills
+ln -s "$PWD/AntiSlopUI/anti-ai-slop-ui-ux" ~/.agents/skills/anti-ai-slop-ui-ux
+```
+
+### opencode
+
+```bash
+mkdir -p ~/.config/opencode/skills
+ln -s "$PWD/AntiSlopUI/anti-ai-slop-ui-ux" ~/.config/opencode/skills/anti-ai-slop-ui-ux
+```
+
+Note: opencode derives the skill id from the **path**, and treats frontmatter `name` as a
+display label. Keep the directory name canonical anyway.
+
+### Kiro
+
+Kiro native skills live in `.kiro/skills/`. Do **not** copy this suite into
+`.kiro/steering/` — steering files default to always-included, which injects every skill
+and every reference into every request and defeats progressive disclosure.
+
+```bash
+mkdir -p your-project/.kiro/skills
+cp -r AntiSlopUI/anti-ai-slop-ui-ux your-project/.kiro/skills/
+cp -r AntiSlopUI/component-reference-design your-project/.kiro/skills/
+cp -r AntiSlopUI/ui-ux-pro-max your-project/.kiro/skills/
 ```
 
 ### Any other agent (AGENTS.md / CLAUDE.md pointer)
 
-If your agent has no skills mechanism, point it at the file and make the constraint
-explicit:
-
 ```markdown
 ## UI work
-Read `anti-ai-slop-ui-ux/SKILL.md` (path relative to the clone) before writing any UI code. It is a hard
-filter, not advice. For patterns, read at most one file from
-`component-reference-design/references/`. Run the Pre-Delivery Slop Audit
-and report PASS/FAIL per item with evidence.
+Read `anti-ai-slop-ui-ux/SKILL.md` before writing or reviewing any UI code. It is a hard
+filter that owns the ban list, not advice. For patterns, open at most one file from
+`component-reference-design/references/`. Run the Pre-Delivery Slop Audit and report
+PASS/FAIL/N-A per item with evidence. Never invent social proof; omit it and record
+`NO-PROOF: user supplied none`.
 ```
 
 ### Prerequisites
 
-Python 3.8+ is required **only** for the `ui-ux-pro-max` research tool:
+Python 3.8+ is required only for the `ui-ux-pro-max` research tool. The other two skills are
+pure Markdown.
 
 ```bash
 python3 --version          # macOS: brew install python3
@@ -146,113 +125,90 @@ python3 --version          # macOS: brew install python3
                            # Windows: winget install Python.Python.3.12
 ```
 
-The two other skills are pure Markdown and need nothing.
+If your agent has no shell, the filter documents a fallback: skip the CSV research, use the
+pattern library plus authored defaults, and state the limitation in the output.
 
 ## Usage
 
-### Workflow
-
-1. **Ask** — request any UI/UX task (build, design, review, fix).
-2. **Filter** — the ban list and instant-death signature set the hard boundaries.
-3. **Palette** — pick a pattern by its *when-to-use* note, not by what looks coolest.
-4. **Research** — generate an industry-specific design system, then post-filter it.
-5. **Audit** — run the Pre-Delivery Slop Audit; one P0 FAIL blocks delivery.
-
-### Example prompts
-
-```
-Build a landing page for my SaaS product
-→ Filter: no purple gradients, no Inter-everywhere, no 3-card grid
-→ Palette: asymmetric split hero, distinctive display font, varied section padding
-→ Research: SaaS reasoning rules → post-filter any indigo/uniform-container output
-
-Design a dashboard for healthcare analytics
-→ Filter: no glassmorphism, no emoji icons, no left-border cards
-→ Palette: dashboard app shell, TanStack Table, KPI cards with delta inversion
-→ Research: healthcare reasoning rules, data-dense dashboard style
-```
-
-### Research tool
+1. **Filter** — read bans, severity tiers and the deterministic terms (`tell`, brand, proof).
+2. **Palette** — pick a pattern by its *when-to-use* note; vary anatomy, widths, padding.
+3. **Research** — generate an industry design system, then post-filter it (style included).
+4. **Audit** — run the PASS/FAIL audit; then `scripts/audit.py` on the artifact in CI.
 
 ```bash
 # Full design system (print)
 python3 ui-ux-pro-max/scripts/search.py "beauty spa wellness service" --design-system -p "Serenity Spa"
 
-# Persist as MASTER.md + per-page overrides (writes design-system/, gitignored)
+# Persist MASTER + per-page overrides into design-system/<slug>/ (gitignored)
 python3 ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system --persist -p "Ledger"
 
-# Single domain
-python3 ui-ux-pro-max/scripts/search.py "glassmorphism" --domain style
-python3 ui-ux-pro-max/scripts/search.py "heatmap" --domain chart
+# Choose the output directory explicitly (default: current working directory)
+python3 ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system --persist -p "Ledger" -o ./design
 
-# Stack guidelines
+# Single domain / stack
+python3 ui-ux-pro-max/scripts/search.py "glassmorphism" --domain style
 python3 ui-ux-pro-max/scripts/search.py "form validation" --stack react
 ```
 
-Paths above are repo-relative. If the skill is installed elsewhere (e.g.
-`.kiro/steering/<skill-dir>`, `~/.claude/skills/<skill-dir>`), resolve
-`ui-ux-pro-max/scripts/search.py` relative to the skill directory.
+Commands are repo-relative. When the skill is installed elsewhere (e.g.
+`~/.claude/skills/ui-ux-pro-max`, `.kiro/skills/ui-ux-pro-max`), invoke it as
+`python3 "<skill-dir>/scripts/search.py" …` — the script resolves its data directory
+relative to itself, so only the path you type changes.
 
 ## What's inside
 
 ```
 AntiSlopUI/
-├── anti-ai-slop-ui-ux/                       # FILTER — what to AVOID (authority)
-│   ├── SKILL.md                        # Instant-death signature, 5 slop axes,
-│   │                                   # per-component bans, severity, audit
+├── anti-ai-slop-ui-ux/                  # FILTER — authority on bans
+│   ├── SKILL.md                         # 12 hard gates, deterministic terms, sole motion
+│   │                                    # table, text measure, audit, fallback
 │   └── references/
-│       ├── slop-uiux-patterns.md       # TELL → WHY-SLOP → FIX → SEVERITY catalog
-│       └── slop-code-patterns.md       # Code-level slop (React/TSX/a11y A11Y1–23)
+│       ├── slop-uiux-patterns.md        # TELL → WHY-SLOP → FIX → SEVERITY catalog
+│       └── slop-code-patterns.md        # code-level tells (React/TSX/a11y)
 │
-├── component-reference-design/         # PALETTE — what to BUILD
-│   ├── SKILL.md                        # Category map, anti-monotony rules, quality bar
-│   └── references/
-│       ├── layouts.md                  # 16 layouts + 2025–2026 page skeletons
-│       ├── typography.md               # Pairings, modular scales, clamp() recipes
-│       ├── components.md               # 17 cards, 10 buttons, 13 forms, 13 nav, 16 data
-│       ├── animation.md                # Overlays + 13 motion recipes
-│       ├── design-systems.md           # 18-system index + W3C DTCG tokens
-│       ├── charts.md                   # Recharts patterns + 15-point anti-slop scan
-│       ├── dashboards.md               # Clean admin dashboard patterns (15 principles)
-│       └── awards-craft.md             # OPT-IN craft tier: Awwwards-weighted rubric,
-│                                        # hard perf/a11y gates, costed craft patterns
+├── component-reference-design/          # PALETTE — what to build
+│   ├── SKILL.md                         # routing table, anti-monotony rules, quality bar
+│   └── references/                      # layouts, typography, components, animation,
+│                                        # design-systems, charts, dashboards, awards-craft
 │
-├── ui-ux-pro-max/                      # RESEARCH — design intelligence (vendored)
-│   ├── SKILL.md                        # Workflow, path convention, post-filter step
-│   ├── POST-FILTER.md                  # Vendor output → filter-compliant substitution
-│   ├── data/                           # CSV databases (query via search.py)
-│   ├── data/stacks/                    # Per-stack guidelines
-│   └── scripts/                        # BM25-style search engine
+├── ui-ux-pro-max/                       # RESEARCH — CSV design-system generator
+│   ├── SKILL.md                         # workflow, path convention, post-filter step
+│   ├── POST-FILTER.md                   # vendor output → compliant substitution
+│   ├── data/                            # CSV databases (query via search.py)
+│   └── scripts/                         # search engine
 │
 ├── scripts/
-│   ├── validate.py                     # Structural validation (9 checks, exit code)
-│   └── stats.py                        # Recompute + splice the stats block below
+│   ├── validate.py                      # repo-level validation (20 checks)
+│   ├── audit.py                         # artifact-level P0 gate (case-insensitive)
+│   └── stats.py                         # recompute/splice the stats block below
 │
-└── .github/workflows/validate.yml      # CI: runs validate.py on push/PR
+└── .github/workflows/validate.yml       # CI: validate + audit a generated design system
 ```
 
 ## Verification
 
-The repo validates itself — claims in this README are checked, not asserted:
+Claims in this repository are checked, not asserted:
 
 ```bash
-python3 scripts/stats.py        # recompute the stats block from the CSVs
-python3 scripts/stats.py --write# splice corrected numbers into this README
-python3 scripts/validate.py     # 10 structural checks, non-zero exit on failure
+python3 scripts/validate.py       # 20 structural + semantic checks, non-zero exit on failure
+python3 scripts/audit.py <path>   # artifact gate: banned values in CSS/HTML/TSX/MD
+python3 scripts/stats.py          # recompute stats from the CSVs
+python3 scripts/stats.py --write  # splice corrected numbers into this README
 ```
 
-What the validator enforces: (1) frontmatter spec compliance — `name` equals the
-directory, lowercase-hyphen only, description ≥60 chars; (2) every
-`metadata.references` path exists; (3) every markdown link resolves; (4) no stale
-Kiro-only install paths; (5) no path mentioned in this README is missing; (6) the
-stats table below matches the CSVs, computed with a real CSV parser rather than line
-counts; (7) every stack file is listed; (8) the research tool still runs; (9) a
-conflict guard that flags banned literals (`#6366F1`, `max-w-7xl`, `hover:scale-105`,
-`transition-all`, …) appearing outside a ban context — the ban catalogue and the
-vendored CSV data are exempt by design; (10) the craft-tier rubric weights are still
-Design 40 · Usability 30 · Creativity 20 · Content 10 and sum to 100.
+What is enforced:
 
-CI runs on every push and pull request.
+- frontmatter spec (name = directory, lowercase-hyphen, `metadata` string→string), reference
+  and markdown-link integrity, no stale install paths
+- CSV structure (every row matches its header; IDs unique and contiguous)
+- documented CLI truth (`--domain` / `--stack` values must exist in argparse)
+- persistence contract (the directory tree the docs name is the tree the code writes)
+- `## Contents` present in every reference; no ban-voiding clauses
+- a single motion canon outside the filter's table; no unexplained duration >300ms
+- descriptions dispatching (no two claim "any UI"; each has a "Not for" clause or load order)
+- README claims matching the implementation (including the check count)
+- `audit.py` run against a freshly generated `MASTER.md` — this is what catches a generator
+  that emits `transition: all` or an indigo accent
 
 ## Stats
 
@@ -263,7 +219,7 @@ CI runs on every push and pull request.
 | Markdown files | 15 |
 | Reference files | 10 |
 | Reasoning rules | 100 |
-| UI styles | 67 |
+| UI styles | 66 |
 | Color palettes | 96 |
 | Font pairings | 57 |
 | UX guidelines | 99 |
@@ -273,55 +229,34 @@ CI runs on every push and pull request.
 
 ## Contributing
 
-Contributions welcome. Useful directions:
-
-- **New slop tells** as they emerge — add to `anti-ai-slop-ui-ux/references/slop-uiux-patterns.md`
-  with tell, why-slop, fix, severity.
-- **New patterns** — add to the matching `component-reference-design/references/*.md`
-  with when-to-use, concrete Tailwind markup, and source.
-- **Reasoning rules / styles / palettes** — `ui-ux-pro-max/data/*.csv`.
-- **Stack coverage** — new `ui-ux-pro-max/data/stacks/*.csv`.
-
 ```bash
 git clone https://github.com/Vanszs/AntiSlopUI.git
 cd AntiSlopUI
 git checkout -b feat/your-feature
 # edit
-python3 scripts/validate.py     # must exit 0 before you push
+python3 scripts/validate.py && python3 scripts/audit.py .
 git commit -m "feat: description"
 git push -u origin feat/your-feature
 gh pr create
 ```
 
-Rules of the house: no new claim without a validated number, no new ban without a
-concrete FIX, no new reference file without a `when-to-use` column. If your change
-introduces a conflict with the filter, the filter wins.
+Rules of the house: no claim without a validated number, no ban without a compliant default,
+no reference file without `## Contents`, no new motion duration outside the canonical table.
+If your change conflicts with the filter, the filter wins.
 
 ## Acknowledgments
 
-**Vendored work:**
-
 - **[UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)** by
-  [NextLevelBuilder](https://github.com/nextlevelbuilder) — the `ui-ux-pro-max/`
-  directory contains their design intelligence system (reasoning rules, UI styles,
-  font pairings, search engine), used as-is with permission. Consider
-  [supporting their project](https://paypal.me/uiuxpromax).
-
-**Inspired by:**
-
-- [MUI](https://mui.com/), [shadcn/ui](https://ui.shadcn.com/),
-  [Radix](https://www.radix-ui.com/), [Headless UI](https://headlessui.com/)
-- [Material Design 3](https://m3.material.io/),
-  [Apple HIG](https://developer.apple.com/design/human-interface-guidelines),
-  [IBM Carbon](https://carbondesignsystem.com/)
-- [NNG](https://www.nngroup.com/), [Refactoring UI](https://www.refactoringui.com/),
-  [Every-Layout](https://every-layout.dev/)
-- [Tailwind UI](https://tailwindui.com/), [Ant Design](https://ant.design/),
-  [Chakra UI](https://chakra-ui.com/)
-- [Josh Comeau](https://www.joshwcomeau.com/), [Emil Kowalski](https://emilkowal.ski/),
-  [Adrian Krebs](https://slop-detect.com/)
+  [NextLevelBuilder](https://github.com/nextlevelbuilder) — the `ui-ux-pro-max/` directory is
+  their design intelligence system, vendored under MIT with minimal local fixes (paths, CSV
+  quoting, docstrings). Consider [supporting their project](https://paypal.me/uiuxpromax).
+- Inspired by MUI, shadcn/ui, Radix, Headless UI, Material Design 3, Apple HIG, IBM Carbon,
+  NNG, Refactoring UI, Every-Layout, Tailwind UI, Ant Design, Chakra UI, Josh Comeau,
+  Emil Kowalski, and [Adrian Krebs](https://slop-detect.com/).
+- The opt-in craft tier's weights follow the Awwwards evaluation system
+  (Design 40 · Usability 30 · Creativity 20 · Content 10).
 
 ## License
 
-MIT — see [LICENSE](LICENSE). UI/UX Pro Max is also MIT licensed
+MIT — see [LICENSE](LICENSE). UI/UX Pro Max is MIT licensed
 (see their [LICENSE](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/main/LICENSE)).

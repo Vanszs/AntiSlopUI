@@ -1,246 +1,136 @@
 ---
 name: anti-ai-slop-ui-ux
-description: >-
-  Overkill negative-prompt skill that stops AI-generated UI from looking like
-  "AI slop" in a single glance. Detects and bans the statistical-mean design
-  defaults LLMs emit (purple gradients, Inter, 3-card grids, glassmorphism,
-  pill CTAs, hype copy) across EVERY component — hero, color, typography, cards,
-  layout, icons, imagery, microcopy, motion, buttons, forms, nav, footer.
-  Use when designing, building, reviewing, or refactoring any UI.
+description: "Hard ban filter for AI-slop UI defaults. Load FIRST, before any UI code is written or reviewed; it owns the ban list that component-reference-design and ui-ux-pro-max defer to. Bans purple/indigo accent gradients, gradient-text headlines, Inter-everywhere, 3-card grids, glassmorphism, emoji icons, pill CTAs, hover:scale-105, invented metrics, and missing prefers-reduced-motion, with severity tiers and a PASS/FAIL pre-delivery audit. Not for backend, API, data-pipeline, or docs-only work."
 license: MIT
 metadata:
-  author: b4r7x
-  version: 2.1.0
-  updated: 2026-11-14
-  references:
-    - references/slop-uiux-patterns.md
-    - references/slop-code-patterns.md
+  author: "b4r7x"
+  version: "2.2.0"
+  updated: "2026-11-14"
+  references: "references/slop-uiux-patterns.md, references/slop-code-patterns.md"
 ---
 
-# Anti-AI-Slop UI/UX — Negative Prompt Skill
+# Anti-AI-Slop UI/UX — Deterministic Filter
 
-## Purpose
-Produce UI that a discerning designer **cannot** instantly flag as
-machine-generated. This skill is a hard filter against "AI slop": the
-homogenized, brand-agnostic, statistically-average aesthetic that LLMs default
-to because they predict the most probable token, not the most *intentional* one.
+## STOP — run the audit
 
-> If you could swap the logo with a competitor and nobody would notice — it's slop.
+Load this filter before UI work. Before delivery, report `PASS`, `FAIL`, or `N-A` plus an evidence pointer for every audit item. `N-A` is allowed only when the component does not exist on the page. Any P0 failure blocks delivery; **3+ tells = block and regenerate**.
 
-## Root Cause (why this happens)
-LLMs generate UI by averaging across training data dominated by Tailwind docs,
-shadcn/ui examples, abandoned repos with unchanged defaults, and 2020–2024
-Dribbble SaaS shots. The output **collapses toward the visual mean**. This is
-structural, not a bug (arXiv:2603.13036, "Interrogating Design Homogenization in
-Web Vibe Coding"). Every decision left unspecified gets filled with the single
-most frequent pattern. **The cure is deliberate, content-specific variation.**
+## Precedence & conflict resolution
 
----
+This skill owns the suite's UI ban list. Its rules override conflicting recommendations from the companion skills and CSVs.
+- `ui-ux-pro-max/scripts/search.py --design-system` may recommend indigo `#6366F1`; reject unless it appears in user-supplied brand assets.
+- `ui-ux-pro-max` recommends Glassmorphism for SaaS in `ui-reasoning.csv`; reject it Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception.
+- Vendor palettes may include banned indigo/purple hexes, backgrounds, or text tints; reject unless user-supplied brand assets contain the value.
+- Playfair Display + Inter pairing remains banned.
+- `hover:scale-105` remains banned. When a recommendation conflicts with a P0/HIGH ban, the ban wins.
 
-## ⛔ THE INSTANT-DEATH SIGNATURE
-3+ tells = block and regenerate; 5+ = unmistakable slop that fails any review.
-Treat each tell as a hard block, not a suggestion.
+## How to use
 
-```
-purple/indigo gradient  +  Inter everywhere  +  centered hero + dual CTA
-+ 3-card feature grid   +  rounded-2xl on everything  +  gradient pill button
-+ "Trusted by 5,000+ teams"  +  "Supercharge your workflow" copy
-+ gradient/aurora blobs  +  glassmorphism  +  emoji icons  +  left-border cards
-```
+### Design/build
+1. Read this skill. Use the gate table below, then consult the relevant UI catalog section for details.
+2. Choose color, type, layout, copy, and motion deliberately; document exceptions using the required `OVERRIDE:` format.
+3. Route code-level review to `references/slop-code-patterns.md`; route visual tells to `references/slop-uiux-patterns.md`.
+4. Run the detailed pre-delivery audit.
 
-If your output contains this combo, you have generated the canonical AI slop
-landing page. **Stop and regenerate.**
+### Review/refactor
+1. Count tells using the definition below; fix all P0/HIGH findings.
+2. Report each finding as `tell → why-slop → fix → severity` with evidence.
+3. **3+ tells = block and regenerate.** No secondary threshold.
 
----
+## Deterministic terms
 
-## How To Use This Skill
+A **tell** is one row in `references/slop-uiux-patterns.md` sections 1–10 with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity vocabulary is closed. Count each matching catalog row once. **3+ tells = block and regenerate.**
 
-### When designing/building UI
-1. Read the **Per-Component Negative Prompts** below for every component you create.
-2. Make a deliberate, stated choice for each of the **5 Slop Axes** (color, type,
-   layout, copy, motion) — never accept the default.
-3. Run the **Pre-Delivery Slop Audit** before handing off.
+A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <value> → <value> [brand: <source>]`.
 
-### When reviewing/refactoring UI
-1. Scan against the **Slop Severity Table** — fix all P0/HIGH first.
-2. Use `references/slop-uiux-patterns.md` for the exhaustive tell→fix catalog.
-3. Report findings as: `tell → why-slop → fix → severity`.
+Placeholder content is allowed only when visibly labeled and structurally distinct, e.g. `<figcaption>Sample data — replace before launch</figcaption>` or `data-sample="true"`. `[placeholder]`, lorem ipsum, and TODO remain banned. Unknown social proof or metrics must be omitted and recorded `NO-PROOF: user supplied none`; omission is compliant, invention is P0.
 
-## Precedence & Conflict Resolution
+## Hard gates
 
-This skill is the authority on bans across this suite. When another skill, CSV, or generator conflicts, this skill wins:
-- `ui-ux-pro-max/scripts/search.py --design-system` can return Primary `#6366F1` (indigo-500): banned P0; substitute a brand-safe hue and record the override.
-- `ui-ux-pro-max/SKILL.md` “consistent max-width / same max-w-6xl or max-w-7xl” conflicts with vary-container-widths; varying wins.
-- “floating navbar top-4” conflicts with fixed solid navbar; the solid fixed nav wins.
-- Glassmorphism is banned, except ONE glass surface over imagery with `bg-white/80` or higher and an `@supports` fallback; state the exception per use.
-- `hover:scale-105` is banned in grids/lists.
+| ID | Banned | Compliant default | Severity |
+|---|---|---|---|
+| H2 | Gradient-text headline | Solid, high-contrast headline | P0 |
+| C1 | Purple/indigo primary accent without supplied brand asset | Use a non-purple/indigo brand hue | P0 |
+| C2 | Canonical purple/indigo or blue/cyan gradient combinations | Flat color or compliant intentional gradient | P0 |
+| C7 | Low-contrast body text | Verify WCAG AA contrast | P0 |
+| K6 | Purple left-border card accent | Remove; reserve left borders for semantic alerts | P0 |
+| MO10 | Missing reduced-motion support | Gate animation; static under reduced motion | P0 |
+| T1 | Inter/Geist for display and body without a second face | Pair a distinctive display face with body type | HIGH |
+| K1 | Identical 3-column feature cards | Vary size/structure or use a list/table | HIGH |
+| K3 | `hover:scale-105` in a grid | Shadow/border color transition | HIGH |
+| I1 | Emoji as functional icons | Consistent SVG icon set | HIGH |
+| B3 | Pill buttons everywhere | `rounded-md`/`rounded-lg`; pills only semantic | HIGH |
+| N1 | Floating glassmorphic navbar | Fixed solid navbar with border | HIGH |
 
-If a tool recommends something on this skill's P0/HIGH list, the recommendation loses — apply the substitution and say which override you made.
+For the full catalog: `grep -n '^## \|^| K' references/slop-uiux-patterns.md`.
 
-## Context Budget
+## The five axes
 
-Load this `SKILL.md` always.
-Open AT MOST ONE reference file per task, and only the section needed; grep for the component heading.
-Never read all references.
-References are on-demand lookup, not required reading.
+| Axis | Banned default | Required action |
+|---|---|---|
+| Color | Purple/indigo accent, purple/blue-cyan default gradients | Choose brand-safe palette; document valid brand overrides |
+| Type | Inter-everywhere, gradient headlines, Playfair + Inter | Distinctive display face; solid headline; restrained weights |
+| Layout | Centered sameness, repetitive three-column grids | Vary structure and emphasis by content |
+| Copy | Hype, generic CTAs, invented proof | Specific copy; omit unknown proof and record `NO-PROOF` |
+| Motion | Gratuitous motion or missing reduced-motion behavior | Follow the sole motion table; animate only to support a task |
 
----
+## Motion table
 
-## The 5 Slop Axes (decide each one explicitly)
+| Motion class | Duration / behavior |
+|---|---|
+| Hover | 100–150ms |
+| Entrances and exits | 150–250ms |
+| Page/route transitions | ≤300ms |
+| Craft-tier exception | ≤400ms ONLY with `OVERRIDE:` |
+| Ambient animation | Maximum 1; pause on hover/focus; render static under `prefers-reduced-motion` |
 
-| Axis | Slop default (BANNED) | Required action |
-|------|----------------------|-----------------|
-| **Color** | `indigo-500`/`violet`/`purple` accent, purple→pink/blue→cyan gradient | Pick ONE brand color (NOT purple/indigo). Define 60-30-10 palette. |
-| **Type** | Inter/Geist for everything, gradient headline, `font-extrabold tracking-tighter` | Distinctive display font ≠ Inter. Solid headline. 2–3 weights, modular scale. |
-| **Layout** | Centered everything, `max-w-7xl`, uniform `py-20`, symmetric 3-col grid | Vary container widths, section padding, grid structure. ≥2 asymmetric moments. |
-| **Copy** | "Supercharge/Unlock/Seamless", "Get Started", "Trusted by X+ teams" | Concrete verbs + real numbers + specific CTAs. No buzzwords, no fake proof. |
-| **Motion** | `hover:scale-105`, universal fade-in-up, 500ms, no reduced-motion | ≤200ms, transform/opacity only, `prefers-reduced-motion` mandatory. |
+All motion examples elsewhere use 200ms. Outside this table, point here instead of restating durations. Respect `prefers-reduced-motion`; use transform/opacity where appropriate.
 
----
+## Text measure
 
-## PER-COMPONENT NEGATIVE PROMPTS
+Use `max-w-3xl` for prose containers, `max-w-prose` for paragraphs, and `max-w-6xl` for grids. A column in a two-column hero split may use `max-w-2xl`.
 
-### 🦸 HERO — never generate
-- ❌ Centered headline + subhead + symmetric dual buttons (filled primary + ghost secondary)
-- ❌ Gradient `bg-clip-text` headline (purple→pink/blue)
-- ❌ Eyebrow pill badge above H1 (`✨ Now with AI`, `🚀 New`)
-- ❌ Aurora/gradient blobs (`blur-3xl` purple/blue circles) behind content
-- ❌ Perspective-tilted dashboard mockup with glow (`rotateY(-5deg) shadow-2xl`)
-- ❌ Greyed fake "Trusted by 5,000+ teams" logo strip
-- ❌ `h-screen` hero with only text + button (PowerPoint-slide emptiness)
-- ✅ **Do instead:** left-aligned headline, asymmetric split (text left / real product screenshot right), one dominant CTA + a text-link secondary, solid background, specific value-prop copy.
+## Brand, proof, and placeholder rules
 
-### 🎨 COLOR & GRADIENT — never generate
-- ❌ `indigo-500`/`violet-500`/`purple-500`/`#6366f1`/`#8b5cf6`/`#a855f7` as primary accent
-- ❌ `from-purple-500 to-pink-500`, `from-indigo-500 to-purple-600`, `from-blue-500 to-cyan-500`
-- ❌ Gradient on text AND button AND border AND background simultaneously
-- ❌ Neon glow `box-shadow: 0 0 40px rgba(purple)` on cards/buttons/text
-- ❌ Slate-900 + indigo-accent "default dark mode"
-- ❌ Low-contrast `text-gray-400` body on white/dark (fails WCAG 4.5:1)
-- ✅ **Do instead:** one intentional brand hue, 60-30-10 distribution, flat solid surfaces, functional shadows (`shadow-sm/md`, neutral), body text ≥ `gray-700` (light) / `gray-200` (dark).
+Apply the deterministic terms above. Do not invent metrics, testimonials, customer logos, benchmarks, or other social proof. Record absent user proof as `NO-PROOF: user supplied none`. Labeled sample data is permitted only in the specified visible/structurally distinct form; unlabeled placeholders, lorem ipsum, and TODO are banned.
 
-### 🔤 TYPOGRAPHY — never generate
-- ❌ Inter/Geist for both display and body with no second face
-- ❌ Gradient `bg-clip-text text-transparent` headlines
-- ❌ `text-5xl font-extrabold tracking-tighter` formula on every heading
-- ❌ 5–6 font weights; arbitrary/flat type scale; centered multi-line body text
-- ❌ `tracking-widest uppercase` eyebrow above every section
-- ❌ Playfair Display + Inter "tasteslop" pairing; monospace for non-code "tech vibes"
-- ✅ **Do instead:** distinctive display font (Fraunces, Bricolage Grotesque, Satoshi, Cabinet Grotesk), modular scale (1.25), max 2–3 weights (400/500/700), `leading-tight` headings / `leading-relaxed` body, `max-w-prose` (65ch), left-aligned paragraphs.
+## If You Cannot Run Commands
 
-### 🃏 CARDS — never generate
-- ❌ Identical 3-column feature grid (icon-in-rounded-square + title + blurb)
-- ❌ Uniform `rounded-2xl shadow-lg border` on every card
-- ❌ `hover:scale-105` (shifts layout) or dramatic `-translate-y-2` lifts
-- ❌ Glassmorphism cards (`bg-white/10 backdrop-blur-lg`)
-- ❌ Gradient-border cards; `border-l-4 border-purple-500` left accent
-- ❌ Emoji icons; identical pricing cards with "Most Popular" ring; fake-avatar testimonials
-- ✅ **Do instead:** vary card size/weight (one larger, one image-led), elevation hierarchy, `hover:shadow-md`/`hover:border-primary` color transitions only, solid surfaces, real logos over fake faces, max 5 pricing features.
+If shell access is unavailable, do NOT read CSVs. Use `component-reference-design` patterns plus the authored defaults in this suite, and state that limitation in the output.
 
-### 📐 LAYOUT & SPACING — never generate
-- ❌ Everything centered in `max-w-7xl mx-auto`
-- ❌ Uniform `py-20` section rhythm (no spatial hierarchy)
-- ❌ Symmetric `grid-cols-3` for every section
-- ❌ Endless alternating image-left/text-right
-- ❌ Identical section anatomy repeated (heading → subtext → 3-col → CTA ×7)
-- ❌ One `gap-6` token for nav, cards, forms, and sections alike
-- ✅ **Do instead:** vary container widths by content (`max-w-2xl` text / `max-w-6xl` grids / full-bleed breaks), vary section padding, mix grid structures (2/4/asymmetric spans), one dominant element per section, contextual gap scale (4px inline → 16px cards → 48px sections), ≥2 deliberate asymmetric moments per page.
+## Pre-Delivery Slop Audit
 
-### 🎯 ICONS & IMAGERY — never generate
-- ❌ Emoji as functional icons (🚀⚡✨🎨💡)
-- ❌ Icons in gradient rounded squares; rainbow per-icon coloring
-- ❌ Mixed icon sets/variants/stroke widths
-- ❌ Corporate-Memphis / Alegria blob-people illustrations (unDraw/Humaaans)
-- ❌ AI-generated hero images with artifacts; generic stock "diverse-team-at-laptop"
-- ❌ Glow behind icons; oversized (>48px) decorative line icons; status dots that map to nothing
-- ✅ **Do instead:** ONE icon library + ONE variant, monochrome/2-color max, sized 16–24px UI, real product screenshots over illustration, every status dot maps to a documented state.
+Report `PASS`, `FAIL`, or `N-A` plus an evidence pointer per item. `N-A` is valid only when that component does not exist on the page. A P0 failure blocks delivery; **3+ tells = block and regenerate**.
 
-### ✍️ MICROCOPY & CONTENT — never generate
-- ❌ Hype verbs: "Supercharge, Unlock, Revolutionize, Elevate, Seamless, Effortless, in seconds"
-- ❌ Filler: "ensuring", "leveraging", "robust/powerful/scalable", "cutting-edge", "for modern teams"
-- ❌ Generic CTAs: "Get Started", "Learn More" everywhere
-- ❌ Fake testimonials ("Sarah M., CEO"), invented metrics, "Trusted by X,000+"
-- ❌ Em-dash overuse, uniform paragraph length, "In today's landscape…" openers, emoji bullets, leftover Lorem ipsum
-- ✅ **Do instead:** say what it does for whom with concrete numbers, specific CTAs ("Import your data"), real or clearly-placeholdered proof, varied sentence rhythm, a human voice with edge.
+**Color & type**
+- [ ] No banned purple/indigo without user-supplied brand asset; any exception recorded as `OVERRIDE:` with source.
+- [ ] No gradient text; display/body type pairing avoids banned defaults.
+- [ ] Body text meets WCAG AA contrast.
 
-### 🎬 MOTION — never generate
-- ❌ Universal fade-in-up on scroll (AOS on everything)
-- ❌ `hover:scale-105` on every card; gratuitous Framer-Motion wrappers
-- ❌ Infinite floating/bobbing blobs; marquee logo scrollers; animated gradient backgrounds
-- ❌ Spring bounce on everything; typewriter effects; 500ms+ transitions
-- ❌ **NO `prefers-reduced-motion` support** (this is an a11y FAILURE, not just slop)
-- ✅ **Do instead:** animate ≤30% of elements, 100–150ms hovers / 200–300ms entrances / faster exits, `transform`+`opacity` only, `ease-out` in / `ease-in` out, **mandatory** `prefers-reduced-motion: reduce`, max 0–1 ambient infinite animation (must pause on hover).
+**Layout & cards**
+- [ ] Structure varies by content; no repetitive identical three-column card grids.
+- [ ] No banned glass surfaces; permitted imagery exception meets all stated conditions.
+- [ ] No emoji functional icons or banned left-border accents.
 
-### 🔘 BUTTONS / FORMS / NAV / FOOTER — never generate
-- ❌ Gradient primary + ghost secondary pair; emoji-in-button; `rounded-full` pills everywhere; oversized `px-8 py-4 text-lg`
-- ❌ Forms with no validation/error/success states; heavy `rounded-xl shadow` glass inputs; toggle overuse; generic gradient "newsletter" band
-- ❌ Floating glassmorphic `backdrop-blur` navbar; shadcn icon+label sidebar clone for non-dashboards; premature sticky CTA bar
-- ❌ 4-column mega-footer of dead `#` links + social icons you don't use; dark-pattern cookie banner
-- ✅ **Do instead:** one solid-color primary per section + text-link secondary, `rounded-md/lg`, `px-4 py-2 text-sm`; inputs `border border-gray-300 rounded-md` with real error/success states; `fixed top-0 border-b` solid nav; minimal footer with only real links; equal-weight cookie choices (if needed at all).
+**Copy & proof**
+- [ ] No banned hype/generic copy or `[placeholder]`, lorem ipsum, TODO.
+- [ ] Unknown metrics/social proof omitted with `NO-PROOF: user supplied none`.
+- [ ] Any sample content is visibly labeled and structurally distinct.
 
----
+**Motion & accessibility**
+- [ ] Motion follows the motion table; reduced-motion renders static.
+- [ ] No `hover:scale-105`; focus states visible; forms have labels and validation states.
+- [ ] Images have appropriate alt text; color is not the only indicator.
 
-## Style Guardrails (positive defaults)
-- 8px spacing system; internal spacing ≤ external spacing (proximity = grouping).
-- One dominant focal element per section; 60-30-10 color distribution.
-- One primary action per section. Restrained emphasis.
-- Radius **scale**, not one value: inputs/badges `rounded-md`, cards `rounded-lg`, modals `rounded-xl`, `rounded-full` only when semantically a pill/avatar.
-- Real product UI, real data, real screenshots — never demo/placeholder UI.
-- WCAG AA contrast minimum (4.5:1 body, 3:1 large/UI). Test light AND dark.
+**Gestalt**
+- [ ] Could a competitor swap the logo without notice? If yes, FAIL.
+- [ ] Counted catalog tells; **3+ tells = block and regenerate**.
 
----
+## References
 
-## Slop Severity Table
+- `references/slop-uiux-patterns.md` — Open for visual/UI tell definitions, severity, fixes, and compliant examples.
+- `references/slop-code-patterns.md` — Open for React/TypeScript/Next.js code-level tells and review patterns.
 
-| Severity | Meaning | Examples |
-|----------|---------|----------|
-| **P0 (auto-block)** | Single-handedly screams AI; never ship | purple/indigo gradient, gradient-text headline, emoji icons, left-border cards, invented metrics, **no reduced-motion** |
-| **HIGH** | Strong tell; fix before delivery | Inter-everywhere, centered dual-CTA hero, 3-card grid, `rounded-2xl` uniformity, pill gradient CTA, fake "Trusted by", glassmorphic nav, no form validation states, dead-link mega-footer, hype copy, `hover:scale-105` |
-| **MEDIUM** | Trained eyes notice | perspective mockup+glow, bento misuse, uniform `py-20`, em-dash overuse, toggle overuse, oversized buttons, illustration-pack sameness |
-| **LOW** | Subtle but cumulative | 0.1-opacity shadows, Space Grotesk fallback, wide letter-spacing, count-up numbers |
+## Output expectations
 
----
-
-## Pre-Delivery Slop Audit (run every time)
-
-Report each item as `PASS` / `FAIL` / `N-A` with one-line evidence pointer (`file:line` or class name); a single FAIL on a P0 item blocks delivery.
-
-**Color & Type**
-- [ ] No `indigo`/`violet`/`purple` accent unless it is the real brand
-- [ ] No gradient text; ≤1 gradient element per section
-- [ ] Display font is NOT Inter/Geist; ≤3 font weights; modular scale
-- [ ] Body text passes 4.5:1 contrast (light + dark)
-
-**Layout & Cards**
-- [ ] Container widths vary by content; section padding varies
-- [ ] No identical 3-col grid repeated; ≥1 dominant element per section
-- [ ] Radius is a differentiated scale, not one uniform value
-- [ ] No `border-l-4` accent; no uniform glassmorphism; no emoji icons
-
-**Copy**
-- [ ] No "Supercharge/Unlock/Seamless/for modern teams"; CTAs are specific
-- [ ] Every metric is real or clearly marked placeholder; no fake testimonials
-- [ ] No leftover Lorem ipsum / `[placeholder]` / `TODO`
-
-**Motion & A11y**
-- [ ] `prefers-reduced-motion: reduce` handled everywhere
-- [ ] Transitions ≤200ms, `transform`/`opacity` only, no `hover:scale-105` in grids
-- [ ] Forms have label + error + success states; focus states visible
-- [ ] Images have alt text; color is not the only indicator
-
-**Gestalt check**
-- [ ] Could I swap the logo with a competitor and nobody notices? → if yes, FAIL
-- [ ] Does the Instant-Death Signature meet the threshold (3+ tells)? → if yes, regenerate
-- [ ] Would this pass a senior designer in a 2-second glance? → if no, fix
-
----
-
-## Output Expectations
-The final UI must read as: **intentional, branded, content-aware, accessible,
-production-ready — and unmistakably NOT machine-averaged.** Every spacing value,
-color, font, grid, and animation must be defensible with a content-specific
-reason. If you cannot explain *why* a choice was made, it is slop — remove or
-replace it.
-
-> For the exhaustive tell → why → fix → severity catalog across all components,
-> see `references/slop-uiux-patterns.md`.
+Report the audit status and evidence. Explain every `OVERRIDE:` and `NO-PROOF:` record. Design decisions must be content-specific; do not claim completion when any blocking P0 failure remains.

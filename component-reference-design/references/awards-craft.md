@@ -1,8 +1,30 @@
 # Awards Craft Tier — Opt-In
 
+## Contents
+
+- [0. When this tier applies](#0-when-this-tier-applies)
+- [1. The rubric — score before you decorate](#1-the-rubric--score-before-you-decorate)
+- [2. Hard gates — a fail denies the tier outright](#2-hard-gates--a-fail-denies-the-tier-outright)
+- [3. Craft patterns and their cost](#3-craft-patterns-and-their-cost)
+- [4. Award theatre — earns nothing, costs the tier](#4-award-theatre--earns-nothing-costs-the-tier)
+- [5. The only two relaxations this tier may request](#5-the-only-two-relaxations-this-tier-may-request)
+- [6. Procedure](#6-procedure)
+- [Sources](#sources)
+
 Companion to `../SKILL.md`. This is the **only** file in the suite that is allowed to
 raise the craft ceiling. It is opt-in and gated, because award-grade detail and
 slop are separated by one thing: whether the detail pays for itself.
+
+## Contents
+
+- [0. When this tier applies](#0-when-this-tier-applies)
+- [1. The rubric — score before you decorate](#1-the-rubric--score-before-you-decorate)
+- [2. Hard gates — a fail denies the tier outright](#2-hard-gates--a-fail-denies-the-tier-outright)
+- [3. Craft patterns and their cost](#3-craft-patterns-and-their-cost)
+- [4. Award theatre — earns nothing, costs the tier](#4-award-theatre--earns-nothing-costs-the-tier)
+- [5. The only two relaxations this tier may request](#5-the-only-two-relaxations-this-tier-may-request)
+- [6. Procedure](#6-procedure)
+- [Sources](#sources)
 
 ## 0. When this tier applies
 
@@ -61,13 +83,13 @@ be paid for is slop with better marketing.
 | Pattern | Earns | Cost | Guardrail |
 |---|---|---|---|
 | Kinetic display type | Concept expression, one hero moment | 1 animated text component, ≤2 animated properties | Settles to static; `prefers-reduced-motion` renders the final frame immediately |
-| Route / section transition | Continuity between views | ≤400ms, route-level only, never blocking the first paint | Skipped entirely under reduced motion; no transition on back-navigation |
-| Scroll choreography | Rhythm across sections | max 1 trigger per section, fires once, 200–400ms, `transform`/`opacity` only | No pinning longer than one viewport; no scroll-jack; native scroll always wins |
+| Route / section transition | Continuity between views | Canonical route limit; hero choreography only may request the §5 `OVERRIDE` | Skipped entirely under reduced motion; no transition on back-navigation |
+| Scroll choreography | Rhythm across sections | max 1 trigger per section, fires once; hero choreography only may request the §5 `OVERRIDE`; `transform`/`opacity` only | No pinning longer than one viewport; no scroll-jack; native scroll always wins |
 | 3D / WebGL accent | Memorability where the product is spatial | ≤800KB gzip, one canvas, capped DPR | Static poster fallback; paused off-screen; paused under reduced motion; no autoplay audio |
 | Custom cursor | Tone, if the brand is the tool | 1 layer, must not hide the native affordance for text/links | Keyboard path unaffected; disabled under reduced motion and on touch |
 | Video loop | Atmosphere or product proof | ≤2MB, muted, `playsinline`, poster, `preload="metadata"` | Visible pause control; paused off-screen and under reduced motion |
 | Oversized editorial type | Confidence, hierarchy | fluid `clamp()`, measure ≤2 lines, ≤3 words per line | Reflows at 390px without clipping; no `text-*`-only headline without a semantic heading |
-| Micro-interaction set | Perceived quality | ≤3 distinct interactions per view, 100–150ms | No layout shift; no hover-only information |
+| Micro-interaction set | Perceived quality | ≤3 distinct interactions per view; follow canonical timing | No layout shift; no hover-only information |
 | Sound | Rarely | opt-in only, default off | Never required to understand state |
 
 ## 4. Award theatre — earns nothing, costs the tier
@@ -88,13 +110,10 @@ scoring worse on the actual rubric:
 
 Everything else in `Anti-AI-Slop` stays exactly as written.
 
-1. **Motion duration ceiling** — hero-level choreography may run to 400ms (suite
-   default is 200–300ms for entrances). Hovers stay at 100–150ms.
-2. **One ambient animation** — allowed, must pause on hover/focus and disappear
-   entirely under `prefers-reduced-motion` (suite default is 0–1, unchanged in count,
-   but allowed to be persistent within the viewport).
+1. **Hero choreography duration** — may use 400ms. Declare `OVERRIDE: canonical motion limit → 400ms (craft tier §5)` on the motion instance.
+2. **Viewport-wide ambient animation** — may persist across the viewport rather than one section. Declare `OVERRIDE: ambient limited to one section → viewport-wide (craft tier §5)`. Keep it pausable and static under `prefers-reduced-motion`.
 
-Both must be declared as `OVERRIDE: <default> → <tier value> (craft tier §5)`.
+Both relaxations remain pausable and static under reduced motion. Hovers and non-hero transitions stay within canonical limits.
 
 ## 6. Procedure
 

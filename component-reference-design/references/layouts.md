@@ -1,5 +1,38 @@
 # Layouts — Modern Page & App Skeletons
 
+## Contents
+
+- [1. HOLY GRAIL (header / nav / main / aside / footer)](#1-holy-grail-header--nav--main--aside--footer)
+- [2. SIDEBAR + CONTENT (app shell) — Every-Layout "Sidebar"](#2-sidebar--content-app-shell--every-layout-sidebar)
+- [3. DASHBOARD SHELL (header + sidebar + content grid)](#3-dashboard-shell-header--sidebar--content-grid)
+- [4. SPLIT SCREEN (50/50 or asymmetric)](#4-split-screen-5050-or-asymmetric)
+- [5. FULL-BLEED LAYOUT (Josh Comeau)](#5-full-bleed-layout-josh-comeau)
+- [6. BENTO GRID](#6-bento-grid)
+- [7. MASONRY](#7-masonry)
+- [8. MAGAZINE / EDITORIAL](#8-magazine--editorial)
+- [9. ASYMMETRIC (alternating ratios)](#9-asymmetric-alternating-ratios)
+- [10. STICKY ASIDE (TOC / contextual sidebar)](#10-sticky-aside-toc--contextual-sidebar)
+- [11. MULTI-COLUMN (newspaper)](#11-multi-column-newspaper)
+- [12. CARD GRID (responsive auto-fill — no breakpoints)](#12-card-grid-responsive-auto-fill--no-breakpoints)
+- [13. CONTAINER QUERIES (component adapts to parent, not viewport)](#13-container-queries-component-adapts-to-parent-not-viewport)
+- [14. Z-PATTERN](#14-z-pattern)
+- [15. F-PATTERN](#15-f-pattern)
+- [16. COVER (Every-Layout) — vertically centered hero / login](#16-cover-every-layout--vertically-centered-hero--login)
+- [EVERY-LAYOUT COMPOSITION PRIMITIVES](#every-layout-composition-primitives)
+- [RESPONSIVE CHEAT SHEET](#responsive-cheat-sheet)
+- [ANTI-MONOTONY TECHNIQUES (recap)](#anti-monotony-techniques-recap)
+- [17. HERO VARIANTS (8 — pick by product type)](#17-hero-variants-8--pick-by-product-type)
+- [18. SAAS LANDING — FULL SECTION FLOW](#18-saas-landing--full-section-flow)
+- [19. DASHBOARD / APP SHELL (Linear / Vercel 2026)](#19-dashboard--app-shell-linear--vercel-2026)
+- [20. BENTO GRID — CELL-SPAN RECIPES](#20-bento-grid--cell-span-recipes)
+- [21. E-COMMERCE SKELETONS](#21-e-commerce-skeletons)
+- [22. EDITORIAL / CONTENT / DOCS](#22-editorial--content--docs)
+- [23. AUTH / ONBOARDING / PRICING / UTILITY PAGES](#23-auth--onboarding--pricing--utility-pages)
+- [24. MOBILE-FIRST / PWA / RESPONSIVE](#24-mobile-first--pwa--responsive)
+- [25. CUTTING-EDGE CSS TECHNIQUES (2025–2026)](#25-cutting-edge-css-techniques-20252026)
+- [PART 2 SOURCES](#part-2-sources)
+- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
+
 Companion to `../SKILL.md`. Every pattern: NAME · when-to-use · concrete CSS/Tailwind · responsive · motion. Sources: Every-Layout.dev, Josh Comeau, web.dev, Tailwind UI, MDN, NNG, Refactoring UI, Smashing.
 
 > Quality bar: semantic, responsive skeletons; vary anatomy and content-sized widths; preserve full-bleed breaks and reduced-motion support.
@@ -41,7 +74,7 @@ Intrinsic version (no breakpoints) — wraps when sidebar can't fit:
 .sidebar{flex-basis:16rem;flex-grow:1}
 .not-sidebar{flex-basis:0;flex-grow:999;min-inline-size:50%}
 ```
-**Responsive:** sidebar → off-canvas drawer on mobile. **Motion:** drawer slide-in `translate-x` 200ms ease-out.
+**Responsive:** sidebar → off-canvas drawer on mobile. **Motion:** drawer slide-in; use canonical timing in `anti-ai-slop-ui-ux/SKILL.md`.
 
 ---
 
@@ -86,7 +119,7 @@ Asymmetric: `lg:grid-cols-[2fr_3fr]` (40/60). **Responsive:** stacks; branding p
 .breakout{grid-column:1 / -1;max-width:60rem;margin-inline:auto}
 ```
 Tailwind: `grid grid-cols-[1fr_min(42rem,100%)_1fr] px-4` → children `col-start-2`, breaks `col-span-full`.
-**Motion:** scroll-reveal on full-bleed media (opacity 0→1 + translateY 8px, 250ms).
+**Motion:** scroll-reveal on full-bleed media (opacity 0→1 + translateY 8px, 200ms).
 
 ---
 
@@ -100,7 +133,7 @@ Tailwind: `grid grid-cols-[1fr_min(42rem,100%)_1fr] px-4` → children `col-star
   <div class="col-span-2 rounded-xl bg-slate-100 p-6">…wide…</div>
 </div>
 ```
-**Responsive:** 4-col → 2-col → 1-col. **Motion:** stagger reveal 30–50ms/cell.
+**Responsive:** 4-col → 2-col → 1-col. **Motion:** stagger reveal within canonical motion limits.
 
 ---
 
@@ -169,7 +202,7 @@ CSS-native (Chrome/FF 2025+): `grid-template-rows:masonry`. **Responsive:** colu
   <article class="rounded-lg border p-6">…</article>
 </div>
 ```
-**Motion:** stagger entrance 30ms/card.
+**Motion:** stagger entrance within canonical motion limits.
 
 ---
 
@@ -217,6 +250,8 @@ Source: NNG F-pattern research.
 ---
 
 ## 16. COVER (Every-Layout) — vertically centered hero / login
+
+**Default to avoid for marketing heroes:** centered layouts are easy to make generic. Prefer the asymmetric split hero in §17a unless the product and single CTA justify centering.
 ```css
 .cover{display:flex;flex-direction:column;min-height:100dvh;padding:1rem}
 .cover>*{margin-block:1rem}
@@ -304,7 +339,7 @@ Real page-level skeletons as built by best-in-class sites: Linear, Vercel, Strip
         Identify at-risk students 6 weeks earlier
       </h1>
       <p class="mt-5 max-w-[52ch] text-lg leading-relaxed text-gray-600">
-        SchoolTrack scores attendance, grades, and economic data so homeroom teacher can intervene before dropout.
+        Product scores attendance, grades, and economic data so homeroom teacher can intervene before dropout.
       </p>
       <a href="/demo" class="mt-8 inline-flex items-center rounded-md bg-blue-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
         See demo with sample data
@@ -374,7 +409,7 @@ Anti-monotony reference sequence (each row a different anatomy + width + padding
   <div class="mx-auto max-w-6xl grid gap-16 lg:grid-cols-2">
     <div class="hidden lg:block">
       <div class="sticky top-24 aspect-[4/3] overflow-hidden rounded-xl border border-gray-200 bg-gray-100">
-        <img id="feature-visual" src="/feature-1.png" alt="" class="h-full w-full object-cover transition-opacity duration-300" />
+        <img id="feature-visual" src="/feature-1.png" alt="Product interface preview" class="h-full w-full object-cover transition-opacity duration-200" />
       </div>
     </div>
     <div class="space-y-24 lg:space-y-48">
@@ -400,8 +435,8 @@ Mobile: sticky panel hidden; inline image per feature shows.
     <nav aria-label="Main" class="p-4 space-y-1 text-[13px]">
       <a href="/dashboard" aria-current="page" class="flex items-center gap-2 rounded-md bg-gray-100 px-2.5 py-1.5 font-medium text-gray-900">
         <svg aria-hidden="true" class="h-4 w-4 text-gray-500"><!-- icon --></svg>Dashboard</a>
-      <a href="/siswa" class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-gray-600 hover:bg-gray-50">
-        <svg aria-hidden="true" class="h-4 w-4 text-gray-400"><!-- icon --></svg>Siswa</a>
+      <a href="/users" class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-gray-600 hover:bg-gray-50">
+        <svg aria-hidden="true" class="h-4 w-4 text-gray-400"><!-- icon --></svg>Users</a>
     </nav>
   </aside>
   <header class="sticky top-0 z-10 flex items-center gap-4 border-b bg-white px-4 md:px-6">
@@ -471,7 +506,7 @@ Vary content per cell — never icon+title+blurb in all six. Use `grid-auto-flow
       <article class="group">
         <a href="/product/1">
           <div class="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
-            <img src="" alt="Product name" loading="lazy" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+            <figure class="aspect-[3/4] rounded-lg bg-gray-100" data-sample="true"><figcaption class="p-4 text-sm text-gray-600">Sample product image — replace before launch</figcaption></figure>
           </div>
           <h3 class="mt-3 text-sm font-medium text-gray-900">Product Name</h3>
           <p class="text-sm font-semibold tabular-nums text-gray-900">Rp 299.000</p>
@@ -481,15 +516,15 @@ Vary content per cell — never icon+title+blurb in all six. Use `grid-auto-flow
   </main>
 </div>
 ```
-Mobile: sidebar → filter bottom-sheet/drawer. Note `scale-[1.03]` on image inside `overflow-hidden`, never `scale-105` on the card.
+Mobile: sidebar → filter bottom-sheet/drawer. Avoid hover scaling on cards and images.
 
 ### PDP — gallery + sticky buy box
 ```html
 <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
   <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_24rem] lg:items-start">
     <section aria-label="Product images" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <img src="" alt="Front view" class="aspect-square w-full rounded-lg object-cover sm:col-span-2" />
-      <img src="" alt="Side view" class="aspect-square w-full rounded-lg object-cover" loading="lazy" />
+      <figure class="aspect-square rounded-lg bg-gray-100 sm:col-span-2" data-sample="true"><figcaption class="p-4 text-sm text-gray-600">Sample front image — replace before launch</figcaption></figure>
+      <figure class="aspect-square rounded-lg bg-gray-100" data-sample="true"><figcaption class="p-4 text-sm text-gray-600">Sample side image — replace before launch</figcaption></figure>
     </section>
     <aside class="lg:sticky lg:top-20 space-y-6">
       <div><h1 class="text-2xl font-bold text-gray-900">Air Max 90</h1><p class="mt-3 text-xl font-semibold tabular-nums">Rp 1.649.000</p></div>
@@ -502,7 +537,7 @@ Mobile: sidebar → filter bottom-sheet/drawer. Note `scale-[1.03]` on image ins
           </label>
         </div>
       </fieldset>
-      <button type="button" class="w-full rounded-full bg-gray-900 px-6 py-4 text-base font-medium text-white hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2">Add to Bag</button>
+      <button type="button" class="w-full rounded-md bg-gray-900 px-6 py-4 text-base font-medium text-white hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2">Add to Bag</button>
     </aside>
   </div>
 </main>
@@ -563,8 +598,8 @@ For full named-line system (content/popout/feature/full) see §5 in core layouts
 <fieldset class="space-y-3">
   <legend class="sr-only">Pilih peran</legend>
   <label class="flex cursor-pointer items-center gap-4 rounded-lg border border-gray-200 p-4 transition-colors hover:border-blue-300 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
-    <input type="radio" name="role" value="guru" class="h-4 w-4 border-gray-300 text-blue-600" />
-    <div><p class="text-sm font-medium text-gray-900">Wali Kelas</p><p class="text-xs text-gray-500">Pantau siswa & terima saran intervensi</p></div>
+    <input type="radio" name="role" value="member" class="h-4 w-4 border-gray-300 text-blue-600" />
+    <div><p class="text-sm font-medium text-gray-900">Team lead</p><p class="text-xs text-gray-500">Monitor activity and review recommendations</p></div>
   </label>
 </fieldset>
 ```
@@ -647,7 +682,7 @@ Browser-support table (June 2026): ✅ ship = all evergreen · ⚠️ progressiv
 
 ### `@starting-style` — modal entrance
 ```css
-dialog[open] { opacity:1; scale:1; transition: opacity 250ms, scale 250ms, display 250ms allow-discrete; }
+dialog[open] { opacity:1; scale:1; transition: opacity 200ms, scale 200ms, display 200ms allow-discrete; }
 @starting-style { dialog[open] { opacity:0; scale:.95; } }
 ```
 
@@ -670,13 +705,6 @@ Linear, Vercel (+ Geist DS / rauno.me), Stripe, Raycast, Clerk, Resend, Framer, 
 
 ---
 
-## Creative Freedom
+## Creative Freedom Within the Bans
 
-These patterns and rules are **bare minimum guidelines**. You are encouraged to:
-
-- **Improvise beyond what's documented** — use your own creativity and judgment
-- **Experiment with novel solutions** — don't feel constrained to only what's listed here
-- **Adapt to context** — every project has unique requirements that may warrant different approaches
-- **Invent new patterns** — if you discover a better solution, use it
-
-Treat this reference as a **foundation, not a ceiling**. The goal is to avoid AI slop while still producing innovative, intentional design — not to limit you to a fixed set of "approved" solutions.
+Invent new patterns when useful. Nothing here overrides a P0/HIGH ban; on conflict, the ban wins.
