@@ -31,7 +31,17 @@ _BANNED_ACCENT = _re.compile(
 _BANNED_TINT = _re.compile(
     r"^#(?:E0E7FF|EEF2FF|FAF5FF|F5F3FF|EDE9FE|F3E8FF|DDD6FE|C7D2FE)$", _re.I)
 _BANNED_TEXT = _re.compile(r"^#(?:1E1B4B|312E81|3730A3|4C1D95|2E1065)$", _re.I)
-_ACCENT_HUES = ["#0F766E", "#B45309", "#3F6212", "#334155", "#7F1D1D", "#0E7490", "#4D7C0F", "#78350F"]
+# Domain table, identical to anti-ai-slop-ui-ux/SKILL.md "brand hue by product domain".
+_DOMAIN_HUES = [
+    (("invoice", "ledger", "money", "payment", "billing", "productivity", "task", "saas"), "#0F766E"),
+    (("health", "medical", "clinic", "wellness", "care", "spa", "fitness"), "#0E7490"),
+    (("safety", "logistics", "alert", "delay", "compliance", "security"), "#B45309"),
+    (("agri", "farm", "environment", "sustainab", "climate"), "#3F6212"),
+    (("enterprise", "legal", "infrastructure", "docs", "b2b", "portal"), "#334155"),
+    (("food", "restaurant", "hospitality", "craft", "heritage", "wine"), "#7F1D1D"),
+    (("developer", "devtool", "api", "data", "ai", "analytics", "ml"), "#4D7C0F"),
+]
+_ACCENT_HUES = ["#0F766E", "#B45309", "#3F6212", "#334155", "#7F1D1D", "#0E7490", "#4D7C0F"]
 _NEUTRAL_BG = "#F8FAFC"
 _NEUTRAL_TINT = "#E2E8F0"
 _NEUTRAL_TEXT = "#0F172A"
@@ -42,11 +52,26 @@ def _seed_index(seed, size):
     return int(digest[:8], 16) % size
 
 
+def domain_hue(query):
+    """Deterministic hue from the filter's domain table; the catch-all is deep teal."""
+    q = (query or "").lower()
+    for words, hue in _DOMAIN_HUES:
+        if any(word in q for word in words):
+            return hue
+    return "#0F766E"
+
+
 def post_filter_colors(colors, seed=""):
-    """Replace vendor indigo/violet values with brand-safe equivalents."""
+    """Replace vendor indigo/violet values with the filter's domain hue."""
     out = dict(colors or {})
+    base = domain_hue(seed)
     idx = _seed_index(seed, len(_ACCENT_HUES))
-    rotations = [(_ACCENT_HUES[(idx + i) % len(_ACCENT_HUES)]) for i in range(3)]
+    rotations = [base, _ACCENT_HUES[(idx + 1) % len(_ACCENT_HUES)], _ACCENT_HUES[(idx + 2) % len(_ACCENT_HUES)]]
+    # The filter's step 2 always decides the hue, so the primary is the domain hue
+    # even when the vendor palette was not itself banned.
+    if isinstance(out.get("primary"), str) and out["primary"].strip().upper() != base.upper():
+        _note_override("OVERRIDE: vendor primary {} → {} [C1]".format(out["primary"], base))
+        out["primary"] = base
     accent_roles = ("primary", "secondary", "cta")
     accent_i = 0
     for role, value in list(out.items()):
@@ -60,6 +85,7 @@ def post_filter_colors(colors, seed=""):
         elif _BANNED_ACCENT.match(hexv):
             if role in accent_roles:
                 out[role] = rotations[accent_i % len(rotations)]
+                _note_override("OVERRIDE: vendor {} {} → {} [C1]".format(role, hexv, out[role]))
                 accent_i += 1
             else:
                 out[role] = _NEUTRAL_TINT
@@ -73,10 +99,17 @@ def post_filter_typography(typo):
     body = str(out.get("body") or "")
     bad_pairing = "playfair" in heading.lower() and body.strip().lower() == "inter"
     inter_only = heading.strip().lower() == "inter" and body.strip().lower() == "inter"
-    same_face = heading.strip().lower() == body.strip().lower() and not inter_only
+    # A single versatile family is legitimate (Plus Jakarta, IBM Plex) unless it is Inter/Geist.
+    same_face = False
     mono_display = bool(_re.search(r"(?:^|\s)(?:fira code|jetbrains mono|space mono|ibm plex mono|share tech mono|roboto mono|source code pro|courier|consolas)(?:$|\s)|mono$", heading.lower()))
-    if inter_only or bad_pairing or mono_display or same_face:
-        new_heading = "Fraunces" if bad_pairing else "Bricolage Grotesque"
+    in_table = any(name in heading.lower() for name in ("fraunces", "bricolage", "cabinet grotesk"))
+    if inter_only or bad_pairing or mono_display or same_face or not in_table:
+        if bad_pairing or any(w in str(out.get("best_for", "")).lower() for w in ("luxury", "editorial", "culture")):
+            new_heading = "Fraunces"
+        elif any(w in str(out.get("best_for", "")).lower() for w in ("playful", "children", "consumer", "education")):
+            new_heading = "Cabinet Grotesk"
+        else:
+            new_heading = "Bricolage Grotesque"
         out["heading"] = new_heading
         body_face = body if body and body.strip().lower() != "inter" else "Inter"
         out["google_fonts_url"] = (
@@ -89,7 +122,7 @@ def post_filter_typography(typo):
             + body_face.replace(" ", "+") + ":wght@400;500&display=swap');"
         )
         out["post_filter_note"] = "display pairing substituted (banned pairing or Inter-everywhere)"
-        _note_override("OVERRIDE: {} / {} -> {} / {} [gate T1]".format(heading or "?", body or "?", new_heading, body or "Inter"))
+        _note_override("OVERRIDE: {} / {} → {} / {} [T1]".format(heading or "?", body or "?", new_heading, body or "Inter"))
     return out
 
 
@@ -100,10 +133,10 @@ def post_filter_style(style):
     if "glassmorphism" in name.lower() or "liquid glass" in name.lower():
         cleaned = _re.sub(r"(?:glassmorphism|liquid glass)\s*\+?\s*", "", name, flags=_re.I).strip(" +")
         out["name"] = cleaned or "Flat Design"
-        for key in ("keywords", "effects", "accessibility", "performance"):
+        for key in ("keywords", "effects"):
             if key in out:
                 out[key] = "flat surfaces, solid fills, clear borders, no blur or transparency"
-        _note_override("OVERRIDE: Glassmorphism style -> {} [gate K4]".format(out["name"]))
+        _note_override("OVERRIDE: Glassmorphism → {} [K4]".format(out["name"]))
     return out
 # ---------------------------------------------------------------------------
 
@@ -574,7 +607,7 @@ def generate_design_system(query: str, project_name: str = None, output_format: 
 
     if output_format == "markdown":
         return format_markdown(design_system) + "\n".join(render_overrides(design_system))
-    return format_ascii_box(design_system)
+    return format_ascii_box(design_system) + "\n".join(render_overrides(design_system))
 
 
 # ============ PERSISTENCE FUNCTIONS ============
@@ -1175,7 +1208,7 @@ def sanitize_prose(text):
     for pattern, replacement in _PROSE_SUBS:
         new = _re.sub(pattern, replacement, out, flags=_re.I)
         if new != out:
-            _note_override("OVERRIDE: vendor prose \"{}\" -> \"{}\" [prose-post-filter]".format(
+            _note_override("OVERRIDE: vendor prose \"{}\" → \"{}\" [K4]".format(
                 _re.search(pattern, out, _re.I).group(0), replacement))
             out = new
     return out

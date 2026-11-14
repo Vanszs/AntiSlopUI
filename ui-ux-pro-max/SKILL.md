@@ -166,7 +166,7 @@ Available stacks: `astro`, `flutter`, `html-tailwind`, `jetpack-compose`, `nextj
 
 ### Step 5: Post-Filter (MANDATORY)
 
-Treat every `--design-system` and domain-search result as a proposal: apply [`POST-FILTER.md`](POST-FILTER.md) before writing code. Run the Anti-AI-Slop pre-delivery audit last; its ban list is authoritative and wins any conflict.
+Treat every `--design-system` and domain-search result as a proposal: apply [`POST-FILTER.md`](POST-FILTER.md) before writing code. Run the Anti-AI-Slop pre-delivery audit last if that skill is installed; if it is not, apply `POST-FILTER.md` plus the frozen contract below, and state in your output that the full audit was unavailable.
 
 ---
 
@@ -280,7 +280,7 @@ Apply [`POST-FILTER.md`](POST-FILTER.md) to every result before implementation. 
 
 ## Bans this skill must apply when the filter is absent
 
-If `anti-ai-slop-ui-ux` is installed, its list is authoritative and this block is redundant; if not, this block is the minimum contract.
+If `anti-ai-slop-ui-ux` is installed, its list is authoritative and this block is redundant; if not, this block is the minimum contract. A minimum is not exhaustive: the filter's full gate table has 12 rows, this block has 8.
 
 - Purple/indigo/violet accents
 - Gradient-text headlines

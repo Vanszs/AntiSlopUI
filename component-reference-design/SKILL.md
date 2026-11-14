@@ -53,6 +53,7 @@ Vary container widths by content; a grid may repeat `max-w-6xl`, but not every s
 Always load this `SKILL.md` first.
 Open at most ONE reference file per task; two when combining dashboards + charts, or when auditing (the tell catalog counts as the second). Never read a whole reference file: read its Contents TOC, grep the heading, then read that range only. Mandatory recipe:
 ```sh
+# run from this skill's directory (cd component-reference-design)
 grep -nE '^#{1,2} ' references/layouts.md   # every section heading, h1 or h2
 sed -n 'START,ENDp' references/layouts.md   # END = the next match's line number minus 1
 ```

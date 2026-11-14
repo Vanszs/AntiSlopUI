@@ -317,6 +317,14 @@ def main():
             domain_choices, stack_choices = set(CSV_CONFIG), set(AVAILABLE_STACKS)
         finally:
             sys.path.pop(0)
+        # the documented domain table must match argparse, not just the examples
+        skill_doc = ROOT / "ui-ux-pro-max/SKILL.md"
+        if skill_doc.exists():
+            table_domains = set(re.findall(r"(?m)^\|\s*`([a-z-]+)`\s*\|", skill_doc.read_text(encoding="utf-8")))
+            table_domains &= domain_choices | {"prompt", "icons", "web", "react", "ux", "chart", "landing", "product", "style", "typography", "color"}
+            if table_domains != domain_choices:
+                problems.append("domain table mismatch: documented {} vs CSV_CONFIG {}".format(sorted(table_domains), sorted(domain_choices)))
+
         for doc in (ROOT / "ui-ux-pro-max/SKILL.md", ROOT / "README.md"):
             if not doc.exists():
                 continue
@@ -414,7 +422,9 @@ def main():
             if path == ROOT / "anti-ai-slop-ui-ux/SKILL.md":
                 continue
             for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-                if "OVERRIDE" not in line and re.search(r"600ms|500ms|1–1\.5s|duration-(?:[5-9])\d\d\b", line):
+                if "OVERRIDE" in line or "≤" in line:
+                    continue
+                if re.search(r"duration-(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})\b|\b(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})ms\b", line):
                     failures.append("{}:{} noncanonical duration".format(path.relative_to(ROOT), number))
         return failures
     run_check(results, "17 SINGLE MOTION CANON", single_motion)

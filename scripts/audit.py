@@ -13,7 +13,7 @@ RULES = [
     ("hover-scale", re.compile(r"hover:scale-1\d\d", re.I)),
     ("group-hover-scale", re.compile(r"group-hover:scale", re.I)),
     ("white-opacity", re.compile(r"bg-white/1[00]?\b", re.I)),
-    ("backdrop-blur-lg", re.compile(r"backdrop-blur-(?:lg|xl|2xl|3xl)\b|backdrop-filter\s*:\s*blur\((?:[6-9]|[1-9]\d)px\)|frosted glass|liquid glass", re.I)),
+    ("backdrop-blur-lg", re.compile(r"backdrop-blur(?:-(?:lg|xl|2xl|3xl))?\b(?!-sm)|(?:backdrop-)?filter\s*:\s*blur\((?:[6-9]|[1-9]\d)px\)|frosted glass|liquid glass", re.I)),
     ("text-transparent-gradient", re.compile(r"(?=.*text-transparent)(?=.*bg-clip-text)", re.I)),
     ("over-motion-budget", re.compile(r"\bduration-(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})\b|\b(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})ms\b", re.I)),
     ("uniform-container", re.compile(r"\bmax-w-7xl\b", re.I)),
@@ -26,6 +26,12 @@ EXTENSIONS = {".css", ".html", ".tsx", ".jsx", ".ts", ".vue", ".svelte", ".astro
 # directory scan only looks at shipped artifacts. An explicitly named file is
 # always scanned, which is how CI audits a generated MASTER.md.
 DOC_EXTENSIONS = {".md"}
+# Docs that exist to quote banned values: exempt from directory scans.
+DOC_EXEMPT_PREFIXES = ("anti-ai-slop-ui-ux/",)
+DOC_EXEMPT_FILES = ("ui-ux-pro-max/POST-FILTER.md", "README.md", "scripts/validate.py")
+# A doc line that names a ban is documentation, not implementation.
+DOC_BAN_CONTEXT = ("❌", "never", "Never", "avoid", "Avoid", "BAN", "banned", "P0", "HIGH", "OVERRIDE", "≤",
+                   "slop", "Slop", "→", "instead", "Instead", "don't", "Don't", "FAIL", "⚠", "anti-pattern")
 
 
 def files_for(paths):
@@ -43,7 +49,10 @@ def files_for(paths):
             suffix = file.suffix.lower()
             if explicit and suffix in (EXTENSIONS | DOC_EXTENSIONS):
                 yield file
-            elif not explicit and suffix in EXTENSIONS - DOC_EXTENSIONS:
+            elif not explicit and suffix in EXTENSIONS:
+                rel = file.as_posix()
+                if rel.startswith(DOC_EXEMPT_PREFIXES) or rel in DOC_EXEMPT_FILES:
+                    continue
                 yield file
 
 
@@ -59,20 +68,33 @@ def main():
         # The repo ships one reviewed allowlist; accept either name.
         allow_file = Path(__file__).with_name("conflict-allowlist.txt")
     if allow_file.exists():
-        allow.extend(line.strip() for line in allow_file.read_text(encoding="utf-8").splitlines()
-                     if line.strip() and not line.lstrip().startswith("#"))
+        for entry in allow_file.read_text(encoding="utf-8").splitlines():
+            entry = entry.strip()
+            if not entry or entry.startswith("#"):
+                continue
+            # entries are "<repo-relative path>:<distinctive substring of the line>"
+            if ":" in entry:
+                allow_path, fragment = entry.split(":", 1)
+                allow.append((allow_path.strip(), fragment.strip()))
+            else:
+                allow.append(("", entry))
     violations = []
     for path in files_for(args.paths):
         text = path.read_text(encoding="utf-8")
         for line_no, line in enumerate(text.splitlines(), 1):
             compact = re.sub(r"\s+", " ", line).strip()
+            if path.suffix.lower() in DOC_EXTENSIONS and any(token in compact for token in DOC_BAN_CONTEXT):
+                continue
             if compact.startswith(("- NO-PROOF:", "NO-PROOF:")):
                 continue
             if compact.startswith(("- OVERRIDE:", "OVERRIDE:")):
                 # a ledger record is allowed to name the banned value it replaced;
                 # only the substituted side is shipped, so check that.
                 parts = re.split(r"→|->", compact, maxsplit=1)
-                compact = parts[1].strip() if len(parts) > 1 else ""
+                if len(parts) < 2:
+                    pass  # not a substitution record: scan it like any other line
+                else:
+                    compact = parts[1].strip()
             for name, pattern in RULES:
                 matches = list(pattern.finditer(compact))
                 if name == "text-transparent-gradient" and matches:
@@ -80,7 +102,8 @@ def main():
                 if name == "uniform-container":
                     matches = matches if compact.count("max-w-7xl") > 0 else []
                 for match in matches:
-                    if any(token in compact for token in allow):
+                    rel = path.as_posix()
+                    if any((not scope or rel.endswith(scope)) and fragment in compact for scope, fragment in allow):
                         continue
                     violations.append({"path": str(path), "line": line_no, "rule": name, "snippet": compact[:240]})
     containers = {}

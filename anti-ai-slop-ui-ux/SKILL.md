@@ -35,7 +35,7 @@ This skill owns the suite's UI ban list. Its rules override conflicting recommen
 4. Run the detailed pre-delivery audit.
 
 ### Review/refactor
-1. Count tells using the definition below; fix all P0/HIGH findings.
+1. Count tells using the definition below; fix every P0 finding, and every HIGH finding that can be fixed without inventing facts.
 2. Report each finding as `tell → why-slop → fix → severity` with evidence.
 3. **Block when any tell is P0, or when 3+ tells are P0/HIGH. MEDIUM and LOW tells are recorded, not blocking.** No secondary threshold.
 
@@ -50,7 +50,7 @@ A banned purple, indigo, or other prohibited hue is “real brand” only when p
 
 Vendor prose describes intent, never implementation: never copy a duration, effect or style name out of generated text, and apply the substitution table instead.
 
-Also enforced from the catalog: mono/technical faces used as display (catalog §3 TYPOGRAPHY), indigo-950 / violet-50 tints used as text or background (POST-FILTER table; values come from the vendor palette), typewriter-style copy animation and multi-layer parallax (catalog §8 MOTION, rows MO8 and MO12). These are catalog rows, not a second list.
+Also enforced from the catalog: mono/technical faces used as display (catalog §3 TYPOGRAPHY), indigo-950 / violet-50 tints used as text or background (vendor palette values; if the research skill is installed its POST-FILTER table lists the substitutions), typewriter-style copy animation and multi-layer parallax (catalog §8 MOTION, rows MO8 and MO12). These are catalog rows, not a second list.
 
 Placeholder content is allowed only when visibly labeled and structurally distinct, e.g. `<figcaption>Sample data — replace before launch</figcaption>` or `data-sample="true"`. `[placeholder]`, lorem ipsum, and TODO remain banned. Unknown social proof or metrics must be omitted and recorded `NO-PROOF: user supplied none`; omission is compliant, invention is P0.
 
@@ -66,12 +66,13 @@ Placeholder content is allowed only when visibly labeled and structurally distin
 | MO10 | Missing reduced-motion support | Gate animation; static under reduced motion | P0 |
 | T1 | Inter/Geist for display and body without a second face | Pair a distinctive display face with body type | HIGH |
 | K1 | Identical 3-col feature grid (icon-in-rounded-square + title + blurb) | Vary size/structure or use a list/table | HIGH |
-| K3 | `hover:scale-105` in a grid | Shadow/border color transition | HIGH |
+| K3 | Any scaling hover (`hover:scale-*`) | Shadow/border color transition | HIGH |
 | I1 | Emoji as functional icons | Consistent SVG icon set | HIGH |
 | B3 | Pill buttons everywhere | `rounded-md`/`rounded-lg`; pills only semantic | HIGH |
 | N1 | Floating glassmorphic navbar | Fixed solid navbar with border | HIGH |
 
-For the full catalog: `grep -nE '^## |^\| ?[A-Z]{1,3}[0-9]+' references/slop-uiux-patterns.md`.
+For the full catalog: `# run from this skill's directory (cd anti-ai-slop-ui-ux)
+grep -nE '^## |^\| ?[A-Z]{1,3}[0-9]+' references/slop-uiux-patterns.md`.
 
 ## The five axes
 
@@ -107,7 +108,7 @@ Apply the deterministic terms above. Do not invent metrics, testimonials, custom
 
 Budget formula, suite-wide: **per skill, at most one reference file**; when auditing, the tell catalog is a second file. Two files total for a full run, never the whole reference tree.
 
-Budget ceiling: **20k tokens** of skill text per task (4 characters ≈ 1 token). Self-check in one command: `wc -c` the files you have loaded, add them up, divide by 4. If the next file crosses 20k, grep the heading and read only that range. The ceiling accommodates the three entry files plus one large reference (≈17k); it does not accommodate two large references, which is what the grep recipe is for.
+Budget ceiling: **20k tokens** of skill text per task (4 characters ≈ 1 token). Self-check with a shell: `wc -c` the files you have loaded, add them up, divide by 4. Without a shell, use the structural rule: the catalog plus one reference, and prefer the smaller of two candidate files. If the next file crosses 20k, grep the heading and read only that range. The ceiling accommodates the three entry files plus one large reference (≈17k); it does not accommodate two large references, which is what the grep recipe is for.
 
 ## Palette and type: who decides
 
@@ -127,7 +128,7 @@ Colour is decided in this order, and the first match wins:
 | Anything not listed | `#0F766E` deep teal |
 
 If a value from user brand assets exists, it wins over the table. Do not derive a hue by feel.
-3. **Research output** — `--design-system` colours, after `POST-FILTER.md`. A proposal, never an authority.
+3. **Research output** — `--design-system` colours, after its post-filter substitution table. A proposal, never an authority: step 2 has already decided the hue, so step 3 supplies systems and accents only.
 
 `component-reference-design` supplies structure, spacing, components and colour *systems* (tokens, chart palettes, OKLCH recipes). It does not choose your brand hue — steps 1–3 above do that; use its systems to express the hue you chose.
 
@@ -160,7 +161,9 @@ Compute relative luminance, or use these verified pairs and do not guess: `#0F17
 
 ## Naming and copy facts
 
-Never invent a product name, customer name, metric, logo or testimonial. If the user supplied a name, use it exactly; otherwise write `Your product` and label it once as a placeholder. Inventing identity is the same class of error as inventing proof.
+Never invent a product name, customer name, metric, logo or testimonial. If the user supplied a name, use it exactly; otherwise write `Your product`, label it once, and record `NO-BRAND: user supplied no name`. Inventing identity is the same class of error as inventing proof.
+
+A page that records `NO-BRAND` is `N-A` on the logo-swap gestalt item: there is no identity to test. Do not delete a wordmark to dodge the item — record the absence instead.
 
 ## If You Cannot Run Commands
 

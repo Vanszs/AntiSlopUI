@@ -6,3 +6,10 @@ component-reference-design/references/charts.md:animate gridlines/axes
 component-reference-design/references/animation.md:purposeful short motion
 component-reference-design/references/dashboards.md:whole-page scroll
 component-reference-design/references/dashboards.md:Vercel guidelines
+ui-ux-pro-max/SKILL.md:`transition: all`
+ui-ux-pro-max/SKILL.md:Motion outside the canonical table
+component-reference-design/SKILL.md:Motion budget
+component-reference-design/references/charts.md:animate gridlines/axes
+component-reference-design/references/animation.md:purposeful short motion
+component-reference-design/references/dashboards.md:purple/indigo accent
+component-reference-design/references/dashboards.md:| `transition: all` |

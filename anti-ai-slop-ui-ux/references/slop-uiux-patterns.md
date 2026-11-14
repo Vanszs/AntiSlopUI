@@ -34,7 +34,7 @@ LLMs generate UI by computing a weighted average across their training distribut
 Output **collapses toward the visual mean**. Every unspecified decision is filled with
 the single most probable token. This is structural math, not a bug.
 
-A tell is one catalog row in sections 1–10 with severity P0, HIGH, MEDIUM, or LOW. **3+ tells = block and regenerate.** The canonical threshold is defined in `../SKILL.md`.
+A tell is one catalog row in sections 1–10 with severity P0, HIGH, MEDIUM, or LOW. **3+ P0/HIGH tells, or any P0 tell, = block (see ../SKILL.md) and regenerate.** The canonical threshold is defined in `../SKILL.md`.
 
 **The cure (one rule to rule them all):** every spacing value, color, font, grid,
 and animation must be *chosen for a content-specific reason*. If you can't explain
