@@ -291,9 +291,12 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 - [ ] (HIGH) Form controls carry labels.
 - [ ] (HIGH) Forms expose validation states.
 - [ ] (HIGH) Colour is never the only state indicator.
+
+**Cross-cutting checks (counted through the catalogue rows named)**
+
 - [ ] Motion inside the canonical table; colour/shadow hovers are 100–150ms; any spatial motion
-  uses `transform`/`opacity` only; reduced-motion renders static.
-- [ ] Body text and UI meet the contrast thresholds above.
+  uses `transform`/`opacity` only; reduced-motion renders static (MO10, MO11).
+- [ ] Body text and UI meet the contrast thresholds above (C7).
 
 **Gestalt**
 - [ ] Counted catalog tells per element; **any P0 tell or 3+ P0/HIGH tells = block**.

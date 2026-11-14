@@ -70,9 +70,31 @@ def _readable_on(background):
     white = contrast_ratio(background, "#FFFFFF")
     ink = contrast_ratio(background, "#0F172A")
     if ink > white:
-        _note_override("OVERRIDE: button text white → #0F172A on {} [catalog C7] {:.1f}:1".format(background, ink))
+        _note_override("OVERRIDE: button text white → #0F172A on {} [catalog C7]".format(background))
         return "#0F172A"
     return "#FFFFFF"
+
+
+def _mix(hex_value, factor):
+    """Scale a hex colour's channels; >1 lightens, <1 darkens."""
+    value = (hex_value or "").lstrip("#")
+    if len(value) != 6:
+        return hex_value
+    try:
+        channels = [int(value[i:i + 2], 16) for i in (0, 2, 4)]
+    except ValueError:
+        return hex_value
+    scaled = [max(0, min(255, round(c * factor))) for c in channels]
+    return "#{:02X}{:02X}{:02X}".format(*scaled)
+
+
+def _hover_shade(background, text):
+    """Pick a hover background that keeps the button text at 4.5:1 or better."""
+    for factor in (0.90, 0.82, 0.74, 1.12, 1.22):
+        candidate = _mix(background, factor)
+        if contrast_ratio(candidate, text) >= 4.5:
+            return candidate
+    return background
 
 
 def _seed_index(seed, size):
@@ -831,8 +853,11 @@ def format_master_md(design_system: dict) -> str:
     lines.append("  cursor: pointer;")
     lines.append("}")
     lines.append("")
+    _hover = _hover_shade(cta, _readable_on(cta))
+    if _hover.upper() != cta.upper():
+        _note_override("OVERRIDE: hover opacity 0.9 → background {} [catalog C7]".format(_hover))
     lines.append(".btn-primary:hover {")
-    lines.append("  opacity: 0.9;")
+    lines.append("  background: {};".format(_hover))
     lines.append("  transform: translateY(-1px);")
     lines.append("}")
     lines.append("")
