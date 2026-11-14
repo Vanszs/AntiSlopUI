@@ -1260,7 +1260,7 @@ def sanitize_prose(text):
     return out
 
 
-_PROOF_WORDS = _re.compile(r"\b(?:proof|metric|metrics|results?|badge|credibility|guarantee|rating|ratings|review|reviews|testimonial|testimonials|sponsor|sponsors|logos?|trust|verified)\b", _re.I)
+_PROOF_WORDS = _re.compile(r"\b(?:proof|metric|metrics|results?|badges?|credibility|credentials?|guarantee|rating|ratings|review|reviews|testimonial|testimonials|sponsor|sponsors|logos?|trust|verified|certificates?|recognition|stats?|statistics?|awards?)\b", _re.I)
 _PROOF_REPLACEMENT = "customer evidence the user supplied (omit otherwise)"
 
 
@@ -1291,8 +1291,8 @@ def sanitize_result(design_system):
             for key in keys:
                 if key in block:
                     block[key] = sanitize_prose(block[key])
-    for section, keys in (("pattern", ("conversion", "sections", "color_strategy", "cta_placement")),
-                          ("style", ("keywords", "effects"))):
+    for section, keys in (("pattern", ("name", "conversion", "sections", "color_strategy", "cta_placement")),
+                          ("style", ("name", "keywords", "effects", "best_for"))):
         block = design_system.get(section)
         if isinstance(block, dict):
             for key in keys:
