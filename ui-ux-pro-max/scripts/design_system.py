@@ -1210,6 +1210,9 @@ _PROSE_SUBS = [
     (r"neon glow", "flat accent"),
     (r"streaming text", "progressive text update"),
     (r"blurred background", "solid background"),
+    (r"\btranslucent\b", "opaque"),
+    (r"backdrop[- ]filter[^.,;]*", "solid surface"),
+    (r"\bglass\b(?!morphism)", "solid surface"),
     (r"light source|light reflection|Z-depth", "flat surface"),
     (r"hover\s*\((?:(?:100|150|200|250|300|350|400)-\d+ms)\)", "hover (100-150ms)"),
     (r"\b(?:50|100|150|200|300|400|500|600)-(?:100|150|200|250|300|400|500|600|700)ms\b", "150-250ms"),
@@ -1291,8 +1294,8 @@ def sanitize_result(design_system):
             for key in keys:
                 if key in block:
                     block[key] = sanitize_prose(block[key])
-    for section, keys in (("pattern", ("name", "conversion", "sections", "color_strategy", "cta_placement")),
-                          ("style", ("name", "keywords", "effects", "best_for"))):
+    for section, keys in (("pattern", ("conversion", "sections", "color_strategy", "cta_placement")),
+                          ("style", ("keywords", "effects", "best_for"))):
         block = design_system.get(section)
         if isinstance(block, dict):
             for key in keys:
