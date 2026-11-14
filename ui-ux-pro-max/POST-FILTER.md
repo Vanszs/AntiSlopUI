@@ -1,6 +1,6 @@
 # Mandatory Post-Filter
 
-Treat generated recommendations as proposals. Apply these substitutions before code; the cited gate/catalog section remains authoritative. This table covers the substitutions the generator applies in code; if a value is absent here and violates the frozen contract in `SKILL.md`, treat it as banned and record the substitution.
+Treat generated recommendations as proposals. Apply these substitutions before code; the cited gate/catalog section remains authoritative. This table lists the named substitutions; the generator also applies a generic prose filter to vendor effect and conversion strings; if a value is absent here and violates the frozen contract in `SKILL.md`, treat it as banned and record the substitution.
 
 | Vendor output | Substitute | Authority |
 |---|---|---|

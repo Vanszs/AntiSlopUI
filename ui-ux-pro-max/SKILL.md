@@ -28,6 +28,7 @@ Comprehensive design guide for web and mobile applications. Contains 66 styles, 
 - [Tips for Better Results](#tips-for-better-results)
 - [If You Cannot Run Commands](#if-you-cannot-run-commands)
 - [Post-Filter](#post-filter)
+- [Bans this skill must apply when the filter is absent](#bans-this-skill-must-apply-when-the-filter-is-absent)
 
 ## Path Convention
 
@@ -289,8 +290,8 @@ If `anti-ai-slop-ui-ux` is installed, its list is authoritative and this block i
 - `hover:scale-*`
 - `transition: all`
 - Motion outside the canonical table (hover 100–150ms, entrance/exit 150–250ms, route ≤300ms); 400ms only with `OVERRIDE`
-- Invented metrics/social proof
+- Invented metrics/social proof — omit absent proof and record `NO-PROOF: user supplied none`
 - Missing `prefers-reduced-motion`; animation must render static under it
 - Colour-only state indicators
 
-Local defaults when the filter is absent: page `#F8FAFC`, card `#FFFFFF`, border `#E2E8F0`, text `#0F172A`, muted `#475569`; one display face plus one body face (Inter only alongside a different display); prose `max-w-3xl`, grids `max-w-6xl`, section padding 32/16/12; radius `md`/`lg`/`xl`; `cursor-pointer` and a visible `focus-visible` ring on anything interactive.
+Local defaults when the filter is absent: page `#F8FAFC`, card `#FFFFFF`, border `#E2E8F0`, text `#0F172A`, muted `#475569`; one display face plus one body face (Inter only alongside a different display); prose `max-w-3xl`, grids `max-w-6xl`, section padding `py-32`/`py-16`/`py-12`; verify 375/768/1024/1440 with no horizontal scroll; radius `md`/`lg`/`xl`; `cursor-pointer` and a visible `focus-visible` ring on anything interactive.

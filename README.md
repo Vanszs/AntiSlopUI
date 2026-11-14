@@ -34,7 +34,7 @@ purpose; load order is stated inside the descriptions because a router never rea
 
 If you load only one skill, load the filter. The other two defer to it, and each carries a local
 minimum contract so it still works alone: the palette ships a ship-gate, the research skill ships
-an 8-bullet ban summary. Installing all three is still better than installing one.
+a 10-bullet ban summary. Installing all three is still better than installing one.
 
 ## Precedence & conflict policy
 

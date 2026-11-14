@@ -52,10 +52,16 @@ def entries(lines):
 
 
 def insertion_point(lines):
-    """After the title and its companion / quality-bar lines."""
-    if not lines or not lines[0].startswith("# "):
-        return 0
-    idx = 1
+    """After frontmatter, the title and its companion / quality-bar lines."""
+    start = 0
+    if lines and lines[0].strip() == "---":
+        for i in range(1, len(lines)):
+            if lines[i].strip() == "---":
+                start = i + 1
+                break
+    if start >= len(lines) or not lines[start].startswith("# "):
+        return start
+    idx = start + 1
     while idx < len(lines) and not HEADING.match(lines[idx]):
         idx += 1
     while idx > 0 and not lines[idx - 1].strip():

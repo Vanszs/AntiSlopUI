@@ -108,7 +108,7 @@ Both relaxations remain pausable and static under reduced motion. Hovers and non
 
 1. Confirm the tier applies (§0). If not, refuse and ship solid.
 2. The filter's Pre-Delivery Audit runs first when that skill is installed; otherwise run the palette ship gate in `../SKILL.md`. A P0 fail denies the tier — do not
-   decorate a page that has not passed the filter.
+   decorate a page that has not passed the ship gate.
 3. Measure the §2 gates. Record numbers, not impressions.
 4. Score the §1 rubric. Fix the weakest criterion before adding any §3 pattern.
 5. Add craft patterns only while budget remains. Each one needs a one-line reason

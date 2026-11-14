@@ -43,7 +43,7 @@ Companion to `../SKILL.md`. The reference for building **clean, modern admin das
 15. **Progressive disclosure** — overview first (KPIs+chart+recent), detail on demand. Never overwhelm. (Stripe)
 
 ### Instant-slop bans (dashboard-specific)
-purple/indigo accent · shadow on every card · `hover:scale-105` in a grid (filter K3) · big `text-3xl` page titles · uniform `rounded-2xl` · `transition: all` · whole-page scroll · rainbow chart series · glassmorphic nav · pulsing notification badge · left-border nav active state.
+purple/indigo accent · shadow on every card · `hover:scale-*` on any element (filter K3) · big `text-3xl` page titles · uniform `rounded-2xl` · `transition: all` · whole-page scroll · rainbow chart series · glassmorphic nav · pulsing notification badge · left-border nav active state.
 
 ---
 
