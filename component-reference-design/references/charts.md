@@ -272,7 +272,7 @@ Use ONLY for ≤5 part-of-whole segments. >5 → horizontal bar. Time-series →
   role="img" aria-label="At-risk accounts: 24, +12% vs last month">
   <div className="flex items-start justify-between">
     <div>
-      <p className="text-sm font-medium text-slate-500">Siswa Berisiko</p>
+      <p className="text-sm font-medium text-slate-500">At-risk accounts</p>
       <p className="mt-2 text-2xl font-semibold tabular-nums text-slate-900">24</p>
       <p className="mt-2 flex items-center gap-1 text-xs">
         <span className="inline-flex items-center rounded bg-red-50 px-1.5 py-0.5 font-medium tabular-nums text-red-700">+12%</span>
@@ -367,7 +367,7 @@ Progress vs target: `role="progressbar"` + colored fill (teal on-track, amber be
 
 ## 11. EMPTY / LOADING / ERROR STATES (never a blank chart box)
 
-- **Empty:** centered icon + "Belum ada data" + one CTA ("Impor data") — see components.md EmptyState.
+- **Empty:** centered icon + "No data yet" + one CTA ("Import data") — see components.md EmptyState.
 - **Zero-but-present:** charts must still render axes/buckets with zero values (don't collapse). Guard
   every `pct` calc against divide-by-zero (`total>0 ? … : 0`, never `NaN`).
 - **Loading:** skeleton matching the chart's height (`animate-pulse motion-reduce:animate-none`), not a spinner.

@@ -288,5 +288,5 @@ If `anti-ai-slop-ui-ux` is installed, its list is authoritative and this block i
 - Inter-everywhere
 - `hover:scale-*`
 - `transition: all`
-- Motion longer than 300ms without an explicit `OVERRIDE`
+- Motion outside the canonical table (hover 100–150ms, entrance/exit 150–250ms, route ≤300ms); 400ms only with `OVERRIDE`
 - Invented metrics/social proof

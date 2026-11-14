@@ -528,7 +528,7 @@ Mobile: sidebar → filter bottom-sheet/drawer. Avoid `hover:scale-105` on grids
       <figure class="aspect-square rounded-lg bg-gray-100" data-sample="true"><figcaption class="p-4 text-sm text-gray-600">Sample side image — replace before launch</figcaption></figure>
     </section>
     <aside class="lg:sticky lg:top-20 space-y-6">
-      <div><h1 class="text-2xl font-bold text-gray-900">Air Max 90</h1><p class="mt-3 text-xl font-semibold tabular-nums">Rp 1.649.000</p></div>
+      <div><h1 class="text-2xl font-bold text-gray-900">Air Max 90</h1><p class="mt-3 text-xl font-semibold tabular-nums">$1,649</p></div>
       <fieldset>
         <legend class="mb-2 text-sm font-medium text-gray-900">Size</legend>
         <div class="grid grid-cols-4 gap-2">

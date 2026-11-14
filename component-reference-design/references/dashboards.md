@@ -475,7 +475,7 @@ Mirror final shape → no CLS. `aria-busy` announces once. Neutral gray (no bran
 Outlined retry (non-aggressive); human copy; red semantic only on icon.
 
 ### 10d. Zero-but-present chart
-Render axes + buckets with zero values + explicit `domain={[0,10]}` (else bars invisible) + subtle annotation "Belum ada kejadian tercatat periode ini". Guard divide-by-zero: `total>0 ? v/total*100 : 0`. Never collapse to empty state.
+Render axes + buckets with zero values + explicit `domain={[0,10]}` (else bars invisible) + subtle annotation "No events recorded this period". Guard divide-by-zero: `total>0 ? v/total*100 : 0`. Never collapse to empty state.
 
 ### 10e. Refresh (stale-while-revalidate)
 Show stale data + corner spinner (`role="status"`), never blank the widget. Table: `opacity-50 pointer-events-none` + centered overlay spinner + `sr-only "Memuat"`.

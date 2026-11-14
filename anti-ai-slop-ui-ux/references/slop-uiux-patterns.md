@@ -70,7 +70,7 @@ WHY, it's slop.
 | C7 | Low-contrast `text-gray-400`/`slate-400` body on white/dark | 83.9% of homepages fail WCAG contrast (WebAIM 2026); "elegant to you, invisible to millions" | Body ≥ `gray-700` (light) / `gray-200` (dark); verify 4.5:1 | P0 |
 | C8 | "Just slate-900 + indigo accent" default dark mode | Every Tailwind dark-mode tutorial; zero brand intent | Warmer dark surface (`zinc-900`); brand-matched accent; 2–3 surface elevations | HIGH |
 | C9 | Oversaturated "vibrant" palette (every accent at -500) | AI stacks every high-performing color at once; busy & artificial | 60-30-10; desaturate to -700/-800 text, -50/-100 bg; max 2 saturated/viewport | MEDIUM |
-| C10 | No brand color system (random hex, interchangeable identity) | "Nobody made a decision here"; meta-tell enabling all other color slop | Define 1 primary + ramp, 1–2 accents, 8–10 greys, semantic colors; tokens in config | HIGH |
+| C10 | Three or more unrelated accent hues with no neutral ramp (identity is interchangeable) | "Nobody made a decision here"; meta-tell enabling all other color slop | Define 1 primary + ramp, 1–2 accents, 8–10 greys, semantic colors; tokens in config | HIGH |
 
 ---
 
@@ -103,7 +103,7 @@ WHY, it's slop.
 |---|------|----------|-----|----------|
 | K1 | Identical 3-col feature grid (icon-in-rounded-square + title + blurb) | THE #1 AI layout fingerprint; statistical mean of every SaaS features section | Vary card sizes (one `col-span-2`); remove some containers; use list/table for uniform items | HIGH |
 | K2 | Uniform `rounded-2xl shadow-lg border` on every card | One safe shadow + radius applied everywhere; flattens hierarchy | Shadow hierarchy (`shadow-sm` cards, `shadow-xl` modals); drop border OR shadow | HIGH |
-| K3 | `hover:scale-105` in a grid | Tutorial-grade; overlaps neighbors; CLS | `hover:shadow-md` or `hover:border-primary/50`, `../SKILL.md` motion table | HIGH |
+| K3 | `hover:scale-105` on any element | Tutorial-grade; overlaps neighbors; CLS | `hover:shadow-md` or `hover:border-primary/50`, `../SKILL.md` motion table | HIGH |
 | K4 | Glassmorphism cards (`bg-white/10 backdrop-blur-lg`) | Peak-Dribbble 2021–22; fails contrast; GPU cost; invisible in light mode | Solid `bg-card`; Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception. | HIGH |
 | K5 | Gradient-border cards (purple→blue wrapper hack) | "Safest choice AI can make"; pure decoration | Solid border conveying state; `ring-1 ring-primary/20` for emphasis | HIGH |
 | K6 | `border-l-4 border-purple-500` left accent | "Almost as reliable a sign as em-dashes for text" (Krebs); lazy accent | Remove; left-border only for semantic alert/callout state | P0 |

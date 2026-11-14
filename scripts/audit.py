@@ -66,8 +66,8 @@ def main():
         text = path.read_text(encoding="utf-8")
         for line_no, line in enumerate(text.splitlines(), 1):
             compact = re.sub(r"\s+", " ", line).strip()
-            if "override" in compact.lower() or "no-proof" in compact.lower():
-                continue  # auditable exception record, not a shipped value
+            if compact.startswith(("OVERRIDE:", "- OVERRIDE:", "NO-PROOF:", "- NO-PROOF:")):
+                continue  # the ledger itself records what was removed; not a shipped value
             for name, pattern in RULES:
                 matches = list(pattern.finditer(compact))
                 if name == "text-transparent-gradient" and matches:

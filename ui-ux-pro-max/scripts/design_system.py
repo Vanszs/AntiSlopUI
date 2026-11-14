@@ -73,8 +73,9 @@ def post_filter_typography(typo):
     body = str(out.get("body") or "")
     bad_pairing = "playfair" in heading.lower() and body.strip().lower() == "inter"
     inter_only = heading.strip().lower() == "inter" and body.strip().lower() == "inter"
+    same_face = heading.strip().lower() == body.strip().lower() and not inter_only
     mono_display = bool(_re.search(r"(?:^|\s)(?:fira code|jetbrains mono|space mono|ibm plex mono|share tech mono|roboto mono|source code pro|courier|consolas)(?:$|\s)|mono$", heading.lower()))
-    if inter_only or bad_pairing or mono_display:
+    if inter_only or bad_pairing or mono_display or same_face:
         new_heading = "Fraunces" if bad_pairing else "Bricolage Grotesque"
         out["heading"] = new_heading
         body_face = body if body and body.strip().lower() != "inter" else "Inter"
@@ -95,10 +96,13 @@ def post_filter_style(style):
     """Drop the vendored Glassmorphism recommendation, keep the rest."""
     out = dict(style or {})
     name = str(out.get("name") or "")
-    if "glassmorphism" in name.lower():
-        cleaned = _re.sub(r"glassmorphism\s*\+?\s*", "", name, flags=_re.I).strip(" +")
+    if "glassmorphism" in name.lower() or "liquid glass" in name.lower():
+        cleaned = _re.sub(r"(?:glassmorphism|liquid glass)\s*\+?\s*", "", name, flags=_re.I).strip(" +")
         out["name"] = cleaned or "Flat Design"
-        out["post_filter_note"] = "Glassmorphism dropped (banned); solid surfaces retained"
+        for key in ("keywords", "effects", "accessibility", "performance"):
+            if key in out:
+                out[key] = "flat surfaces, solid fills, clear borders, no blur or transparency"
+        _note_override("OVERRIDE: Glassmorphism style -> {} [gate K4]".format(out["name"]))
     return out
 # ---------------------------------------------------------------------------
 
@@ -1142,10 +1146,13 @@ def _detect_page_type(context: str, style_results: list) -> str:
 _PROSE_SUBS = [
     (r"glassmorphism", "solid surfaces"),
     (r"frosted glass[^.,;]*", "solid surface"),
-    (r"backdrop[- ]blur[^.,;)]*", "solid surface"),
+    (r"backdrop[- ]blur(?:\s*\([^)]*\))?[^.,;]*", "solid surface"),
     (r"neon glow", "flat accent"),
     (r"parallax[^.,;)]*", "scroll-linked reveal"),
     (r"streaming text", "progressive text update"),
+    (r"blurred background", "solid background"),
+    (r"light source|light reflection|Z-depth", "flat surface"),
+    (r"hover\s*\((?:150-250|200-300|300-400)ms\)", "hover (100-150ms)"),
     (r"indigo primary", "brand primary"),
     (r"purple tech", "brand accent"),
     (r"\b(?:indigo|violet|purple|lavender)\b", "brand"),

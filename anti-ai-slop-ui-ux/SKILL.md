@@ -48,7 +48,9 @@ Absence rows do not match. A row that describes something missing (a form withou
 
 A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, or a gate id such as `H2`.
 
-Also enforced from the catalog: mono/technical faces used as display (catalog §3 TYPOGRAPHY), indigo-950 / violet-50 tints used as text or background (catalog §2), typewriter-style copy animation and multi-layer parallax (catalog §8 MOTION, rows MO8 and MO12). These are catalog rows, not a second list.
+Vendor prose describes intent, never implementation: never copy a duration, effect or style name out of generated text, and apply the substitution table instead.
+
+Also enforced from the catalog: mono/technical faces used as display (catalog §3 TYPOGRAPHY), indigo-950 / violet-50 tints used as text or background (POST-FILTER table; values come from the vendor palette), typewriter-style copy animation and multi-layer parallax (catalog §8 MOTION, rows MO8 and MO12). These are catalog rows, not a second list.
 
 Placeholder content is allowed only when visibly labeled and structurally distinct, e.g. `<figcaption>Sample data — replace before launch</figcaption>` or `data-sample="true"`. `[placeholder]`, lorem ipsum, and TODO remain banned. Unknown social proof or metrics must be omitted and recorded `NO-PROOF: user supplied none`; omission is compliant, invention is P0.
 
@@ -111,7 +113,20 @@ Budget ceiling: **20k tokens** of skill text per task (4 characters ≈ 1 token)
 
 Colour is decided in this order, and the first match wins:
 1. **User-supplied brand assets** — a logo file, existing CSS tokens, or a brand PDF. Use the value found there and record `[brand: <source>]`.
-2. **This skill's brand rule** — one hue that is not purple, indigo, or violet, defensible from the product's own domain (ledger-neutral, clinical-calm, safety-orange …). State the reason in one sentence.
+2. **This skill's brand rule** — take the hue from this table by product domain. Every value is contrast-certified for white text:
+
+| Product domain | Brand hue |
+|---|---|
+| Money, invoicing, ledger, productivity | `#0F766E` deep teal |
+| Health, clinical, wellness, care | `#0E7490` cyan-teal |
+| Safety, urgency, logistics, alerts | `#B45309` clay |
+| Agriculture, environment, sustainability | `#3F6212` moss |
+| Enterprise, legal, infrastructure, docs | `#334155` slate |
+| Food, hospitality, craft, heritage | `#7F1D1D` oxblood |
+| Developer tooling, data, AI infrastructure | `#4D7C0F` olive |
+| Anything not listed | `#0F766E` deep teal |
+
+If a value from user brand assets exists, it wins over the table. Do not derive a hue by feel.
 3. **Research output** — `--design-system` colours, after `POST-FILTER.md`. A proposal, never an authority.
 
 `component-reference-design` supplies structure, spacing, components and colour *systems* (tokens, chart palettes, OKLCH recipes). It does not choose your brand hue — steps 1–3 above do that; use its systems to express the hue you chose.
@@ -120,16 +135,16 @@ Display face is chosen by product category, not taste:
 
 | Product category | Display face | Body |
 |---|---|---|
-| Editorial, luxury, culture | Fraunces | Inter |
-| Software, developer tool, data product | Bricolage Grotesque | Inter |
-| Neutral B2B, enterprise, docs | Bricolage Grotesque | Inter |
-| Playful, consumer, education | Cabinet Grotesk | Inter |
+| Editorial, luxury, culture | Fraunces | Inter or the palette's body face |
+| Software, developer tool, data product | Bricolage Grotesque | Inter or the palette's body face |
+| Neutral B2B, enterprise, docs | Bricolage Grotesque | Inter or the palette's body face |
+| Playful, consumer, education | Cabinet Grotesk | Inter or the palette's body face |
 
-If the category is genuinely ambiguous, use Bricolage Grotesque and say why. Two families maximum; Inter is legal for body only when a different display face is present.
+If the category is genuinely ambiguous, use Bricolage Grotesque and say why. Two families maximum. Any single non-display body face is legal; Inter is legal only when a different display face is present. If the display face is not loadable, do not substitute a vendor face — use Bricolage Grotesque.
 
 ## Contrast: how to check it
 
-Compute relative luminance, or use these verified pairs and do not guess: `#0F172A` on `#F8FAFC` = 15.9:1 · `#475569` on `#F8FAFC` = 7.2:1 · `#FFFFFF` on `#0F766E` = 5.5:1 · `#FFFFFF` on `#B45309` = 5.2:1. Ship body text at 4.5:1 or better, large text and UI at 3:1 or better. If you cannot compute a custom pair, move the value until it matches one of the pairs above.
+Compute relative luminance, or use these verified pairs and do not guess: `#0F172A` on `#F8FAFC` = 17.1:1 · `#475569` on `#F8FAFC` = 7.2:1 · `#FFFFFF` on `#0F766E` = 5.5:1 · `#FFFFFF` on `#B45309` = 5.0:1. Ship body text at 4.5:1 or better, large text and UI at 3:1 or better. If you cannot compute a custom pair, move the value until it matches one of the pairs above.
 
 ## Container widths, precisely
 
@@ -139,13 +154,17 @@ Compute relative luminance, or use these verified pairs and do not guess: `#0F17
 
 - Surfaces: `#F8FAFC` page, `#FFFFFF` card, border `#E2E8F0`, text `#0F172A`, muted `#475569`.
 - Type: one display face ≠ Inter, body Inter 400/500, 2 families, 3 weights, 1.25 scale.
-- Layout: prose `max-w-3xl`, grids `max-w-6xl`, section padding 32/16/12, radius `md`/`lg`/`xl`.
+- Layout: prose `max-w-3xl`, grids `max-w-6xl`, section padding `py-32` / `py-16` / `py-12`, radius `md`/`lg`/`xl`.
 - Interaction: `cursor-pointer` on anything clickable, visible `focus-visible` ring, hover feedback by color/shadow only.
 - Responsive: verify 375 / 768 / 1024 / 1440 with no horizontal scroll.
 
+## Naming and copy facts
+
+Never invent a product name, customer name, metric, logo or testimonial. If the user supplied a name, use it exactly; otherwise write `Your product` and label it once as a placeholder. Inventing identity is the same class of error as inventing proof.
+
 ## If You Cannot Run Commands
 
-If shell access is unavailable, do NOT read CSVs. Use `component-reference-design` patterns plus the authored defaults in this suite, and state that limitation in the output.
+If shell access is unavailable, do NOT read CSVs. Build from the authored defaults below; if `component-reference-design` is installed its patterns are optional enrichment. State the limitation in the output.
 
 ## Pre-Delivery Slop Audit
 
