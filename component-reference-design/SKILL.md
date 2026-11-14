@@ -41,6 +41,8 @@ Record each item as **PASS / FAIL / N-A + evidence**:
 7. Shipped palette meets WCAG AA contrast.
 8. No invented proof; record `NO-PROOF` when evidence was not supplied.
 
+Any FAIL blocks. There is no severity arithmetic in a standalone install: fix it or report it as blocking.
+
 ## Precedence & Conflict Resolution
 This skill is the palette; `Anti-AI-Slop` is the filter and authority. Its bans win every conflict; state the compliant substitution.
 Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception.

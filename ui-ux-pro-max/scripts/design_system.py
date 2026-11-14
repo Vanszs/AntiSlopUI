@@ -1117,7 +1117,7 @@ def _generate_intelligent_overrides(page_name: str, page_query: str, design_syst
             layout["Layout"] = "Full-width sections, centered content"
         
         if effects:
-            recommendations.append(f"Effects: {effects}")
+            recommendations.append(f"Effects: {sanitize_prose(effects)}")
     
     # Extract UX guidelines as recommendations
     for ux in ux_results:
@@ -1222,6 +1222,13 @@ _PROSE_SUBS = [
     (r"individual reviews?", "customer quotes (omit if not supplied)"),
     (r"include ratings?[^.,;]*", "omit ratings unless supplied"),
     (r"trust signals?[^.,;]*", "supplied evidence only"),
+    (r"join [\d,]+ readers", "state the audience only if supplied"),
+    (r"show (?:verified )?purchases?", "omit purchase proof unless supplied"),
+    (r"member count[^.,;]*", "omit community figures unless supplied"),
+    (r"posts today", "omit activity figures unless supplied"),
+    (r"include photo \+ name \+ role", "omit customer details unless supplied"),
+    (r"subscriber count[^.,;]*", "omit subscriber figures unless supplied"),
+    (r"ratings? \(4\.5\+?[^)]*\)", "omit ratings unless supplied"),
     (r"indigo primary", "brand primary"),
     (r"purple tech", "brand accent"),
     (r"\b(?:indigo|violet|purple|lavender)\b", "brand"),

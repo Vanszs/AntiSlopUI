@@ -214,7 +214,7 @@ What is enforced:
 - documented CLI truth (`--domain` / `--stack` values must exist in argparse)
 - persistence contract (the directory tree the docs name is the tree the code writes)
 - `## Contents` present in every reference; no ban-voiding clauses
-- a single motion canon outside the filter's table; no unexplained duration >300ms
+- a single motion canon outside the filter's table; the mechanical gate catches durations >300ms, while the filter's audit item enforces the tighter hover window (100–150ms)
 - descriptions dispatching (no two claim "any UI"; each has a "Not for" clause or load order)
 - README claims matching the implementation (including the check count)
 - `audit.py` run against a freshly generated `MASTER.md` — this is what catches a generator
