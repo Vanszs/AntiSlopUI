@@ -89,6 +89,7 @@ def post_filter_typography(typo):
             + body_face.replace(" ", "+") + ":wght@400;500&display=swap');"
         )
         out["post_filter_note"] = "display pairing substituted (banned pairing or Inter-everywhere)"
+        _note_override("OVERRIDE: {} / {} -> {} / {} [gate T1]".format(heading or "?", body or "?", new_heading, body or "Inter"))
     return out
 
 
@@ -572,7 +573,7 @@ def generate_design_system(query: str, project_name: str = None, output_format: 
         persist_design_system(design_system, page, output_dir, query)
 
     if output_format == "markdown":
-        return format_markdown(design_system)
+        return format_markdown(design_system) + "\n".join(render_overrides(design_system))
     return format_ascii_box(design_system)
 
 
@@ -1191,9 +1192,14 @@ def sanitize_result(design_system):
             for key in keys:
                 if key in block:
                     block[key] = sanitize_prose(block[key])
-    for key in ("key_effects", "anti_patterns"):
+    for key in ("key_effects",):
         if key in design_system:
             design_system[key] = sanitize_prose(design_system.get(key))
+    # anti_patterns is a list of things to AVOID: rewriting it would invert its polarity
+    for key in ("keywords", "effects", "accessibility", "performance"):
+        block = design_system.get("style")
+        if isinstance(block, dict) and key in block:
+            block[key] = sanitize_prose(block[key])
     design_system["overrides"] = list(_OVERRIDES)
     return design_system
 

@@ -129,10 +129,10 @@ python3 ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "
 ```
 
 This also creates:
-`design-system/<project-slug>/pages/dashboard.md` — page-specific deviations from Master.
+`design-system/<project-slug>/pages/<page-name>.md` — page-specific deviations from Master.
 
 **How hierarchical retrieval works:**
-1. When building a specific page (e.g., "Checkout"), first check `design-system/<project-slug>/pages/checkout.md`
+1. When building a specific page, first check `design-system/<project-slug>/pages/<page-name>.md` (for example, `--page "checkout"` writes the checkout file there)
 2. If the page file exists, its rules **override** the Master file
 3. If not, use `design-system/<project-slug>/MASTER.md` exclusively
 

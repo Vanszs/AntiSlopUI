@@ -96,7 +96,7 @@ def get_probe():
 
 def persisted_probe():
     out = Path(tempfile.mkdtemp(prefix="persist-", dir="/tmp/opencode" if Path("/tmp/opencode").exists() else None))
-    cmd = [sys.executable, str(ROOT / "ui-ux-pro-max/scripts/search.py"), "saas dashboard", "--design-system", "--persist", "-p", "ValidateProbe", "-o", str(out)]
+    cmd = [sys.executable, str(ROOT / "ui-ux-pro-max/scripts/search.py"), "saas dashboard", "--design-system", "--persist", "-p", "ValidateProbe", "--page", "dashboard", "-o", str(out)]
     proc = subprocess.run(cmd, cwd=_probe_cwd(), capture_output=True, text=True, timeout=90)
     if proc.returncode:
         raise RuntimeError("persist probe exit {}: {}".format(proc.returncode, (proc.stdout + proc.stderr)[-1500:]))
@@ -350,13 +350,21 @@ def main():
         out = cache["out"]
         produced = [str(p.relative_to(out)) for p in out.rglob("*") if p.is_file()]
         doc = (ROOT / "ui-ux-pro-max/SKILL.md").read_text(encoding="utf-8")
-        promised = set(re.findall(r"design-system/[A-Za-z0-9._/-]+", doc))
+        promised = set(re.findall(r"design-system/[A-Za-z0-9._/<>-]+", doc))
         for rel in sorted(promised):
             clean = rel.rstrip(".,;:")
             if not clean or clean.endswith("design-system/"):
                 continue
-            if not any(clean in path for path in produced):
+            # docs use placeholders such as <project-slug>: resolve them to the probe slug
+            resolved = clean.replace("<project-slug>", "validateprobe").replace("<page-name>", "dashboard").replace("<page>", "dashboard")
+            if any(ch in resolved for ch in "<>[]"):
+                continue
+            if not any(resolved in path for path in produced):
                 failures.append("docs promise {!r} but the probe wrote {}".format(clean, produced))
+        if not promised:
+            failures.append("SKILL.md names no persist path: the contract cannot be checked")
+        if any(path.endswith("/design-system/MASTER.md") for path in produced):
+            failures.append("legacy non-slugged design-system/MASTER.md was produced")
         return failures
     run_check(results, "13 PERSIST CONTRACT", persist_contract)
 
@@ -373,21 +381,6 @@ def main():
                     failures.append("{}: fallback metadata list/date is not string-map safe".format(path.relative_to(ROOT)))
         return failures
     run_check(results, "14 FRONTMATTER TYPES", frontmatter_types)
-
-    def suite_version():
-        versions = {}
-        for path, data in parsed.items():
-            meta = data.get("metadata") or {}
-            value = meta.get("suite_version") if isinstance(meta, dict) else None
-            versions[path.relative_to(ROOT)] = value
-        distinct = {v for v in versions.values()}
-        if None in distinct:
-            return ["missing metadata.suite_version in {}".format(
-                ", ".join(str(k) for k, v in versions.items() if v is None))]
-        if len(distinct) != 1:
-            return ["suite_version disagrees: {}".format(versions)]
-        return []
-    run_check(results, "21 SUITE VERSION", suite_version)
 
     def toc_sync():
         import importlib.util
@@ -457,6 +450,27 @@ def main():
         proc = subprocess.run([sys.executable, str(ROOT / "scripts/audit.py"), str(master)], capture_output=True, text=True, timeout=30)
         return [] if proc.returncode == 0 else ["audit exit {}: {}".format(proc.returncode, (proc.stdout + proc.stderr).strip())]
     run_check(results, "20 GENERATED ARTIFACT AUDIT", generated_audit)
+
+    def suite_version():
+        versions = {}
+        for path, data in parsed.items():
+            meta = data.get("metadata") or {}
+            value = meta.get("suite_version") if isinstance(meta, dict) else None
+            versions[path.relative_to(ROOT)] = value
+        distinct = {v for v in versions.values()}
+        if None in distinct:
+            return ["missing metadata.suite_version in {}".format(
+                ", ".join(str(k) for k, v in versions.items() if v is None))]
+        if len(distinct) != 1:
+            return ["suite_version disagrees: {}".format(versions)]
+        version = next(iter(distinct))
+        badge = re.search(r"suite%20([0-9][0-9.]*)-blue", readme.read_text(encoding="utf-8"))
+        if not badge:
+            return ["README badge does not state the suite version"]
+        if badge.group(1) != version:
+            return ["README badge says {} but metadata.suite_version is {}".format(badge.group(1), version)]
+        return []
+    run_check(results, "21 SUITE VERSION", suite_version)
 
     def readme_check_count():
         text = readme.read_text(encoding="utf-8")

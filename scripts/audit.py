@@ -13,7 +13,7 @@ RULES = [
     ("hover-scale", re.compile(r"hover:scale-1\d\d", re.I)),
     ("group-hover-scale", re.compile(r"group-hover:scale", re.I)),
     ("white-opacity", re.compile(r"bg-white/1[00]?\b", re.I)),
-    ("backdrop-blur-lg", re.compile(r"backdrop-blur-(?:lg|xl|2xl|3xl)?\b|backdrop-filter\s*:\s*blur|frosted glass|liquid glass", re.I)),
+    ("backdrop-blur-lg", re.compile(r"backdrop-blur-(?:lg|xl|2xl|3xl)\b|backdrop-filter\s*:\s*blur\((?:[6-9]|[1-9]\d)px\)|frosted glass|liquid glass", re.I)),
     ("text-transparent-gradient", re.compile(r"(?=.*text-transparent)(?=.*bg-clip-text)", re.I)),
     ("over-motion-budget", re.compile(r"\bduration-(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})\b|\b(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})ms\b", re.I)),
     ("uniform-container", re.compile(r"\bmax-w-7xl\b", re.I)),
@@ -66,8 +66,13 @@ def main():
         text = path.read_text(encoding="utf-8")
         for line_no, line in enumerate(text.splitlines(), 1):
             compact = re.sub(r"\s+", " ", line).strip()
-            if compact.startswith(("OVERRIDE:", "- OVERRIDE:", "NO-PROOF:", "- NO-PROOF:")):
-                continue  # the ledger itself records what was removed; not a shipped value
+            if compact.startswith(("- NO-PROOF:", "NO-PROOF:")):
+                continue
+            if compact.startswith(("- OVERRIDE:", "OVERRIDE:")):
+                # a ledger record is allowed to name the banned value it replaced;
+                # only the substituted side is shipped, so check that.
+                parts = re.split(r"→|->", compact, maxsplit=1)
+                compact = parts[1].strip() if len(parts) > 1 else ""
             for name, pattern in RULES:
                 matches = list(pattern.finditer(compact))
                 if name == "text-transparent-gradient" and matches:

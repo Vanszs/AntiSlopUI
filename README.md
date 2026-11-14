@@ -203,6 +203,7 @@ python3 scripts/validate.py       # 22 structural + semantic checks, non-zero ex
 python3 scripts/audit.py <path>   # artifact gate: banned values in CSS/HTML/TSX/MD
 python3 scripts/stats.py          # recompute stats from the CSVs
 python3 scripts/stats.py --write  # splice corrected numbers into this README
+python3 scripts/toc.py --write    # regenerate every reference index (non-destructive)
 ```
 
 What is enforced:
