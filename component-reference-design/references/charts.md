@@ -2,36 +2,21 @@
 
 ## Contents
 
-- [0. THE 15-POINT ANTI-SLOP CHART SCAN (run before shipping any chart)](#0-the-15-point-anti-slop-chart-scan-run-before-shipping-any-chart)
-- [1. COLOR SYSTEM (the #1 thing that makes charts beautiful or slop)](#1-color-system-the-1-thing-that-makes-charts-beautiful-or-slop)
-- [2. THE "PREMIUM MINIMAL" CHROME (shared presets — apply to every chart)](#2-the-premium-minimal-chrome-shared-presets--apply-to-every-chart)
-- [3. BAR & COLUMN](#3-bar--column)
-- [4. LINE & AREA](#4-line--area)
-- [5. DONUT / PIE / RADIAL](#5-donut--pie--radial)
-- [6. KPI / STAT CARDS + SPARKLINES (the dashboard's first impression)](#6-kpi--stat-cards--sparklines-the-dashboards-first-impression)
-- [7. SPECIALTY (use when the data story needs it; always pair with a data table)](#7-specialty-use-when-the-data-story-needs-it-always-pair-with-a-data-table)
-- [8. MOTION (tasteful — guides the eye, never entertains)](#8-motion-tasteful--guides-the-eye-never-entertains)
-- [9. DARK MODE & RESPONSIVE](#9-dark-mode--responsive)
-- [10. ACCESSIBILITY (mandatory on every chart)](#10-accessibility-mandatory-on-every-chart)
-- [11. EMPTY / LOADING / ERROR STATES (never a blank chart box)](#11-empty--loading--error-states-never-a-blank-chart-box)
-- [12. DECISION MATRIX — which chart for which question](#12-decision-matrix--which-chart-for-which-question)
-- [SOURCES (selected)](#sources-selected)
-- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
-
-Companion to `../SKILL.md`. The reference for building **beautiful** charts (Recharts-first)
-that read as Linear/Vercel/Stripe/Tremor quality — not "basic HTML chart" and not AI-slop.
-Synthesized from web research (2025–2026): Recharts 3.x docs, Tremor, shadcn/ui charts, Nivo,
-Apache ECharts, Observable, IBM Carbon Data-Viz, ColorBrewer, Okabe-Ito, Vercel/Linear/Stripe
-dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
-
-> Quality bar: derive one hue from the product; never use purple/indigo or impose a fixed client palette. Keep labels accessible, data real, motion reduced-aware, chrome legible.
-
-> Quality bar: one product-derived hue (never purple/indigo) · subtle dashed horizontal grid · gradient
-> area fills · hover-only dots · custom tooltip card · `tabular-nums` · `prefers-reduced-motion`
-> gated · `role="img"`+`aria-label` · real data only. If a chart could be swapped into any
-> generic dashboard and nobody notices, it's slop.
-
----
+- 0. THE 15-POINT ANTI-SLOP CHART SCAN (run before shipping any chart)
+- 1. COLOR SYSTEM (the #1 thing that makes charts beautiful or slop)
+- 2. THE "PREMIUM MINIMAL" CHROME (shared presets — apply to every chart)
+- 3. BAR & COLUMN
+- 4. LINE & AREA
+- 5. DONUT / PIE / RADIAL
+- 6. KPI / STAT CARDS + SPARKLINES (the dashboard's first impression)
+- 7. SPECIALTY (use when the data story needs it; always pair with a data table)
+- 8. MOTION (tasteful — guides the eye, never entertains)
+- 9. DARK MODE & RESPONSIVE
+- 10. ACCESSIBILITY (mandatory on every chart)
+- 11. EMPTY / LOADING / ERROR STATES (never a blank chart box)
+- 12. DECISION MATRIX — which chart for which question
+- SOURCES (selected)
+- Creative Freedom Within the Bans
 
 ## 0. THE 15-POINT ANTI-SLOP CHART SCAN (run before shipping any chart)
 
@@ -269,14 +254,14 @@ Use ONLY for ≤5 part-of-whole segments. >5 → horizontal bar. Time-series →
 
 ```tsx
 <article className="rounded-lg border border-slate-200 bg-white p-5"
-  role="img" aria-label="Siswa berisiko: 24, +12% vs bulan lalu">
+  role="img" aria-label="At-risk accounts: 24, +12% vs last month">
   <div className="flex items-start justify-between">
     <div>
       <p className="text-sm font-medium text-slate-500">Siswa Berisiko</p>
       <p className="mt-2 text-2xl font-semibold tabular-nums text-slate-900">24</p>
       <p className="mt-2 flex items-center gap-1 text-xs">
         <span className="inline-flex items-center rounded bg-red-50 px-1.5 py-0.5 font-medium tabular-nums text-red-700">+12%</span>
-        <span className="text-slate-400">vs bulan lalu</span>
+        <span className="text-slate-400">vs last month</span>
       </p>
     </div>
     <div className="h-12 w-24 flex-none" aria-hidden="true">{/* Sparkline */}</div>

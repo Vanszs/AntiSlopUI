@@ -2,22 +2,14 @@
 
 ## Contents
 
-- [(A) PROVEN FONT PAIRINGS (display + body)](#a-proven-font-pairings-display--body)
-- [(B) MODULAR SCALE RECIPES](#b-modular-scale-recipes)
-- [(C) PER-ROLE RULES (leading / measure / tracking / weight)](#c-per-role-rules-leading--measure--tracking--weight)
-- [(D) FLUID TYPE — clamp() RECIPES (Utopia method, 360→1240px)](#d-fluid-type--clamp-recipes-utopia-method-3601240px)
-- [(E) TAILWIND CONFIG](#e-tailwind-config)
-- [(F) DESIGN-SYSTEM SCALES COMPARED (reference values)](#f-design-system-scales-compared-reference-values)
-- [KEY PRINCIPLES](#key-principles)
-- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
-
-Companion to `../SKILL.md`. Sources: Refactoring UI, Material Design 3, Apple HIG, IBM Carbon, MUI, Utopia, Typewolf, Fontshare, Google Fonts, Smashing.
-
-> Quality bar: distinctive display + neutral body; max 2 families and 3 weights; modular scale; readable measure and accessible contrast.
-
-> Rule of thumb: distinctive display font (NOT Inter-everywhere) + neutral body; max 2 families; max 3 weights: 400/500/600 for dense UI; 400/500/700 for marketing; modular scale; `max-w-prose` (~65ch); left-aligned body.
-
----
+- (A) PROVEN FONT PAIRINGS (display + body)
+- (B) MODULAR SCALE RECIPES
+- (C) PER-ROLE RULES (leading / measure / tracking / weight)
+- (D) FLUID TYPE — clamp() RECIPES (Utopia method, 360→1240px)
+- (E) TAILWIND CONFIG
+- (F) DESIGN-SYSTEM SCALES COMPARED (reference values)
+- KEY PRINCIPLES
+- Creative Freedom Within the Bans
 
 ## (A) PROVEN FONT PAIRINGS (display + body)
 

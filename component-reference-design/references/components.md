@@ -2,14 +2,13 @@
 
 ## Contents
 
-- [CROSS-CUTTING PRINCIPLES](#cross-cutting-principles)
-- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
-
-Companion to `../SKILL.md`. Every entry: NAME · when-to-use · concrete accessible Tailwind. Sources: MUI, shadcn/ui, Radix, Headless UI, Ant Design, Material Design 3, IBM Carbon, Tailwind UI, Inclusive Components, TanStack Table, Tremor, W3C WAI-ARIA APG.
-
-> Quality bar: real `<button>`/`<a>` (never `<div onClick>`), `focus-visible` ring on every interactive, labels wired, radius is a scale, hover = shadow/color not `scale-105`.
-
----
+- 1. CARDS (17 variants)
+- 2. BUTTONS (10 variants)
+- 3. FORM CONTROLS (13)
+- 4. NAVIGATION (13) — pick by IA size × device
+- 5. DATA DISPLAY (16)
+- CROSS-CUTTING PRINCIPLES
+- Creative Freedom Within the Bans
 
 # 1. CARDS (17 variants)
 
@@ -61,7 +60,7 @@ Entire card clickable, heading stays the semantic link, `:focus-within` mirrors 
   <p class="mt-2 flex items-center gap-1 text-xs">
     <svg aria-hidden="true" class="h-3.5 w-3.5 text-red-500"><!-- arrow-up --></svg>
     <span class="font-medium text-red-600">+12%</span>
-    <span class="text-gray-400">vs bulan lalu</span>
+    <span class="text-gray-400">vs last month</span>
   </p>
 </div>
 ```
@@ -236,7 +235,7 @@ Tabs (W3C APG keyboard: arrows move, Home/End, Enter/Space activate):
     <tbody class="divide-y divide-gray-100">
       <tr class="odd:bg-white even:bg-gray-50/50 hover:bg-blue-50/50">
         <td class="px-4 py-3 font-medium text-gray-900">Alex Morgan</td>
-        <td class="px-4 py-3"><span class="inline-flex rounded-md bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">Waspada</span></td>
+        <td class="px-4 py-3"><span class="inline-flex rounded-md bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">Warning</span></td>
         <td class="px-4 py-3 text-right tabular-nums">72</td>
       </tr>
     </tbody>

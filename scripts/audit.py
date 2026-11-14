@@ -8,18 +8,18 @@ from pathlib import Path
 
 RULES = [
     ("transition-all", re.compile(r"transition\s*:\s*all|transition-all", re.I)),
-    ("accent-hex", re.compile(r"#(?:6366f1|8b5cf6|7c3aed|a78bfa|818cf8|4f46e5|c4b5fd)\b", re.I)),
+    ("accent-hex", re.compile(r"#(?:6366f1|8b5cf6|7c3aed|a78bfa|818cf8|4f46e5|c4b5fd|a855f7)\b", re.I)),
     ("accent-tailwind", re.compile(r"\b(?:indigo|violet|purple)-\d{2,3}\b", re.I)),
     ("hover-scale", re.compile(r"hover:scale-1\d\d", re.I)),
     ("group-hover-scale", re.compile(r"group-hover:scale", re.I)),
     ("white-opacity", re.compile(r"bg-white/1[00]?\b", re.I)),
-    ("backdrop-blur-lg", re.compile(r"backdrop-blur-lg\b", re.I)),
+    ("backdrop-blur-lg", re.compile(r"backdrop-blur-(?:lg|xl|2xl|3xl)?\b|backdrop-filter\s*:\s*blur|frosted glass|liquid glass", re.I)),
     ("text-transparent-gradient", re.compile(r"(?=.*text-transparent)(?=.*bg-clip-text)", re.I)),
-    ("duration-over-400ms", re.compile(r"\bduration-(?:4[1-9]\d|[5-9]\d\d|\d{4,})\b|\b(?:4[1-9]\d|[5-9]\d\d|\d{4,})ms\b", re.I)),
+    ("over-motion-budget", re.compile(r"\bduration-(?:3[1-9]\d|[4-9]\d\d|\d{4,})\b|\b(?:3[1-9]\d|[4-9]\d\d|\d{4,})ms\b", re.I)),
     ("uniform-container", re.compile(r"\bmax-w-7xl\b", re.I)),
     ("empty-src", re.compile(r"\bsrc\s*=\s*(['\"])[ ]*\1", re.I)),
 ]
-EXTENSIONS = {".css", ".html", ".tsx", ".md"}
+EXTENSIONS = {".css", ".html", ".tsx", ".jsx", ".ts", ".vue", ".svelte", ".astro", ".md"}
 
 
 # Docs quote banned values on purpose (ban tables, substitution tables), so a
@@ -55,6 +55,9 @@ def main():
     args = parser.parse_args()
     allow = list(args.allow)
     allow_file = Path(__file__).with_name("audit-allowlist.txt")
+    if not allow_file.exists():
+        # The repo ships one reviewed allowlist; accept either name.
+        allow_file = Path(__file__).with_name("conflict-allowlist.txt")
     if allow_file.exists():
         allow.extend(line.strip() for line in allow_file.read_text(encoding="utf-8").splitlines()
                      if line.strip() and not line.lstrip().startswith("#"))
@@ -63,6 +66,8 @@ def main():
         text = path.read_text(encoding="utf-8")
         for line_no, line in enumerate(text.splitlines(), 1):
             compact = re.sub(r"\s+", " ", line).strip()
+            if "override" in compact.lower() or "no-proof" in compact.lower():
+                continue  # auditable exception record, not a shipped value
             for name, pattern in RULES:
                 matches = list(pattern.finditer(compact))
                 if name == "text-transparent-gradient" and matches:

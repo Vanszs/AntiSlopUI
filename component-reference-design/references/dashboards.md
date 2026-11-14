@@ -2,27 +2,21 @@
 
 ## Contents
 
-- [0. THE 15 CLEAN-DASHBOARD PRINCIPLES (run before shipping any dashboard)](#0-the-15-clean-dashboard-principles-run-before-shipping-any-dashboard)
-- [1. APP SHELL (header + sidebar + content)](#1-app-shell-header--sidebar--content)
-- [2. SIDEBAR NAVIGATION](#2-sidebar-navigation)
-- [3. TOPBAR / HEADER](#3-topbar--header)
-- [4. COMMAND PALETTE (⌘K)](#4-command-palette-k)
-- [5. GRID COMPOSITION (widget layout)](#5-grid-composition-widget-layout)
-- [6. KPI / STAT CARDS](#6-kpi--stat-cards)
-- [7. CHART PLACEMENT & CHROME](#7-chart-placement--chrome)
-- [8. FILTERS & TOOLBAR](#8-filters--toolbar)
-- [9. DATA TABLE](#9-data-table)
-- [10. STATES — empty / loading / error / zero](#10-states--empty--loading--error--zero)
-- [11. COLOR / THEME TOKENS (3-tier + dark)](#11-color--theme-tokens-3-tier--dark)
-- [12. ANTI-PATTERN CHEAT SHEET (teardown-confirmed)](#12-anti-pattern-cheat-sheet-teardown-confirmed)
-- [SOURCES (selected)](#sources-selected)
-- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
-
-Companion to `../SKILL.md`. The reference for building **clean, modern admin dashboards** that read as Linear/Vercel/Stripe/Tremor quality — dense yet calm, not generic SaaS template, not AI-slop. Every pattern: NAME · when-to-use · concrete accessible Tailwind · why-clean · source. Synthesized from web research (2025–2026): Linear (2026 "calmer interface" refresh), Vercel/Geist, Stripe Apps, Tremor, shadcn/ui dashboard, Untitled UI, PostHog "3000", Notion, Retool, Mixpanel, TanStack Table, IBM Carbon, React Aria, W3C WAI-ARIA APG, NNG, SetProduct, Refactoring UI.
-
-> Quality bar: product-derived accent hue on interactive/focal only (never purple/indigo; no fixed client palette) · sidebar recedes (`bg-slate-50`, content shines) · elevation via surface shade NOT shadow-spam · border-only cards (shadow reserved for floating) · `tabular-nums` on all data · radius scale (md/lg/xl) · visible focus ring using the product accent · `prefers-reduced-motion` gated · real `<button>`/`<a>` · all states designed (empty/loading/error/zero). If it could be swapped into any generic admin panel and nobody notices, it's slop.
-
----
+- 0. THE 15 CLEAN-DASHBOARD PRINCIPLES (run before shipping any dashboard)
+- 1. APP SHELL (header + sidebar + content)
+- 2. SIDEBAR NAVIGATION
+- 3. TOPBAR / HEADER
+- 4. COMMAND PALETTE (⌘K)
+- 5. GRID COMPOSITION (widget layout)
+- 6. KPI / STAT CARDS
+- 7. CHART PLACEMENT & CHROME
+- 8. FILTERS & TOOLBAR
+- 9. DATA TABLE
+- 10. STATES — empty / loading / error / zero
+- 11. COLOR / THEME TOKENS (3-tier + dark)
+- 12. ANTI-PATTERN CHEAT SHEET (teardown-confirmed)
+- SOURCES (selected)
+- Creative Freedom Within the Bans
 
 ## 0. THE 15 CLEAN-DASHBOARD PRINCIPLES (run before shipping any dashboard)
 
@@ -178,7 +172,7 @@ Mobile:  [hamburger] [page-title trunc] ---spacer--- [notif] [avatar]
     <svg aria-hidden="true" class="h-4 w-4 shrink-0 text-slate-400"><!-- search --></svg>
     <input type="text" role="combobox" aria-expanded="true" aria-controls="cmd-list" aria-autocomplete="list"
       class="w-full border-0 bg-transparent py-3 pl-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0"
-      placeholder="Ketik perintah atau cari..." />
+      placeholder="Type a command atau cari..." />
   </div>
   <ul id="cmd-list" role="listbox" class="max-h-72 overflow-y-auto p-2">
     <li role="option" aria-selected="true" class="flex items-center gap-3 rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-900">
@@ -255,14 +249,14 @@ Dominant ≥`col-span-2 row-span-2` else it's a uniform card grid (slop). Mix co
 `label` (sm muted) → `value` (2xl semibold tabular-nums) → `delta` (arrow+%+period) → `sparkline` (optional, aria-hidden).
 ```html
 <article class="rounded-lg border border-slate-200 bg-white p-5"
-  role="img" aria-label="Users Flagged Tinggi: 24, naik 12% vs bulan lalu">
+  role="img" aria-label="Users Flagged Tinggi: 24, naik 12% vs last month">
   <p class="text-sm font-medium text-slate-500">Users Flagged Tinggi</p>
   <p class="mt-1 text-2xl font-semibold tabular-nums text-slate-900">24</p>
   <div class="mt-2 flex items-center gap-1.5">
     <span class="inline-flex items-center gap-0.5 rounded-md bg-red-50 px-1.5 py-0.5 text-xs font-medium tabular-nums text-red-700 ring-1 ring-inset ring-red-600/20">
       <svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 12 12"><path d="M6 2v8M6 2l3 3M6 2L3 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>+12%
     </span>
-    <span class="text-xs text-slate-400">vs bulan lalu</span>
+    <span class="text-xs text-slate-400">vs last month</span>
   </div>
 </article>
 ```

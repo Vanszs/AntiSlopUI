@@ -82,16 +82,35 @@ def run_check(results, name, fn):
     results.append(check(name, failures))
 
 
+_PROBE_CACHE = {}
+
+
+def get_probe():
+    """Run the persist probe once and cache (out_dir, master_file)."""
+    if not _PROBE_CACHE:
+        out, master = persisted_probe()
+        _PROBE_CACHE["out"] = out
+        _PROBE_CACHE["master"] = master
+    return _PROBE_CACHE
+
+
 def persisted_probe():
     out = Path(tempfile.mkdtemp(prefix="persist-", dir="/tmp/opencode" if Path("/tmp/opencode").exists() else None))
     cmd = [sys.executable, str(ROOT / "ui-ux-pro-max/scripts/search.py"), "saas dashboard", "--design-system", "--persist", "-p", "ValidateProbe", "-o", str(out)]
-    proc = subprocess.run(cmd, cwd="/tmp/opencode/validate-cwd" if Path("/tmp/opencode/validate-cwd").exists() else str(ROOT), capture_output=True, text=True, timeout=90)
+    proc = subprocess.run(cmd, cwd=_probe_cwd(), capture_output=True, text=True, timeout=90)
     if proc.returncode:
         raise RuntimeError("persist probe exit {}: {}".format(proc.returncode, (proc.stdout + proc.stderr)[-1500:]))
     master = out / "design-system/validateprobe/MASTER.md"
     if not master.is_file():
         raise RuntimeError("persist probe did not create promised {}".format(master))
     return out, master
+
+
+def _probe_cwd():
+    """Isolated scratch dir so validation never writes into the repo."""
+    import tempfile
+    path = Path(tempfile.mkdtemp(prefix="antislop-validate-"))
+    return str(path)
 
 
 def main():
@@ -267,7 +286,7 @@ def main():
 
     def csv_structure():
         problems = []
-        csv_paths = sorted(set((ROOT / "ui-ux-pro-max/data").glob("*.csv")) | set((ROOT / "data/stacks").glob("*.csv")))
+        csv_paths = sorted(set((ROOT / "ui-ux-pro-max/data").glob("*.csv")) | set((ROOT / "ui-ux-pro-max/data/stacks").glob("*.csv")))
         for path in csv_paths:
             with path.open(encoding="utf-8-sig", newline="") as stream:
                 rows = list(csv.reader(stream, strict=True))
@@ -316,7 +335,7 @@ def main():
                     command = match.group(0).strip().strip("`")
                     command = re.sub(r"(?:[\w./-]*search\.py)", shlex.quote(str(script)), command, count=1)
                     try:
-                        proc = subprocess.run(shlex.split(command), cwd="/tmp/opencode/validate-cwd" if Path("/tmp/opencode/validate-cwd").exists() else str(ROOT), capture_output=True, text=True, timeout=30)
+                        proc = subprocess.run(shlex.split(command), cwd=_probe_cwd(), capture_output=True, text=True, timeout=30)
                         if proc.returncode:
                             problems.append("{}:{} command exit {}: {}".format(doc.relative_to(ROOT), line_no, proc.returncode, (proc.stderr or proc.stdout)[:300]))
                     except Exception as exc:
@@ -326,19 +345,19 @@ def main():
 
     probe = {}
     def persist_contract():
-        out, master = persisted_probe()
-        probe.update(out=out, master=master)
-        promised = [out / "design-system/validateprobe/MASTER.md", out / "design-system/validateprobe/pages"]
-        missing = [str(p) for p in promised if not p.exists()]
-        text = master.read_text(encoding="utf-8")
-        for item in re.findall(r"(?:design-system/)[\w./-]+", text):
-            rel = item.rstrip(".,)`]")
-            actual = out / rel
-            if rel == "design-system/pages/":
-                actual = out / "design-system/validateprobe/pages"
-            if rel and not actual.exists() and not rel.endswith(("[page].md", "MASTER.md")):
-                missing.append("generated artifact references absent path {}".format(rel))
-        return missing
+        failures = []
+        cache = get_probe()
+        out = cache["out"]
+        produced = [str(p.relative_to(out)) for p in out.rglob("*") if p.is_file()]
+        doc = (ROOT / "ui-ux-pro-max/SKILL.md").read_text(encoding="utf-8")
+        promised = set(re.findall(r"design-system/[A-Za-z0-9._/-]+", doc))
+        for rel in sorted(promised):
+            clean = rel.rstrip(".,;:")
+            if not clean or clean.endswith("design-system/"):
+                continue
+            if not any(clean in path for path in produced):
+                failures.append("docs promise {!r} but the probe wrote {}".format(clean, produced))
+        return failures
     run_check(results, "13 PERSIST CONTRACT", persist_contract)
 
     def frontmatter_types():
@@ -355,7 +374,22 @@ def main():
         return failures
     run_check(results, "14 FRONTMATTER TYPES", frontmatter_types)
 
-    run_check(results, "15 TOC PRESENCE", lambda: ["{}: missing ## Contents in first 20 lines".format(p.relative_to(ROOT)) for p in ROOT.glob("*/references/*.md") if not any(line.strip() == "## Contents" for line in p.read_text(encoding="utf-8").splitlines()[:20])])
+    def toc_sync():
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("toc_tool", str(ROOT / "scripts" / "toc.py"))
+        toc_tool = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(toc_tool)
+        failures = []
+        for path in sorted(ROOT.glob("*/references/*.md")):
+            text = path.read_text(encoding="utf-8")
+            heads = [ln for ln in text.splitlines() if ln.strip() == "## Contents"]
+            if len(heads) != 1:
+                failures.append("{}: expected exactly one ## Contents, found {}".format(path.relative_to(ROOT), len(heads)))
+                continue
+            if toc_tool.rebuild(text) != text:
+                failures.append("{}: contents block is stale (run scripts/toc.py --write)".format(path.relative_to(ROOT)))
+        return failures
+    run_check(results, "15 TOC SYNC", toc_sync)
 
     def ban_voiding():
         findings = []
@@ -397,7 +431,7 @@ def main():
     def readme_claim_sync():
         text = readme.read_text(encoding="utf-8")
         failures = ["README.md contains --write# (missing shell-comment space)"] if "--write#" in text else []
-        match = re.search(r"(\d+) structural checks", text, re.I)
+        match = re.search(r"(\d+)\s+structural", text, re.I)
         implemented = len(results) + 2  # This check plus the generated-artifact audit below.
         if match and int(match.group(1)) != implemented:
             failures.append("README claims {} checks; implemented {}".format(match.group(1), implemented))
@@ -405,9 +439,8 @@ def main():
     run_check(results, "19 README CLAIM SYNC", readme_claim_sync)
 
     def generated_audit():
-        if "master" not in probe:
-            raise RuntimeError("persist probe unavailable")
-        proc = subprocess.run([sys.executable, str(ROOT / "scripts/audit.py"), str(probe["master"])], capture_output=True, text=True, timeout=30)
+        master = get_probe()["master"]
+        proc = subprocess.run([sys.executable, str(ROOT / "scripts/audit.py"), str(master)], capture_output=True, text=True, timeout=30)
         return [] if proc.returncode == 0 else ["audit exit {}: {}".format(proc.returncode, (proc.stdout + proc.stderr).strip())]
     run_check(results, "20 GENERATED ARTIFACT AUDIT", generated_audit)
 

@@ -2,29 +2,14 @@
 
 ## Contents
 
-- [0. When this tier applies](#0-when-this-tier-applies)
-- [1. The rubric — score before you decorate](#1-the-rubric--score-before-you-decorate)
-- [2. Hard gates — a fail denies the tier outright](#2-hard-gates--a-fail-denies-the-tier-outright)
-- [3. Craft patterns and their cost](#3-craft-patterns-and-their-cost)
-- [4. Award theatre — earns nothing, costs the tier](#4-award-theatre--earns-nothing-costs-the-tier)
-- [5. The only two relaxations this tier may request](#5-the-only-two-relaxations-this-tier-may-request)
-- [6. Procedure](#6-procedure)
-- [Sources](#sources)
-
-Companion to `../SKILL.md`. This is the **only** file in the suite that is allowed to
-raise the craft ceiling. It is opt-in and gated, because award-grade detail and
-slop are separated by one thing: whether the detail pays for itself.
-
-## Contents
-
-- [0. When this tier applies](#0-when-this-tier-applies)
-- [1. The rubric — score before you decorate](#1-the-rubric--score-before-you-decorate)
-- [2. Hard gates — a fail denies the tier outright](#2-hard-gates--a-fail-denies-the-tier-outright)
-- [3. Craft patterns and their cost](#3-craft-patterns-and-their-cost)
-- [4. Award theatre — earns nothing, costs the tier](#4-award-theatre--earns-nothing-costs-the-tier)
-- [5. The only two relaxations this tier may request](#5-the-only-two-relaxations-this-tier-may-request)
-- [6. Procedure](#6-procedure)
-- [Sources](#sources)
+- 0. When this tier applies
+- 1. The rubric — score before you decorate
+- 2. Hard gates — a fail denies the tier outright
+- 3. Craft patterns and their cost
+- 4. Award theatre — earns nothing, costs the tier
+- 5. The only two relaxations this tier may request
+- 6. Procedure
+- Sources
 
 ## 0. When this tier applies
 

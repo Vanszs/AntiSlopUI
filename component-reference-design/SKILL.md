@@ -39,7 +39,9 @@ Vary container widths by content; never use uniform `max-w-7xl`/`max-w-6xl` acro
 ## Context Budget
 Always load this `SKILL.md` first.
 Open at most ONE reference file per task; two only when combining dashboards + charts.
-Grep to the needed section; do not read a 680-line reference whole.
+Grep to the needed section; do not read a whole reference file.
+
+Motion values here defer to the canonical table in `anti-ai-slop-ui-ux/SKILL.md`; the numbers are restated so this skill stays usable when installed alone: hovers 100–150ms, entrances/exits 150–250ms, page/route ≤300ms. Craft tier may use 400ms only with `OVERRIDE: ... [craft tier §5]`.
 Use Category Map to select the narrowest relevant reference.
 
 ## Category Map (where to look)
@@ -65,7 +67,7 @@ Use Category Map to select the narrowest relevant reference.
 7. **≥2 deliberate asymmetric moments per page** — unequal columns, off-centre headings, left-aligned text.
 
 ## Proven Storytelling Sequence (Evil Martians, 100 dev-tool landing pages)
-`Hero (what is it?) → Trust (who uses it?) → Features (what/why?) → Social proof (what do users say?) → Supporting (FAQ / comparison / pricing) → Final CTA (what now?)` — with each section using a DIFFERENT anatomy.
+`Hero (what is it?) → Trust (who uses it? — omit and record `NO-PROOF: user supplied none` when no evidence exists) → Features (what/why?) → Social proof (what do users say?) → Supporting (FAQ / comparison / pricing) → Final CTA (what now?)` — with each section using a DIFFERENT anatomy.
 
 ## Non-Negotiable Quality Bar (every pattern here already follows it)
 - **Semantic HTML first** — `<table>`, `<ul>`, `<dl>`, `<dialog>`, `<nav>`, `<button>`, `<a>` before div-soup.
@@ -74,7 +76,7 @@ Use Category Map to select the narrowest relevant reference.
 - **Radius is a scale** — inputs/buttons `rounded-md`, cards `rounded-lg`, modals `rounded-xl`, pills `rounded-full`.
 - **Type** — distinctive display font (NOT Inter-everywhere), modular scale, `max-w-prose` body, 2–3 weights.
 - **Motion budget** — see `anti-ai-slop-ui-ux/SKILL.md`; use `transform`+`opacity` only.
-- **WCAG AA contrast** — 4.5:1 body, 3:1 large/UI; test light + dark.
+- **WCAG AA contrast** — 4.5:1 body, 3:1 large/UI; test light and dark when a dark palette is supplied; otherwise ship light and state it.
 - **Text measure** — prose `max-w-3xl`, paragraphs `max-w-prose`, grids `max-w-6xl`; a 2-column hero split may use `max-w-2xl`.
 
 ## Trusted Sources (full index in `references/design-systems.md`)

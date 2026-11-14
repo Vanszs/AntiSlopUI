@@ -2,22 +2,20 @@
 
 ## Contents
 
-- [3-tier token architecture (recommended)](#3-tier-token-architecture-recommended)
-- [Hero (4 variants — break the centered-dual-CTA mold)](#hero-4-variants--break-the-centered-dual-cta-mold)
-- [Features (5 variants)](#features-5-variants)
-- [Social proof (4)](#social-proof-4)
-- [Testimonials (3)](#testimonials-3)
-- [Pricing (3)](#pricing-3)
-- [FAQ (2)](#faq-2)
-- [CTA (2)](#cta-2)
-- [Footer (2)](#footer-2)
-- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
-
-Companion to `../SKILL.md`. Which library to reach for, how to structure tokens, and varied marketing-section anatomies. Sources: official docs of each system, W3C DTCG, Evil Martians (100 dev-tool landing pages study), Tailwind UI.
-
-> Quality bar: choose systems by product fit, accessibility, theming, and license; use tokens consistently and vary section anatomy.
-
----
+- PART A — TRUSTED DESIGN SYSTEM INDEX (18)
+- PART B — W3C DESIGN TOKENS (DTCG)
+- 3-tier token architecture (recommended)
+- PART C — HOW TO PICK
+- PART D — MARKETING SECTION ANATOMIES (varied, anti-monotony)
+- Hero (4 variants — break the centered-dual-CTA mold)
+- Features (5 variants)
+- Social proof (4)
+- Testimonials (3)
+- Pricing (3)
+- FAQ (2)
+- CTA (2)
+- Footer (2)
+- Creative Freedom Within the Bans
 
 # PART A — TRUSTED DESIGN SYSTEM INDEX (18)
 

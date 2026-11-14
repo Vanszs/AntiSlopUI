@@ -1,3 +1,15 @@
+# Anti-AI-Slop UI/UX — Exhaustive Pattern Catalog
+
+Companion to `../SKILL.md`. Format for every entry: **TELL → WHY-SLOP → FIX → SEVERITY**.
+Synthesized from deep research across slop-detect.com, Adrian Krebs' Show HN study
+(1,590 sites scored), Thomas Wiegold, Noqta, The Fountain Institute, NNG, Refactoring
+UI, WIRED, Built In, and arXiv:2603.13036 (design homogenization in vibe coding).
+
+Severity: **P0** = single-handedly screams AI / a11y failure · **HIGH** = strong tell ·
+**MEDIUM** = trained eyes notice · **LOW** = subtle, cumulative.
+
+---
+
 ## Contents
 
 - 0. THE ROOT CAUSE & THE GESTALT
@@ -14,20 +26,6 @@
 - 11. SLOP-DETECT SCORING AXES (quick self-scan)
 - 12. SOURCES
 - Creative Freedom Within the Bans
-
----
-
-# Anti-AI-Slop UI/UX — Exhaustive Pattern Catalog
-
-Companion to `../SKILL.md`. Format for every entry: **TELL → WHY-SLOP → FIX → SEVERITY**.
-Synthesized from deep research across slop-detect.com, Adrian Krebs' Show HN study
-(1,590 sites scored), Thomas Wiegold, Noqta, The Fountain Institute, NNG, Refactoring
-UI, WIRED, Built In, and arXiv:2603.13036 (design homogenization in vibe coding).
-
-Severity: **P0** = single-handedly screams AI / a11y failure · **HIGH** = strong tell ·
-**MEDIUM** = trained eyes notice · **LOW** = subtle, cumulative.
-
----
 
 ## 0. THE ROOT CAUSE & THE GESTALT
 
@@ -176,7 +174,7 @@ WHY, it's slop.
 | M10 | Headline + subhead saying the same thing | Redundant pair | Headline=WHAT, subhead=HOW/FOR-WHOM | HIGH |
 | M11 | Generic testimonials ("Sarah M.", "transformed our workflow!") | Invented archetypes, no specifics | Real name+company+photo+specific outcome, or none | HIGH |
 | M12 | Generic feature names ("Advanced Analytics", "Powerful Integrations") | Adjective padding, no differentiator | Name the thing ("Funnel drop-off heatmap") | HIGH |
-| M13 | Zero concrete numbers anywhere | AI can't invent real metrics so avoids them | Use user-supplied verified numbers only; otherwise omit and record `NO-PROOF: user supplied none` | HIGH |
+| M13 | Zero concrete numbers anywhere | AI can't invent real metrics so avoids them | Applies only when the product claims results; a page that records `NO-PROOF: user supplied none` is compliant.  Use user-supplied verified numbers only; otherwise omit and record `NO-PROOF: user supplied none` | HIGH |
 | M14 | Emoji bullets (🚀✨💡⚡) | Decorative; vibe-coded | Plain bullets or SVG icons | HIGH |
 | M15 | Leftover Lorem ipsum / `[placeholder]` / TODO | Generated skeleton never filled | grep "lorem/placeholder/[/TODO" pre-delivery | HIGH |
 | M16 | Em-dash overuse (2+/paragraph) | 18.5% AI text vs 7.1% human (WriteHuman) | Max 1 per 3 paragraphs; commas/periods/parens | MEDIUM |

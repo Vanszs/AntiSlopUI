@@ -11,15 +11,16 @@ metadata:
 
 # Anti-AI-Slop UI/UX — Deterministic Filter
 
-## STOP — run the audit
+## Delivery gate (read now, apply before shipping)
 
-Load this filter before UI work. Before delivery, report `PASS`, `FAIL`, or `N-A` plus an evidence pointer for every audit item. `N-A` is allowed only when the component does not exist on the page. Any P0 failure blocks delivery; **3+ tells = block and regenerate**.
+Load this filter before UI work. Before delivery, report `PASS`, `FAIL`, or `N-A` plus an evidence pointer for every audit item. `N-A` is allowed only when the component does not exist on the page. Any P0 failure blocks delivery, as does 3+ P0/HIGH tells; MEDIUM/LOW tells are recorded, not blocking.
 
 ## Precedence & conflict resolution
 
 This skill owns the suite's UI ban list. Its rules override conflicting recommendations from the companion skills and CSVs.
-- `ui-ux-pro-max/scripts/search.py --design-system` may recommend indigo `#6366F1`; reject unless it appears in user-supplied brand assets.
-- `ui-ux-pro-max` recommends Glassmorphism for SaaS in `ui-reasoning.csv`; reject it Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception.
+- If the research skill is installed, its `--design-system` output may recommend indigo `#6366F1`; reject unless it appears in user-supplied brand assets.
+- `ui-ux-pro-max` recommends Glassmorphism for SaaS in `ui-reasoning.csv`; reject the style and keep solid surfaces.
+- Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception per use.
 - Vendor palettes may include banned indigo/purple hexes, backgrounds, or text tints; reject unless user-supplied brand assets contain the value.
 - Playfair Display + Inter pairing remains banned.
 - `hover:scale-105` remains banned. When a recommendation conflicts with a P0/HIGH ban, the ban wins.
@@ -35,13 +36,18 @@ This skill owns the suite's UI ban list. Its rules override conflicting recommen
 ### Review/refactor
 1. Count tells using the definition below; fix all P0/HIGH findings.
 2. Report each finding as `tell → why-slop → fix → severity` with evidence.
-3. **3+ tells = block and regenerate.** No secondary threshold.
+3. **Block when any tell is P0, or when 3+ tells are P0/HIGH. MEDIUM and LOW tells are recorded, not blocking.** No secondary threshold.
 
 ## Deterministic terms
 
-A **tell** is one row in `references/slop-uiux-patterns.md` sections 1–10 with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity vocabulary is closed. Count each matching catalog row once. **3+ tells = block and regenerate.**
+A **tell** is one row in `references/slop-uiux-patterns.md` sections 1–10 with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity vocabulary is closed. Count each matching catalog row once. **Block when any tell is P0, or when 3+ tells are P0/HIGH. MEDIUM and LOW tells are recorded, not blocking.**
 
-A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <value> → <value> [brand: <source>]`.
+Absence rows do not match. A row that describes something missing (a form without states, a page without numbers) only counts when the page *claims* that capability; otherwise it is `N-A`, same as in the audit.
+
+
+A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, or a gate id such as `H2`.
+
+Also enforced from the catalog: mono/technical faces used as display (catalog §3), indigo-950 / violet-50 tints used as text or background (catalog §2), typewriter-style copy animation and multi-layer parallax (catalog §9). These are catalog rows, not a second list.
 
 Placeholder content is allowed only when visibly labeled and structurally distinct, e.g. `<figcaption>Sample data — replace before launch</figcaption>` or `data-sample="true"`. `[placeholder]`, lorem ipsum, and TODO remain banned. Unknown social proof or metrics must be omitted and recorded `NO-PROOF: user supplied none`; omission is compliant, invention is P0.
 
@@ -56,13 +62,13 @@ Placeholder content is allowed only when visibly labeled and structurally distin
 | K6 | Purple left-border card accent | Remove; reserve left borders for semantic alerts | P0 |
 | MO10 | Missing reduced-motion support | Gate animation; static under reduced motion | P0 |
 | T1 | Inter/Geist for display and body without a second face | Pair a distinctive display face with body type | HIGH |
-| K1 | Identical 3-column feature cards | Vary size/structure or use a list/table | HIGH |
+| K1 | Identical 3-col feature grid (icon-in-rounded-square + title + blurb) | Vary size/structure or use a list/table | HIGH |
 | K3 | `hover:scale-105` in a grid | Shadow/border color transition | HIGH |
 | I1 | Emoji as functional icons | Consistent SVG icon set | HIGH |
 | B3 | Pill buttons everywhere | `rounded-md`/`rounded-lg`; pills only semantic | HIGH |
 | N1 | Floating glassmorphic navbar | Fixed solid navbar with border | HIGH |
 
-For the full catalog: `grep -n '^## \|^| K' references/slop-uiux-patterns.md`.
+For the full catalog: `grep -nE '^## |^\| ?[A-Z]{1,3}[0-9]+' references/slop-uiux-patterns.md`.
 
 ## The five axes
 
@@ -93,6 +99,18 @@ Use `max-w-3xl` for prose containers, `max-w-prose` for paragraphs, and `max-w-6
 ## Brand, proof, and placeholder rules
 
 Apply the deterministic terms above. Do not invent metrics, testimonials, customer logos, benchmarks, or other social proof. Record absent user proof as `NO-PROOF: user supplied none`. Labeled sample data is permitted only in the specified visible/structurally distinct form; unlabeled placeholders, lorem ipsum, and TODO are banned.
+
+## Reference budget
+
+Two reference files per task, not one: the tell catalog (required for counting) plus one pattern library file. Read the catalog sections you need, not the whole file.
+
+## Authored defaults (used when research output is unavailable)
+
+- Surfaces: `#F8FAFC` page, `#FFFFFF` card, border `#E2E8F0`, text `#0F172A`, muted `#475569`.
+- Type: one display face ≠ Inter, body Inter 400/500, 2 families, 3 weights, 1.25 scale.
+- Layout: prose `max-w-3xl`, grids `max-w-6xl`, section padding 32/16/12, radius `md`/`lg`/`xl`.
+- Interaction: `cursor-pointer` on anything clickable, visible `focus-visible` ring, hover feedback by color/shadow only.
+- Responsive: verify 375 / 768 / 1024 / 1440 with no horizontal scroll.
 
 ## If You Cannot Run Commands
 

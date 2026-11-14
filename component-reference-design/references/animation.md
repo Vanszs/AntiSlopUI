@@ -2,20 +2,15 @@
 
 ## Contents
 
-- [Duration & easing reference](#duration--easing-reference)
-- [prefers-reduced-motion (MANDATORY — WCAG 2.3.3)](#prefers-reduced-motion-mandatory--wcag-233)
-- [Motion design tokens](#motion-design-tokens)
-- [OVERLAY A11Y RULES (all)](#overlay-a11y-rules-all)
-- [GOLDEN RULES (motion)](#golden-rules-motion)
-- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
-
-Companion to `../SKILL.md`. Overlay/feedback components + accessible motion. Sources: Radix, Headless UI, shadcn/ui, MUI, Ant Design, Material Design 3, Framer Motion / Motion, Emil Kowalski (Sonner, Vaul, animations.dev), Josh Comeau, NNG, web.dev, W3C WCAG/APG.
-
-> Quality bar: purposeful short motion, `prefers-reduced-motion` support, keyboard-accessible overlays, and no `transition-all`.
-
-> Motion budget: animate ≤30% of elements · `transform`+`opacity` ONLY (GPU) · ease-out in / ease-in out · exits 25–35% faster · `prefers-reduced-motion` MANDATORY.
-
----
+- PART A — MOTION FOUNDATIONS
+- Duration & easing reference
+- prefers-reduced-motion (MANDATORY — WCAG 2.3.3)
+- Motion design tokens
+- PART B — MOTION RECIPES (13)
+- PART C — OVERLAY & FEEDBACK COMPONENTS
+- OVERLAY A11Y RULES (all)
+- GOLDEN RULES (motion)
+- Creative Freedom Within the Bans
 
 # PART A — MOTION FOUNDATIONS
 

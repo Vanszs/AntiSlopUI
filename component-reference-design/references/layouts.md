@@ -2,44 +2,37 @@
 
 ## Contents
 
-- [1. HOLY GRAIL (header / nav / main / aside / footer)](#1-holy-grail-header--nav--main--aside--footer)
-- [2. SIDEBAR + CONTENT (app shell) — Every-Layout "Sidebar"](#2-sidebar--content-app-shell--every-layout-sidebar)
-- [3. DASHBOARD SHELL (header + sidebar + content grid)](#3-dashboard-shell-header--sidebar--content-grid)
-- [4. SPLIT SCREEN (50/50 or asymmetric)](#4-split-screen-5050-or-asymmetric)
-- [5. FULL-BLEED LAYOUT (Josh Comeau)](#5-full-bleed-layout-josh-comeau)
-- [6. BENTO GRID](#6-bento-grid)
-- [7. MASONRY](#7-masonry)
-- [8. MAGAZINE / EDITORIAL](#8-magazine--editorial)
-- [9. ASYMMETRIC (alternating ratios)](#9-asymmetric-alternating-ratios)
-- [10. STICKY ASIDE (TOC / contextual sidebar)](#10-sticky-aside-toc--contextual-sidebar)
-- [11. MULTI-COLUMN (newspaper)](#11-multi-column-newspaper)
-- [12. CARD GRID (responsive auto-fill — no breakpoints)](#12-card-grid-responsive-auto-fill--no-breakpoints)
-- [13. CONTAINER QUERIES (component adapts to parent, not viewport)](#13-container-queries-component-adapts-to-parent-not-viewport)
-- [14. Z-PATTERN](#14-z-pattern)
-- [15. F-PATTERN](#15-f-pattern)
-- [16. COVER (Every-Layout) — vertically centered hero / login](#16-cover-every-layout--vertically-centered-hero--login)
-- [EVERY-LAYOUT COMPOSITION PRIMITIVES](#every-layout-composition-primitives)
-- [RESPONSIVE CHEAT SHEET](#responsive-cheat-sheet)
-- [ANTI-MONOTONY TECHNIQUES (recap)](#anti-monotony-techniques-recap)
-- [17. HERO VARIANTS (8 — pick by product type)](#17-hero-variants-8--pick-by-product-type)
-- [18. SAAS LANDING — FULL SECTION FLOW](#18-saas-landing--full-section-flow)
-- [19. DASHBOARD / APP SHELL (Linear / Vercel 2026)](#19-dashboard--app-shell-linear--vercel-2026)
-- [20. BENTO GRID — CELL-SPAN RECIPES](#20-bento-grid--cell-span-recipes)
-- [21. E-COMMERCE SKELETONS](#21-e-commerce-skeletons)
-- [22. EDITORIAL / CONTENT / DOCS](#22-editorial--content--docs)
-- [23. AUTH / ONBOARDING / PRICING / UTILITY PAGES](#23-auth--onboarding--pricing--utility-pages)
-- [24. MOBILE-FIRST / PWA / RESPONSIVE](#24-mobile-first--pwa--responsive)
-- [25. CUTTING-EDGE CSS TECHNIQUES (2025–2026)](#25-cutting-edge-css-techniques-20252026)
-- [PART 2 SOURCES](#part-2-sources)
-- [Creative Freedom Within the Bans](#creative-freedom-within-the-bans)
-
-Companion to `../SKILL.md`. Every pattern: NAME · when-to-use · concrete CSS/Tailwind · responsive · motion. Sources: Every-Layout.dev, Josh Comeau, web.dev, Tailwind UI, MDN, NNG, Refactoring UI, Smashing.
-
-> Quality bar: semantic, responsive skeletons; vary anatomy and content-sized widths; preserve full-bleed breaks and reduced-motion support.
-
-> Anti-monotony rule of thumb: never repeat the same skeleton in consecutive sections; vary container width and section padding; ≥1 full-bleed break per page.
-
----
+- 1. HOLY GRAIL (header / nav / main / aside / footer)
+- 2. SIDEBAR + CONTENT (app shell) — Every-Layout "Sidebar"
+- 3. DASHBOARD SHELL (header + sidebar + content grid)
+- 4. SPLIT SCREEN (50/50 or asymmetric)
+- 5. FULL-BLEED LAYOUT (Josh Comeau)
+- 6. BENTO GRID
+- 7. MASONRY
+- 8. MAGAZINE / EDITORIAL
+- 9. ASYMMETRIC (alternating ratios)
+- 10. STICKY ASIDE (TOC / contextual sidebar)
+- 11. MULTI-COLUMN (newspaper)
+- 12. CARD GRID (responsive auto-fill — no breakpoints)
+- 13. CONTAINER QUERIES (component adapts to parent, not viewport)
+- 14. Z-PATTERN
+- 15. F-PATTERN
+- 16. COVER (Every-Layout) — vertically centered hero / login
+- EVERY-LAYOUT COMPOSITION PRIMITIVES
+- RESPONSIVE CHEAT SHEET
+- ANTI-MONOTONY TECHNIQUES (recap)
+- PART 2 — MODERN WEBSITE SKELETONS (2025–2026)
+- 17. HERO VARIANTS (8 — pick by product type)
+- 18. SAAS LANDING — FULL SECTION FLOW
+- 19. DASHBOARD / APP SHELL (Linear / Vercel 2026)
+- 20. BENTO GRID — CELL-SPAN RECIPES
+- 21. E-COMMERCE SKELETONS
+- 22. EDITORIAL / CONTENT / DOCS
+- 23. AUTH / ONBOARDING / PRICING / UTILITY PAGES
+- 24. MOBILE-FIRST / PWA / RESPONSIVE
+- 25. CUTTING-EDGE CSS TECHNIQUES (2025–2026)
+- PART 2 SOURCES
+- Creative Freedom Within the Bans
 
 ## 1. HOLY GRAIL (header / nav / main / aside / footer)
 **When:** docs, content sites, admin with TOC sidebars.
@@ -509,7 +502,7 @@ Vary content per cell — never icon+title+blurb in all six. Use `grid-auto-flow
             <figure class="aspect-[3/4] rounded-lg bg-gray-100" data-sample="true"><figcaption class="p-4 text-sm text-gray-600">Sample product image — replace before launch</figcaption></figure>
           </div>
           <h3 class="mt-3 text-sm font-medium text-gray-900">Product Name</h3>
-          <p class="text-sm font-semibold tabular-nums text-gray-900">Rp 299.000</p>
+          <p class="text-sm font-semibold tabular-nums text-gray-900">$299</p>
         </a>
       </article>
     </div>

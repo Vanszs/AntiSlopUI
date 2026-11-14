@@ -27,7 +27,7 @@ import hashlib
 import re as _re
 
 _BANNED_ACCENT = _re.compile(
-    r"^#(?:6366F1|818CF8|8B5CF6|7C3AED|A78BFA|4F46E5|C4B5FD|8B5CF6|6D28D9|5B21B6)$", _re.I)
+    r"^#(?:6366F1|818CF8|8B5CF6|7C3AED|A78BFA|4F46E5|C4B5FD|6D28D9|5B21B6|A855F7)$", _re.I)
 _BANNED_TINT = _re.compile(
     r"^#(?:E0E7FF|EEF2FF|FAF5FF|F5F3FF|EDE9FE|F3E8FF|DDD6FE|C7D2FE)$", _re.I)
 _BANNED_TEXT = _re.compile(r"^#(?:1E1B4B|312E81|3730A3|4C1D95|2E1065)$", _re.I)
@@ -73,17 +73,19 @@ def post_filter_typography(typo):
     body = str(out.get("body") or "")
     bad_pairing = "playfair" in heading.lower() and body.strip().lower() == "inter"
     inter_only = heading.strip().lower() == "inter" and body.strip().lower() == "inter"
-    mono_display = any(k in heading.lower() for k in ("fira code", "mono", "courier", "consolas"))
+    mono_display = bool(_re.search(r"(?:^|\s)(?:fira code|jetbrains mono|space mono|ibm plex mono|share tech mono|roboto mono|source code pro|courier|consolas)(?:$|\s)|mono$", heading.lower()))
     if inter_only or bad_pairing or mono_display:
         new_heading = "Fraunces" if bad_pairing else "Bricolage Grotesque"
         out["heading"] = new_heading
+        body_face = body if body and body.strip().lower() != "inter" else "Inter"
         out["google_fonts_url"] = (
             "https://fonts.google.com/share?selection.family="
-            + new_heading.replace(" ", "+") + ":wght@400;600;700|Inter:wght@400;500"
+            + new_heading.replace(" ", "+") + ":wght@400;600;700|" + body_face.replace(" ", "+") + ":wght@400;500"
         )
         out["css_import"] = (
             "@import url('https://fonts.googleapis.com/css2?"
-            "family=" + new_heading.replace(" ", "+") + ":wght@400;600;700&family=Inter:wght@400;500&display=swap');"
+            "family=" + new_heading.replace(" ", "+") + ":wght@400;600;700&family="
+            + body_face.replace(" ", "+") + ":wght@400;500&display=swap');"
         )
         out["post_filter_note"] = "display pairing substituted (banned pairing or Inter-everywhere)"
     return out
@@ -557,8 +559,9 @@ def generate_design_system(query: str, project_name: str = None, output_format: 
     Returns:
         Formatted design system string
     """
+    _OVERRIDES.clear()
     generator = DesignSystemGenerator()
-    design_system = generator.generate(query, project_name)
+    design_system = sanitize_result(generator.generate(query, project_name))
     
     # Persist to files if requested
     if persist:
@@ -601,7 +604,7 @@ def persist_design_system(design_system: dict, page: str = None, output_dir: str
     master_file = design_system_dir / "MASTER.md"
     
     # Generate and write MASTER.md
-    master_content = format_master_md(design_system)
+    master_content = format_master_md(design_system) + "\n".join(render_overrides(design_system))
     with open(master_file, 'w', encoding='utf-8') as f:
         f.write(master_content)
     created_files.append(str(master_file))
@@ -798,7 +801,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("```css")
     lines.append(".modal-overlay {")
     lines.append("  background: rgba(0, 0, 0, 0.5);")
-    lines.append("  backdrop-filter: blur(4px);")
+    lines.append("  background: rgba(15, 23, 42, 0.45);")
     lines.append("}")
     lines.append("")
     lines.append(".modal {")
@@ -1133,6 +1136,68 @@ def _detect_page_type(context: str, style_results: list) -> str:
     
     return "General"
 
+
+
+# --- Semantic post-filter: prose columns and override ledger ----------------
+_PROSE_SUBS = [
+    (r"glassmorphism", "solid surfaces"),
+    (r"frosted glass[^.,;]*", "solid surface"),
+    (r"backdrop[- ]blur[^.,;)]*", "solid surface"),
+    (r"neon glow", "flat accent"),
+    (r"parallax[^.,;)]*", "scroll-linked reveal"),
+    (r"streaming text", "progressive text update"),
+    (r"indigo primary", "brand primary"),
+    (r"purple tech", "brand accent"),
+    (r"\b(?:indigo|violet|purple|lavender)\b", "brand"),
+    (r"\b(?:200-300ms|300-400ms)\b", "150-250ms"),
+]
+_OVERRIDES = []
+
+
+def _note_override(message):
+    if message not in _OVERRIDES:
+        _OVERRIDES.append(message)
+
+
+def sanitize_prose(text):
+    """Remove banned concepts from vendor prose columns and record the override."""
+    if not isinstance(text, str) or not text:
+        return text
+    out = text
+    for pattern, replacement in _PROSE_SUBS:
+        new = _re.sub(pattern, replacement, out, flags=_re.I)
+        if new != out:
+            _note_override("OVERRIDE: vendor prose \"{}\" -> \"{}\" [prose-post-filter]".format(
+                _re.search(pattern, out, _re.I).group(0), replacement))
+            out = new
+    return out
+
+
+def sanitize_result(design_system):
+    """Apply the semantic post-filter to every prose-bearing field."""
+    for section, keys in (("style", ("effects", "keywords", "best_for")),
+                          ("colors", ("notes",)),
+                          ("typography", ("mood",)),
+                          ("pattern", ("name", "conversion"))):
+        block = design_system.get(section)
+        if isinstance(block, dict):
+            for key in keys:
+                if key in block:
+                    block[key] = sanitize_prose(block[key])
+    for key in ("key_effects", "anti_patterns"):
+        if key in design_system:
+            design_system[key] = sanitize_prose(design_system.get(key))
+    design_system["overrides"] = list(_OVERRIDES)
+    return design_system
+
+
+def render_overrides(design_system):
+    """Lines describing every substitution, so the ledger reaches the artifact."""
+    overrides = design_system.get("overrides") or []
+    if not overrides:
+        return []
+    return ["", "## Post-filter overrides", ""] + ["- {}".format(o) for o in overrides] + [""]
+# ---------------------------------------------------------------------------
 
 # ============ CLI SUPPORT ============
 if __name__ == "__main__":

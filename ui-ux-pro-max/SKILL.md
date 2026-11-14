@@ -2,6 +2,7 @@
 name: ui-ux-pro-max
 description: "CSV-backed design-system generator: searches UI styles, color palettes, font pairings, UX guidelines, chart types, and 13 stack-specific guides, then proposes a design system for a product type. Use only when you need industry-specific style/palette/typography evidence, after anti-ai-slop-ui-ux is loaded; every result is a proposal that must pass POST-FILTER.md before use. Not a pattern library (use component-reference-design) and not for code review."
 license: MIT
+compatibility: "Requires Python 3.8+ to execute scripts/search.py; the CSV data is read-only otherwise."
 metadata:
   upstream: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
   author: NextLevelBuilder (vendored)
@@ -77,9 +78,9 @@ Extract key information from user request:
 - **Industry**: healthcare, fintech, gaming, education, etc.
 - **Stack**: React, Vue, Next.js, or default to `html-tailwind`
 
-### Step 2: Generate Design System (REQUIRED)
+### Step 2: Generate Design System (recommended; required when the shell is available)
 
-**Always start with `--design-system`** to get comprehensive recommendations with reasoning:
+**When the shell is available, start with `--design-system`** to get comprehensive recommendations with reasoning:
 
 ```bash
 python3 ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" --design-system [-p "Project Name"]
@@ -204,7 +205,7 @@ Supported flags: `--json` emits JSON for domain/stack search but is silently ign
 - Industry: Beauty/Wellness
 - Stack: html-tailwind (default)
 
-### Step 2: Generate Design System (REQUIRED)
+### Step 2: Generate Design System (recommended; required when the shell is available)
 
 ```bash
 python3 ui-ux-pro-max/scripts/search.py "beauty spa wellness service elegant" --design-system -p "Serenity Spa"
