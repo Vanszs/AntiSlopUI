@@ -75,7 +75,7 @@ Intrinsic version (no breakpoints) — wraps when sidebar can't fit:
 .sidebar{flex-basis:16rem;flex-grow:1}
 .not-sidebar{flex-basis:0;flex-grow:999;min-inline-size:50%}
 ```
-**Responsive:** sidebar → off-canvas drawer on mobile. **Motion:** drawer slide-in; use canonical timing in `anti-ai-slop-ui-ux/SKILL.md`.
+**Responsive:** sidebar → off-canvas drawer on mobile. **Motion:** drawer slide-in; use canonical timing in `../SKILL.md`.
 
 ---
 

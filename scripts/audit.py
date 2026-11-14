@@ -27,8 +27,8 @@ EXTENSIONS = {".css", ".html", ".tsx", ".jsx", ".ts", ".vue", ".svelte", ".astro
 # always scanned, which is how CI audits a generated MASTER.md.
 DOC_EXTENSIONS = {".md"}
 # Docs that exist to quote banned values: exempt from directory scans.
-DOC_EXEMPT_PREFIXES = ("anti-ai-slop-ui-ux/",)
-DOC_EXEMPT_FILES = ("ui-ux-pro-max/POST-FILTER.md", "README.md", "scripts/validate.py")
+DOC_EXEMPT_PREFIXES = ("references/slop-",)
+DOC_EXEMPT_FILES = ("references/research.md", "README.md", "SKILL.md", "scripts/validate.py")
 # A doc line that names a ban is documentation, not implementation.
 DOC_BAN_CONTEXT = ("❌", "never", "Never", "avoid", "Avoid", "BAN", "banned", "P0", "HIGH", "OVERRIDE", "≤",
                    "slop", "Slop", "→", "instead", "Instead", "don't", "Don't", "FAIL", "⚠", "anti-pattern")

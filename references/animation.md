@@ -25,7 +25,7 @@ Companion to `../SKILL.md`. Overlay/feedback components + accessible motion. Sou
 ## Duration & easing reference
 | Context | Reference |
 |---------|-----------|
-| All motion timing | See the canonical motion table in `anti-ai-slop-ui-ux/SKILL.md` |
+| All motion timing | See the canonical motion table in `../SKILL.md` |
 
 | Easing | cubic-bezier | Use |
 |--------|--------------|-----|

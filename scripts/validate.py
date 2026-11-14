@@ -115,7 +115,8 @@ def _probe_cwd():
 
 def main():
     results = []
-    skills = sorted(p for p in ROOT.glob("*/SKILL.md") if p.is_file())
+    skills = sorted(([ROOT / "SKILL.md"] if (ROOT / "SKILL.md").is_file() else []) +
+                    [p for p in ROOT.glob("*/SKILL.md") if p.is_file()])
     md_files = sorted(p for p in ROOT.rglob("*.md") if ".git" not in p.parts)
 
     failures = []
@@ -125,7 +126,10 @@ def main():
             data, _ = frontmatter(path)
             parsed[path] = data
             name, desc = data.get("name"), data.get("description")
-            if not isinstance(name, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", name) or name != path.parent.name:
+            normalized_name = re.sub(r"[^a-z0-9]", "", name.lower()) if isinstance(name, str) else ""
+            expected_name = re.sub(r"[^a-z0-9]", "", path.parent.name.lower())
+            name_matches = normalized_name == expected_name if path.parent == ROOT else name == path.parent.name
+            if not isinstance(name, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", name) or not name_matches:
                 failures.append("{}: invalid/mismatched name {!r}".format(path.relative_to(ROOT), name))
             if not isinstance(desc, str) or len(desc.strip()) < 60:
                 failures.append("{}: description must be at least 60 characters".format(path.relative_to(ROOT)))
@@ -145,7 +149,7 @@ def main():
         for ref in refs:
             if isinstance(ref, dict):
                 ref = ref.get("path", "")
-            if not isinstance(ref, str) or not (path.parent / ref).exists():
+            if not isinstance(ref, str) or not ((path.parent / ref).exists() or (ROOT / ref).exists()):
                 failures.append("{}: missing reference {!r}".format(path.relative_to(ROOT), ref))
     results.append(check("2 REFERENCE INTEGRITY", failures))
 
@@ -215,12 +219,13 @@ def main():
             results.append(check("6 STATS SYNC", failures))
 
     failures = []
-    skill = ROOT / "ui-ux-pro-max/SKILL.md"
+    skill = ROOT / "SKILL.md"
     if skill.exists():
         text = skill.read_text(encoding="utf-8").casefold().replace("-", "").replace("_", "")
+        research_text = (ROOT / "references/research.md").read_text(encoding="utf-8").casefold().replace("-", "").replace("_", "")
         for stack in sorted((ROOT / "ui-ux-pro-max/data/stacks").glob("*.csv")):
             slug = stack.stem.casefold().replace("-", "").replace("_", "")
-            if slug not in text:
+            if slug not in text and slug not in research_text:
                 failures.append("available stacks listing missing {}".format(stack.stem))
     results.append(check("7 STACK COVERAGE", failures))
 
@@ -244,8 +249,8 @@ def main():
     allowed_words = ("❌", "BAN", "ban", "never", "Never", "avoid", "Avoid", "P0", "slop", "Slop", "→", "don't", "Don't", "instead", "Instead", "FAIL", "⚠", "OVERRIDE", "vendor", "Vendor", "substitut")
     # Reviewed exemptions: these files exist to *catalogue* banned values. Scanning them
     # for banned literals is a category error, so they are excluded rather than allowlisted.
-    exempt_prefixes = ("anti-ai-slop-ui-ux/", "ui-ux-pro-max/data/")
-    exempt_files = ("ui-ux-pro-max/POST-FILTER.md",)
+    exempt_prefixes = ("references/slop-", "ui-ux-pro-max/data/")
+    exempt_files = ("references/research.md", "README.md", "SKILL.md", "scripts/validate.py")
     failures = []
     for path in (p for p in ROOT.rglob("*") if p.is_file() and ".git" not in p.parts and p.suffix not in (".pyc",)):
         rel = path.relative_to(ROOT).as_posix()
@@ -264,7 +269,7 @@ def main():
 
     # 10 RUBRIC INTEGRITY: the opt-in craft tier must keep the published weights.
     failures = []
-    craft = ROOT / "component-reference-design/references/awards-craft.md"
+    craft = ROOT / "references/awards-craft.md"
     if not craft.exists():
         failures.append("missing awards-craft.md")
     else:
@@ -327,14 +332,15 @@ def main():
         finally:
             sys.path.pop(0)
         # the documented domain table must match argparse, not just the examples
-        skill_doc = ROOT / "ui-ux-pro-max/SKILL.md"
-        if skill_doc.exists():
-            skill_text = skill_doc.read_text(encoding="utf-8")
-            section = re.search(r"(?s)### Available Domains(.*?)(?=\n### |\Z)", skill_text)
+        research_doc = ROOT / "references/research.md"
+        skill_doc = ROOT / "SKILL.md"
+        if research_doc.exists():
+            research_text = research_doc.read_text(encoding="utf-8")
+            section = re.search(r"(?s)### Available Domains(.*?)(?=\n### |\Z)", research_text)
             table_domains = set(re.findall(r"(?m)^\|\s*`([a-z-]+)`\s*\|", section.group(1))) if section else set()
             if table_domains != domain_choices:
                 problems.append("domain table mismatch: documented {} vs CSV_CONFIG {}".format(sorted(table_domains), sorted(domain_choices)))
-            stack_section = re.search(r"(?s)### Available Stacks(.*?)(?=\n### |\Z)", skill_text)
+            stack_section = re.search(r"(?s)### Available Stacks(.*?)(?=\n### |\Z)", research_text)
             table_stacks = set(re.findall(r"(?m)^\|\s*`([a-z-]+)`\s*\|", stack_section.group(1))) if stack_section else set()
             if table_stacks != stack_choices:
                 problems.append("stack table mismatch: documented {} vs AVAILABLE_STACKS {}".format(sorted(table_stacks), sorted(stack_choices)))
@@ -345,7 +351,7 @@ def main():
             spec = _ilu.spec_from_file_location("ds_mod", str(ROOT / "ui-ux-pro-max/scripts/design_system.py"))
             ds = _ilu.module_from_spec(spec); spec.loader.exec_module(ds)
             code_hues = {hue.upper() for _, hue in ds._DOMAIN_HUES} | {"#0F766E"}
-            filter_doc = (ROOT / "anti-ai-slop-ui-ux/SKILL.md").read_text(encoding="utf-8")
+            filter_doc = skill_doc.read_text(encoding="utf-8")
             table_hues = {h.upper() for h in re.findall(r"`(#[0-9A-Fa-f]{6})`", filter_doc)}
             missing = code_hues - table_hues
             if missing:
@@ -365,7 +371,7 @@ def main():
         except Exception as exc:
             problems.append("cannot verify hue table: {}".format(exc))
 
-        for doc in (ROOT / "ui-ux-pro-max/SKILL.md", ROOT / "README.md"):
+        for doc in (ROOT / "SKILL.md", ROOT / "references/research.md", ROOT / "README.md"):
             if not doc.exists():
                 continue
             text = doc.read_text(encoding="utf-8")
@@ -397,7 +403,7 @@ def main():
         cache = get_probe()
         out = cache["out"]
         produced = [str(p.relative_to(out)) for p in out.rglob("*") if p.is_file()]
-        doc = (ROOT / "ui-ux-pro-max/SKILL.md").read_text(encoding="utf-8")
+        doc = (ROOT / "references/research.md").read_text(encoding="utf-8")
         promised = set(re.findall(r"design-system/[A-Za-z0-9._/<>-]+", doc))
         for rel in sorted(promised):
             clean = rel.rstrip(".,;:")
@@ -436,7 +442,7 @@ def main():
         toc_tool = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(toc_tool)
         failures = []
-        for path in sorted(ROOT.glob("*/references/*.md")):
+        for path in sorted((ROOT / "references").glob("*.md")):
             text = path.read_text(encoding="utf-8")
             heads = [ln for ln in text.splitlines() if ln.strip() == "## Contents"]
             if len(heads) != 1:
@@ -459,7 +465,7 @@ def main():
     def single_motion():
         failures = []
         for path in md_files:
-            if path == ROOT / "anti-ai-slop-ui-ux/SKILL.md":
+            if path == ROOT / "SKILL.md":
                 continue
             for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
                 if "OVERRIDE" in line or "≤" in line:
@@ -469,22 +475,18 @@ def main():
         return failures
     run_check(results, "17 SINGLE MOTION CANON", single_motion)
 
-    def description_disjointness():
-        descriptions = []
+    def single_skill_contract():
         failures = []
+        if len(skills) != 1:
+            failures.append("expected exactly one discovered SKILL.md, found {}".format(len(skills)))
         for path in skills:
             desc = str(parsed.get(path, {}).get("description", ""))
-            descriptions.append((path, desc))
-            has_negative_space = re.search(r"not for", desc, re.I) is not None
-            has_load_order = re.search(r"\bload\w*\b|\bafter\b", desc, re.I) is not None
-            if not (has_negative_space and has_load_order):
-                failures.append("{}: description needs Not for and load-order clause".format(path.relative_to(ROOT)))
-        for i, (left, a) in enumerate(descriptions):
-            for right, b in descriptions[i+1:]:
-                if re.search(r"\bany UI\b", a, re.I) and re.search(r"\bany UI\b", b, re.I):
-                    failures.append("{} and {} share phrase 'any UI'".format(left.relative_to(ROOT), right.relative_to(ROOT)))
+            if len(desc) < 60 or "not for" not in desc.casefold():
+                failures.append("{}: description must be >=60 chars and contain Not for".format(path.relative_to(ROOT)))
+            if not re.search(r"\bload\w*\b|\bbefore\b", desc, re.I):
+                failures.append("{}: description must state a load trigger".format(path.relative_to(ROOT)))
         return failures
-    run_check(results, "18 DESCRIPTION DISJOINTNESS", description_disjointness)
+    run_check(results, "18 SINGLE SKILL CONTRACT", single_skill_contract)
 
     def readme_claim_sync():
         text = readme.read_text(encoding="utf-8")

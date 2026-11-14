@@ -15,7 +15,7 @@ CONTENTS = "## Contents"
 
 
 def reference_files(root=ROOT):
-    return sorted(root.glob("*/references/*.md"))
+    return sorted((root / "references").glob("*.md"))
 
 
 def remove_contents(lines):

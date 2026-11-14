@@ -323,7 +323,7 @@ Progress vs target: `role="progressbar"` + colored fill (teal on-track, amber be
 
 - **Recharts 3.x default `isAnimationActive="auto"` respects `prefers-reduced-motion`** — leave it,
   or pass `!reduced` from a `usePrefersReducedMotion()` hook for explicit control. Never `={true}`.
-- Motion timings follow `anti-ai-slop-ui-ux/SKILL.md`; normalize snippets to 200ms (hover 150ms).
+- Motion timings follow `../SKILL.md`; normalize snippets to 200ms (hover 150ms).
 - Easing: `ease-out` (entrances) / `cubic-bezier(0,0,0.2,1)` (premium deceleration). Exits faster.
 - Stagger series via `animationBegin` (≤5 items; overall timing follows canonical motion limits).
 - Hover: highlight active series, dim siblings to `opacity 0.3` using canonical hover timing.

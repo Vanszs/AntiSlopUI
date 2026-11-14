@@ -1,10 +1,9 @@
 # Conflict-guard / audit exemptions, reviewed by a human.
 # Format: <repo-relative path>:<distinctive substring of the line>
-component-reference-design/references/charts.md:animate gridlines/axes
-component-reference-design/references/animation.md:purposeful short motion
-component-reference-design/references/dashboards.md:whole-page scroll
-ui-ux-pro-max/SKILL.md:`transition: all`
-ui-ux-pro-max/SKILL.md:Motion outside the canonical table
-component-reference-design/SKILL.md:Motion budget
-component-reference-design/references/dashboards.md:purple/indigo accent
-component-reference-design/references/dashboards.md:| `transition: all` |
+references/charts.md:animate gridlines/axes
+references/animation.md:purposeful short motion
+references/dashboards.md:whole-page scroll
+SKILL.md:`transition: all`
+SKILL.md:Motion outside the canonical table
+references/dashboards.md:purple/indigo accent
+references/dashboards.md:| `transition: all` |
