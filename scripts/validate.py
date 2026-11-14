@@ -299,6 +299,13 @@ def main():
                 problems.append("{}: row field count differs from header ({})".format(path.relative_to(ROOT), width))
             if len(ids) != len(set(ids)):
                 problems.append("{}: duplicate first-column IDs".format(path.relative_to(ROOT)))
+            sev_idx = width - 2 if "docs url" in rows[0][-1].strip().lower() else None
+            for row in (rows[1:] if sev_idx is not None else []):
+                if len(row) != width:
+                    continue
+                value = row[sev_idx].strip()
+                if value and value.lower() not in ("critical", "high", "medium", "low"):
+                    problems.append("{}: severity column holds {!r}".format(path.relative_to(ROOT), value))
             nums = sorted(int(value) for value in ids if value.isdigit())
             if nums and nums != list(range(nums[0], nums[-1] + 1)):
                 problems.append("{}: numeric ID gaps".format(path.relative_to(ROOT)))
@@ -346,11 +353,16 @@ def main():
                 outs.append(found.group(1).upper() if found else "none")
             if len(set(outs)) != 1:
                 problems.append("primary hue depends on -p: {} vs {}".format(outs[0], outs[1]))
-            expected = ds.domain_hue("healthcare clinic").upper()
+            expected = "#0E7490"  # healthcare row of the filter table; hardcoded so a wrong mapping fails
             if outs[0] != expected:
                 problems.append("primary hue does not follow the domain table: got {}, expected {}".format(outs[0], expected))
         except Exception as exc:
             problems.append("cannot verify hue table: {}".format(exc))
+
+            stack_section = re.search(r"(?s)### Available Stacks(.*?)(?=\n### |\Z)", skill_text)
+            table_stacks = set(re.findall(r"(?m)^\|\s*`([a-z-]+)`\s*\|", stack_section.group(1))) if stack_section else set()
+            if table_stacks != stack_choices:
+                problems.append("stack table mismatch: documented {} vs AVAILABLE_STACKS {}".format(sorted(table_stacks), sorted(stack_choices)))
 
         for doc in (ROOT / "ui-ux-pro-max/SKILL.md", ROOT / "README.md"):
             if not doc.exists():

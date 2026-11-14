@@ -27,7 +27,7 @@ import hashlib
 import re as _re
 
 _BANNED_ACCENT = _re.compile(
-    r"^#(?:6366F1|818CF8|8B5CF6|7C3AED|A78BFA|4F46E5|C4B5FD|6D28D9|5B21B6|A855F7)$", _re.I)
+    r"^#(?:6366F1|818CF8|8B5CF6|7C3AED|A78BFA|4F46E5|C4B5FD|6D28D9|5B21B6|A855F7|7B61FF|E879F9)$", _re.I)
 _BANNED_TINT = _re.compile(
     r"^#(?:E0E7FF|EEF2FF|FAF5FF|F5F3FF|EDE9FE|F3E8FF|DDD6FE|C7D2FE)$", _re.I)
 _BANNED_TEXT = _re.compile(r"^#(?:1E1B4B|312E81|3730A3|4C1D95|2E1065)$", _re.I)
@@ -58,19 +58,19 @@ _FACE_CONSUMER = ("playful", "consumer", "education", "school", "kid", "game", "
 
 def category_face(query):
     """Display face from the filter's category table, keyed on the product itself."""
-    q = (query or "").lower()
-    if any(word in q for word in _FACE_EDITORIAL):
+    q = " " + _re.sub(r"[^a-z0-9]+", " ", (query or "").lower()) + " "
+    if any(" {} ".format(word) in q for word in _FACE_EDITORIAL):
         return "Fraunces"
-    if any(word in q for word in _FACE_CONSUMER):
+    if any(" {} ".format(word) in q for word in _FACE_CONSUMER):
         return "Cabinet Grotesk"
     return "Bricolage Grotesque"
 
 
 def domain_hue(query):
     """Deterministic hue from the filter's domain table; the catch-all is deep teal."""
-    q = (query or "").lower()
+    q = " " + _re.sub(r"[^a-z0-9]+", " ", (query or "").lower()) + " "
     for words, hue in _DOMAIN_HUES:
-        if any(word in q for word in words):
+        if any(" {} ".format(word) in q for word in words):
             return hue
     return "#0F766E"
 
@@ -96,8 +96,10 @@ def post_filter_colors(colors, seed=""):
         hexv = value.strip()
         if _BANNED_TINT.match(hexv):
             out[role] = _NEUTRAL_TINT if "border" in role else _NEUTRAL_BG
+            _note_override("OVERRIDE: vendor {} tint {} → {} [C1]".format(role, hexv, out[role]))
         elif _BANNED_TEXT.match(hexv):
             out[role] = _NEUTRAL_TEXT
+            _note_override("OVERRIDE: vendor {} text {} → {} [C7]".format(role, hexv, out[role]))
         elif _BANNED_ACCENT.match(hexv):
             if role in accent_roles:
                 out[role] = rotations[accent_i % len(rotations)]
@@ -117,10 +119,9 @@ def post_filter_typography(typo, query=""):
     bad_pairing = "playfair" in heading.lower() and body.strip().lower() == "inter"
     inter_only = heading.strip().lower() == "inter" and body.strip().lower() == "inter"
     # A single versatile family is legitimate (Plus Jakarta, IBM Plex) unless it is Inter/Geist.
-    same_face = False
     mono_display = bool(_re.search(r"(?:^|\s)(?:fira code|jetbrains mono|space mono|ibm plex mono|share tech mono|roboto mono|source code pro|courier|consolas)(?:$|\s)|mono$", heading.lower()))
     in_table = any(name in heading.lower() for name in ("fraunces", "bricolage", "cabinet grotesk"))
-    if inter_only or bad_pairing or mono_display or same_face or not in_table:
+    if inter_only or bad_pairing or mono_display or not in_table:
         new_heading = category_face(out.get("_query", ""))
         out["heading"] = new_heading
         body_face = body if body and body.strip().lower() != "inter" else "Inter"
@@ -148,7 +149,7 @@ def post_filter_style(style):
         for key in ("keywords", "effects"):
             if key in out:
                 out[key] = "flat surfaces, solid fills, clear borders, no blur or transparency"
-        _note_override("OVERRIDE: Glassmorphism → {} [K4]".format(out["name"]))
+        _note_override("OVERRIDE: Glassmorphism → {} [catalog K4]".format(out["name"]))
     return out
 # ---------------------------------------------------------------------------
 
@@ -461,7 +462,7 @@ def format_ascii_box(design_system: dict) -> str:
     if typography.get("google_fonts_url"):
         lines.append(f"|     Google Fonts: {typography.get('google_fonts_url', '')}".ljust(BOX_WIDTH) + "|")
     if typography.get("css_import"):
-        lines.append(f"|     CSS Import: {typography.get('css_import', '')[:70]}...".ljust(BOX_WIDTH) + "|")
+        lines.append(f"|     CSS Import: {typography.get('css_import', '')[:120]}".ljust(BOX_WIDTH) + "|")
     lines.append("|" + " " * BOX_WIDTH + "|")
 
     # Key Effects section
@@ -782,7 +783,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("  padding: 12px 24px;")
     lines.append("  border-radius: 8px;")
     lines.append("  font-weight: 600;")
-    lines.append("  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease;")
+    lines.append("  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;")
     lines.append("  cursor: pointer;")
     lines.append("}")
     lines.append("")
@@ -799,7 +800,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("  padding: 12px 24px;")
     lines.append("  border-radius: 8px;")
     lines.append("  font-weight: 600;")
-    lines.append("  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease;")
+    lines.append("  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;")
     lines.append("  cursor: pointer;")
     lines.append("}")
     lines.append("```")
@@ -814,7 +815,7 @@ def format_master_md(design_system: dict) -> str:
     lines.append("  border-radius: 12px;")
     lines.append("  padding: 24px;")
     lines.append("  box-shadow: var(--shadow-md);")
-    lines.append("  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease;")
+    lines.append("  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;")
     lines.append("  cursor: pointer;")
     lines.append("}")
     lines.append("")
@@ -1199,6 +1200,9 @@ _PROSE_SUBS = [
     (r"blurred background", "solid background"),
     (r"light source|light reflection|Z-depth", "flat surface"),
     (r"hover\s*\((?:150-250|200-300|300-400)ms\)", "hover (100-150ms)"),
+    (r"parallax[^.,;)]*", "scroll-linked reveal"),
+    (r"Client Logos", "Customer proof (omit if not supplied)"),
+    (r"(?:3-5 )?testimonials", "customer evidence (omit if not supplied)"),
     (r"indigo primary", "brand primary"),
     (r"purple tech", "brand accent"),
     (r"\b(?:indigo|violet|purple|lavender)\b", "brand"),
@@ -1220,7 +1224,7 @@ def sanitize_prose(text):
     for pattern, replacement in _PROSE_SUBS:
         new = _re.sub(pattern, replacement, out, flags=_re.I)
         if new != out:
-            _note_override("OVERRIDE: vendor prose \"{}\" → \"{}\" [K4]".format(
+            _note_override("OVERRIDE: vendor prose \"{}\" → \"{}\" [catalog K4]".format(
                 _re.search(pattern, out, _re.I).group(0), replacement))
             out = new
     return out

@@ -8,11 +8,11 @@ from pathlib import Path
 
 RULES = [
     ("transition-all", re.compile(r"transition\s*:\s*all|transition-all", re.I)),
-    ("accent-hex", re.compile(r"#(?:6366f1|8b5cf6|7c3aed|a78bfa|818cf8|4f46e5|c4b5fd|a855f7)\b", re.I)),
+    ("accent-hex", re.compile(r"#(?:6366f1|8b5cf6|7c3aed|a78bfa|818cf8|4f46e5|c4b5fd|a855f7|7b61ff|e879f9)\b", re.I)),
     ("accent-tailwind", re.compile(r"\b(?:indigo|violet|purple)-\d{2,3}\b", re.I)),
     ("hover-scale", re.compile(r"hover:scale-1\d\d", re.I)),
     ("group-hover-scale", re.compile(r"group-hover:scale", re.I)),
-    ("white-opacity", re.compile(r"bg-white/1[00]?\b", re.I)),
+    ("white-opacity", re.compile(r"bg-white/(?:[1-6][0-9]?)(?!\d)", re.I)),
     ("backdrop-blur-lg", re.compile(r"backdrop-blur(?:-(?:lg|xl|2xl|3xl))?\b(?!-sm)|(?:backdrop-)?filter\s*:\s*blur\((?:[6-9]|[1-9]\d)px\)|frosted glass|liquid glass", re.I)),
     ("text-transparent-gradient", re.compile(r"(?=.*text-transparent)(?=.*bg-clip-text)", re.I)),
     ("over-motion-budget", re.compile(r"\bduration-(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})\b|\b(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})ms\b", re.I)),
@@ -87,10 +87,7 @@ def main():
                 continue
             if compact.startswith(("- OVERRIDE:", "OVERRIDE:")):
                 parts = re.split(r"→|->", compact, maxsplit=1)
-                if len(parts) < 2:
-                    compact = ""      # a record with no substitution side ships nothing
-                else:
-                    compact = parts[1].strip()
+                compact = parts[1].strip() if len(parts) > 1 else compact
             elif path.suffix.lower() in DOC_EXTENSIONS and any(token in compact for token in DOC_BAN_CONTEXT):
                 continue
             for name, pattern in RULES:

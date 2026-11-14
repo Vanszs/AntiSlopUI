@@ -41,12 +41,14 @@ This skill owns the suite's UI ban list. Its rules override conflicting recommen
 
 ## Deterministic terms
 
-A **tell** is one row in `references/slop-uiux-patterns.md` sections 1–10 with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity vocabulary is closed. Count each matching catalog row once. **Block when any tell is P0, or when 3+ tells are P0/HIGH. MEDIUM and LOW tells are recorded, not blocking.**
+A **tell** is one catalog row in `references/slop-uiux-patterns.md` sections 1–10, or one **P0 finding** in `references/slop-code-patterns.md`, with severity exactly one of `P0`, `HIGH`, `MEDIUM`, or `LOW`. Severity vocabulary is closed.
+
+Count **per element**, not per row: if one element matches several rows (a 3-card grid with emoji icons is both K1 and I1), it is one tell at the highest matching severity. Fold overlapping rows into one before applying the threshold. **Block when any tell is P0, or when 3+ tells are P0/HIGH. MEDIUM and LOW tells are recorded, not blocking.**
 
 Absence rows do not match. A row that describes something missing (a form without states, a page without numbers) only counts when the page *claims* that capability; otherwise it is `N-A`, same as in the audit.
 
 
-A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, `domain table`, `display table`, or a gate id such as `H2`.
+A banned purple, indigo, or other prohibited hue is “real brand” only when present in user-supplied brand assets: a logo file, existing CSS tokens, or brand PDF. Otherwise it is a violation. Record an exception exactly as `OVERRIDE: <from> → <to> [<reason>]`, where `<reason>` is `brand: <source>`, `craft tier §5`, `domain table`, `display table`, `catalog <ID>`, or a gate id such as `H2`.
 
 Vendor prose describes intent, never implementation: never copy a duration, effect or style name out of generated text, and apply the substitution table instead.
 
@@ -94,7 +96,7 @@ grep -nE '^## |^\| ?[A-Z]{1,3}[0-9]+' references/slop-uiux-patterns.md`.
 | Craft-tier exception | ≤400ms ONLY with `OVERRIDE:` |
 | Ambient animation | Maximum 1; pause on hover/focus; render static under `prefers-reduced-motion` |
 
-All motion examples elsewhere use 200ms. Outside this table, point here instead of restating durations. Respect `prefers-reduced-motion`; use transform/opacity where appropriate.
+Hover examples use 150ms; entrance and exit examples use 200ms. Outside this table, point here instead of restating durations. Respect `prefers-reduced-motion`; use transform/opacity where appropriate.
 
 ## Text measure
 
@@ -127,7 +129,7 @@ Colour is decided in this order, and the first match wins:
 | Developer tooling, data, AI infrastructure | `#4D7C0F` olive |
 | Anything not listed | `#0F766E` deep teal |
 
-If a value from user brand assets exists, it wins over the table. Do not derive a hue by feel.
+If a value from user brand assets exists, it wins over the table. When several rows match, the row earliest in this table wins. Do not derive a hue by feel.
 3. **Research output** — `--design-system` colours, after its post-filter substitution table. A proposal, never an authority: step 2 has already decided the hue, so step 3 supplies systems and accents only.
 
 `component-reference-design` supplies structure, spacing, components and colour *systems* (tokens, chart palettes, OKLCH recipes). It does not choose your brand hue — steps 1–3 above do that; use its systems to express the hue you chose.

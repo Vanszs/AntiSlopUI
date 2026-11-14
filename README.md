@@ -53,14 +53,14 @@ an 8-bullet ban summary. Installing all three is still better than installing on
    in user-supplied brand assets, recorded as `OVERRIDE: <value> → <value> [brand: <source>]`.
    Unknown proof is omitted and recorded `NO-PROOF: user supplied none`; inventing it is P0.
 6. **The audit runs last and reports `PASS`/`FAIL`/`N-A`** with an evidence pointer per item.
-   One P0 FAIL blocks delivery.
+   One P0 FAIL blocks delivery, as do 3+ P0/HIGH tells; MEDIUM/LOW are recorded.
 
 ## Context budget
 
 - **Always:** the `SKILL.md` of skills that apply (≤3 files).
 - **On demand:** per skill, at most one reference file; the tell catalog is a second file when
   auditing (two total for a full run); two also when combining dashboards + charts. Every reference starts with a `## Contents` index —
-  `grep -nE '^#{1,2} '`, then read only that range (END = next match − 1).
+  `grep -nE '^#{1,2} ' references/<file>.md`, then read only that range (END = next match − 1).
 - **Never:** read the CSVs by hand. Query them through `search.py` (2–3 targeted queries).
 
 ## Installation
