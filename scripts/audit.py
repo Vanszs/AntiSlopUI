@@ -15,7 +15,7 @@ RULES = [
     ("white-opacity", re.compile(r"bg-white/1[00]?\b", re.I)),
     ("backdrop-blur-lg", re.compile(r"backdrop-blur-(?:lg|xl|2xl|3xl)?\b|backdrop-filter\s*:\s*blur|frosted glass|liquid glass", re.I)),
     ("text-transparent-gradient", re.compile(r"(?=.*text-transparent)(?=.*bg-clip-text)", re.I)),
-    ("over-motion-budget", re.compile(r"\bduration-(?:3[1-9]\d|[4-9]\d\d|\d{4,})\b|\b(?:3[1-9]\d|[4-9]\d\d|\d{4,})ms\b", re.I)),
+    ("over-motion-budget", re.compile(r"\bduration-(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})\b|\b(?:3(?:0[1-9]|[1-9]\d)|[4-9]\d\d|\d{4,})ms\b", re.I)),
     ("uniform-container", re.compile(r"\bmax-w-7xl\b", re.I)),
     ("empty-src", re.compile(r"\bsrc\s*=\s*(['\"])[ ]*\1", re.I)),
 ]
