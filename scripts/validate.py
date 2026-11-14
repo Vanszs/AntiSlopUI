@@ -575,10 +575,13 @@ def main():
             elif a != b:
                 failures.append("{} differs: README {} vs SKILL.md {}".format(label, a, b))
             else:
-                enumerated = sum(1 for line in skill_text.splitlines()
-                                 if line.lstrip().startswith("- [ ]") and token in line)
+                items = [line.strip().lower() for line in skill_text.splitlines()
+                         if line.lstrip().startswith("- [ ]") and token in line]
+                enumerated = len(items)
                 if enumerated != b:
                     failures.append("{} declares {} but the audit enumerates {}".format(label, b, enumerated))
+                elif len(set(items)) != enumerated:
+                    failures.append("{} has duplicate audit items ({} lines, {} distinct)".format(label, enumerated, len(set(items))))
         claimed_gates = re.search(r"(\d+)\s+hard gates", text)
         if claimed_gates and int(claimed_gates.group(1)) != gates:
             failures.append("README claims {} hard gates; the table has {}".format(claimed_gates.group(1), gates))
