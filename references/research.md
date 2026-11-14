@@ -126,9 +126,10 @@ Record each substitution exactly: `OVERRIDE: <from> → <to> [<reason>]`.
 ## Determinism
 
 Recommendations are deterministic for a given query. The hue comes from the
-product domain in the query, never from `-p`; `-p` only names the output folder.
-Secondary and CTA derive from the primary, so a banned secondary collapses to
-the primary and a second banned accent takes the next hue in the fixed list.
+product domain in the query, never from `-p`; `-p` names the output folder and the document header.
+A banned secondary collapses to the primary and a second banned accent takes the next hue in
+the fixed list. Non-banned vendor secondary and CTA values pass through unchanged, so the
+palette is not uniformly derived from the primary.
 Persisted artifacts additionally embed a generation timestamp.
 
 ## When there is no shell

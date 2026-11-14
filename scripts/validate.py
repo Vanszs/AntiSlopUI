@@ -558,14 +558,27 @@ def main():
         if kb and skill_kb and kb.group(1) != skill_kb.group(1):
             failures.append("budget ceiling differs: README {} KB vs SKILL.md {} KB".format(kb.group(1), skill_kb.group(1)))
         skill_text_c = skill_text
-        for label, pattern in (("a11y HIGH items", r"(\w+)\s+a11y\s+HIGH\s+items"), ("code P0 items", r"(\w+)\s+code\s+P0\s+items")):
-            words = {"one":1,"two":2,"three":3,"four":4,"five":5,"six":6,"seven":7,"eight":8}
+        words = {"one":1,"two":2,"three":3,"four":4,"five":5,"six":6,"seven":7,"eight":8}
+        def number(value):
+            value = (value or "").strip().lower()
+            return int(value) if value.isdigit() else words.get(value)
+        for label, pattern, token in (("a11y HIGH items", r"([\w]+)\s+a11y(?:/form)?\s+HIGH\s+items", "(HIGH"),
+                                      ("code P0 items", r"([\w]+)\s+code\s+P0\s+items", "(P0")):
             readme_v = re.search(pattern, text)
-            skill_v = re.search(pattern, skill_text_c)
-            if readme_v and skill_v:
-                a = words.get(readme_v.group(1).lower()); b = words.get(skill_v.group(1).lower())
-                if a and b and a != b:
-                    failures.append("{} differs: README {} vs SKILL.md {}".format(label, readme_v.group(1), skill_v.group(1)))
+            skill_v = re.search(pattern, skill_text)
+            if not readme_v or not skill_v:
+                failures.append("{} count not stated in README or SKILL.md".format(label))
+                continue
+            a, b = number(readme_v.group(1)), number(skill_v.group(1))
+            if a is None or b is None:
+                failures.append("{} count is not a number: README {!r} vs SKILL.md {!r}".format(label, readme_v.group(1), skill_v.group(1)))
+            elif a != b:
+                failures.append("{} differs: README {} vs SKILL.md {}".format(label, a, b))
+            else:
+                enumerated = sum(1 for line in skill_text.splitlines()
+                                 if line.lstrip().startswith("- [ ]") and token in line)
+                if enumerated != b:
+                    failures.append("{} declares {} but the audit enumerates {}".format(label, b, enumerated))
         claimed_gates = re.search(r"(\d+)\s+hard gates", text)
         if claimed_gates and int(claimed_gates.group(1)) != gates:
             failures.append("README claims {} hard gates; the table has {}".format(claimed_gates.group(1), gates))

@@ -73,8 +73,8 @@ motion table, a single budget, and no dangling cross-skill steps.
 ## The decision rule
 
 **Any P0 tell blocks delivery, as does 3+ P0/HIGH tells. MEDIUM and LOW are recorded.**
-A tell is one catalogue row, or one of the code-level findings in the audit (five a11y HIGH
-items and seven code P0 items), counted **per element** — overlapping rows on one element collapse to the highest
+A tell is one catalogue row, or one of the code-level findings in the audit (five a11y/form HIGH
+items (focus, labels, alt, colour-only, validation) and seven code P0 items), counted **per element** — overlapping rows on one element collapse to the highest
 severity, and page-scope rows count once for the page.
 
 `WARN-BRAND-SWAP` is a warning, never a block; an `UNVERIFIED` P0 blocks like a FAIL. `N-A` means the component or capability is

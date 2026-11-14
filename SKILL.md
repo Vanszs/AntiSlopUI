@@ -34,8 +34,9 @@ recorded, not blocking.** `WARN-BRAND-SWAP` is a warning, never a block.
 ## Deterministic terms
 
 A **tell** is one catalogue row in `references/slop-uiux-patterns.md` sections 1–10, or one
-of the code-level findings the audit lists below (five a11y HIGH items and seven code P0
-items). Severity is exactly `P0`, `HIGH`, `MEDIUM` or `LOW`; the vocabulary is closed.
+of the code-level findings the audit lists below (five a11y/form HIGH items and seven code P0
+items, the HIGH set being focus states, form labels, alt text, colour-only indicators and
+validation states (F1 in the code catalogue)). Severity is exactly `P0`, `HIGH`, `MEDIUM` or `LOW`; the vocabulary is closed.
 
 Count **per element**: when one element matches several rows (a 3-card grid with emoji icons
 is both K1 and I1), count it once at the **higher** severity. Rows that describe the whole
@@ -79,8 +80,8 @@ sample is not an invented metric.
 | N1 | Floating glassmorphic navbar | Fixed solid navbar with a border | HIGH |
 
 Also enforced from the catalog: mono/technical faces as display (§3), indigo-950 or
-violet-50 tints as text or background (no catalogue row: these are vendor palette values,
-and `references/research.md` lists the substitutions), typewriter-style copy animation (MO12) and
+violet-50 tints as text or background (no dedicated row: treat them as C1 for accents and
+C7 for text contrast, and record the substitution from `references/research.md`), typewriter-style copy animation (MO12) and
 multi-layer parallax (MO8), both in §8 MOTION. These are catalog rows, not a
 second list.
 
@@ -202,8 +203,8 @@ structures; at least two deliberate asymmetric moments per page.
 ## Reference budget
 
 Per task: this file plus **sections**, never whole reference files. A whole reference is
-6–36 KB (2–10k tokens): six would still fit under the ceiling and four would not, but none
-may be read whole regardless. A section runs from a few hundred tokens to about 1,300, with the
+6–36 KB (2–10k tokens). Only the six smallest would fit beside this file and the catalogue;
+the four largest would not. None may be read whole. A section runs from a few hundred tokens to about 1,300, with the
 dashboard and code catalogues reaching roughly 2,100.
 
 Ceiling: **70 KB of skill text per task** (≈20k real tokens; 3.5 bytes ≈ 1 token, so bytes
@@ -272,23 +273,27 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 - [ ] Every metric is real or visibly labelled; unknown proof omitted with `NO-PROOF`.
 - [ ] Sample content visibly labelled.
 
-**Code-level (P0 findings)**
-- [ ] Semantic landmarks: one `<main>`, `<nav>`, `<header>`, `<footer>`; page has `lang`.
-- [ ] Real controls: `<button>`/`<a>`, never `<div onClick>` or `<span role="button">`.
-- [ ] Overlays are `<dialog>` (or a focus-trapped equivalent) and close on Escape.
-- [ ] Custom inputs follow the ARIA pattern: a combobox/select exposes `role="listbox"` +
+**Code-level findings (7 P0)**
+- [ ] (P0) Semantic landmarks: one `<main>`, `<nav>`, `<header>`, `<footer>`; page has `lang`.
+- [ ] (P0) Real controls: `<button>`/`<a>`, never `<div onClick>` or `<span role="button">`.
+- [ ] (P0) Overlays are `<dialog>` (or a focus-trapped equivalent) and close on Escape.
+- [ ] (P0) Custom inputs follow the ARIA pattern: combobox/select exposes `role="listbox"` +
   `aria-expanded` and is keyboard operable.
-- [ ] Icon-only controls carry `aria-label` (P0).
-- [ ] Images carry `alt` (HIGH — one of the five a11y HIGH items).
-- [ ] No secrets, keys or tokens in client code, and no unsanitized HTML injection
+- [ ] (P0) Icon-only controls carry `aria-label`.
+- [ ] (P0) No secrets, keys or tokens in client code, and no unsanitized HTML injection
   (`dangerouslySetInnerHTML`, `innerHTML`, `v-html`).
-- [ ] Data fetching follows the stack's idiom — server component, loader, or query cache —
+- [ ] (P0) Data fetching follows the stack's idiom — server component, loader, or query cache —
   not a client-side request waterfall in an effect.
 
-**Motion and accessibility**
-- [ ] Motion inside the canonical table; colour/shadow hovers are 100–150ms; any spatial motion uses `transform`/`opacity` only; reduced-motion renders static.
-- [ ] Focus states visible; forms have labels and validation states (both HIGH a11y items); contrast checked.
-- [ ] Images have alt text; colour is never the only indicator.
+**Motion and accessibility findings (5 HIGH)**
+- [ ] (HIGH) Images carry `alt`.
+- [ ] (HIGH) Focus states are visible.
+- [ ] (HIGH) Form controls carry labels.
+- [ ] (HIGH) Forms expose validation states.
+- [ ] (HIGH) Colour is never the only state indicator.
+- [ ] Motion inside the canonical table; colour/shadow hovers are 100–150ms; any spatial motion
+  uses `transform`/`opacity` only; reduced-motion renders static.
+- [ ] Body text and UI meet the contrast thresholds above.
 
 **Gestalt**
 - [ ] Counted catalog tells per element; **any P0 tell or 3+ P0/HIGH tells = block**.

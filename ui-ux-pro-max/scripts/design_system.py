@@ -70,7 +70,7 @@ def _readable_on(background):
     white = contrast_ratio(background, "#FFFFFF")
     ink = contrast_ratio(background, "#0F172A")
     if ink > white:
-        _note_override("OVERRIDE: button text white → #0F172A on {} [catalog C7, {:.1f}:1]".format(background, ink))
+        _note_override("OVERRIDE: button text white → #0F172A on {} [catalog C7] {:.1f}:1".format(background, ink))
         return "#0F172A"
     return "#FFFFFF"
 
