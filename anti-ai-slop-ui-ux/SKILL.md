@@ -19,7 +19,7 @@ Load this filter before UI work. Before delivery, report `PASS`, `FAIL`, or `N-A
 ## Precedence & conflict resolution
 
 This skill owns the suite's UI ban list. Its rules override conflicting recommendations from the companion skills and CSVs.
-- If the research skill is installed, its `--design-system` output may recommend indigo `#6366F1`; reject unless it appears in user-supplied brand assets.
+- If the research skill is installed, older vendor data recommends indigo `#6366F1`-family accents; the bundled generator now forces the domain hue, but if you see one, reject it unless it appears in user-supplied brand assets.
 - `ui-ux-pro-max` recommends Glassmorphism for SaaS in `ui-reasoning.csv`; reject the style and keep solid surfaces.
 - Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception per use.
 - Vendor palettes may include banned indigo/purple hexes, backgrounds, or text tints; reject unless user-supplied brand assets contain the value.

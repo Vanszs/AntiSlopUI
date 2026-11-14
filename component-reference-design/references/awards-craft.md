@@ -107,7 +107,7 @@ Both relaxations remain pausable and static under reduced motion. Hovers and non
 ## 6. Procedure
 
 1. Confirm the tier applies (§0). If not, refuse and ship solid.
-2. Run the Anti-AI-Slop Pre-Delivery Audit first. A P0 fail denies the tier — do not
+2. The filter's Pre-Delivery Audit runs first when that skill is installed; otherwise run the palette ship gate in `../SKILL.md`. A P0 fail denies the tier — do not
    decorate a page that has not passed the filter.
 3. Measure the §2 gates. Record numbers, not impressions.
 4. Score the §1 rubric. Fix the weakest criterion before adding any §3 pattern.

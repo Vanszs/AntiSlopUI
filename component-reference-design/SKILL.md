@@ -46,7 +46,7 @@ Any FAIL blocks. There is no severity arithmetic in a standalone install: fix it
 ## Precedence & Conflict Resolution
 This skill is the palette; `Anti-AI-Slop` is the filter and authority. Its bans win every conflict; state the compliant substitution.
 Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception.
-Vary container widths by content; a grid may repeat `max-w-6xl`, but not every section. K3 bans hover enlargement in a grid; avoid scaling hover elsewhere too. Never use `transition-all`; pills are for tags and avatars only.
+Vary container widths by content; a grid may repeat `max-w-6xl`, but not every section. K3 bans hover enlargement on any element. Never use `transition-all`; pills are for tags and avatars only.
 
 ### Craft tier is opt-in
 `references/awards-craft.md` is the only file allowed to raise the craft ceiling, and only when the user explicitly asks for premium / award-grade / "wow" / studio / launch work. It carries a scored rubric (Design 40 · Usability 30 · Creativity 20 · Content 10), hard performance and a11y gates that deny the tier on failure, and a cost table for every craft pattern. It never buys a ban, and its two permitted relaxations are declared in `OVERRIDE:` form. Do not load it for dashboards, admin tools, docs, checkout, or forms.

@@ -272,7 +272,7 @@ python3 ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system -f mark
 
 ## If You Cannot Run Commands
 
-Do not read CSV files by hand. Fall back to the pattern library and authored defaults, and state this limitation in the output.
+Do not read CSV files by hand. Fall back to the contract below; the pattern library and the filter's authored defaults exist only if those skills are installed. State this limitation in the output.
 
 ## Post-Filter
 
@@ -290,3 +290,7 @@ If `anti-ai-slop-ui-ux` is installed, its list is authoritative and this block i
 - `transition: all`
 - Motion outside the canonical table (hover 100–150ms, entrance/exit 150–250ms, route ≤300ms); 400ms only with `OVERRIDE`
 - Invented metrics/social proof
+- Missing `prefers-reduced-motion`; animation must render static under it
+- Colour-only state indicators
+
+Local defaults when the filter is absent: page `#F8FAFC`, card `#FFFFFF`, border `#E2E8F0`, text `#0F172A`, muted `#475569`; one display face plus one body face (Inter only alongside a different display); prose `max-w-3xl`, grids `max-w-6xl`, section padding 32/16/12; radius `md`/`lg`/`xl`; `cursor-pointer` and a visible `focus-visible` ring on anything interactive.
