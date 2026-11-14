@@ -52,6 +52,20 @@ def _seed_index(seed, size):
     return int(digest[:8], 16) % size
 
 
+_FACE_EDITORIAL = ("editorial", "luxury", "culture", "museum", "portfolio", "art", "gallery", "heritage", "beauty", "spa", "wellness", "jewel")
+_FACE_CONSUMER = ("playful", "consumer", "education", "school", "kid", "game", "gaming", "esport", "ecommerce", "e-commerce", "retail", "fashion", "food", "restaurant")
+
+
+def category_face(query):
+    """Display face from the filter's category table, keyed on the product itself."""
+    q = (query or "").lower()
+    if any(word in q for word in _FACE_EDITORIAL):
+        return "Fraunces"
+    if any(word in q for word in _FACE_CONSUMER):
+        return "Cabinet Grotesk"
+    return "Bricolage Grotesque"
+
+
 def domain_hue(query):
     """Deterministic hue from the filter's domain table; the catch-all is deep teal."""
     q = (query or "").lower()
@@ -72,6 +86,8 @@ def post_filter_colors(colors, seed=""):
     if isinstance(out.get("primary"), str) and out["primary"].strip().upper() != base.upper():
         _note_override("OVERRIDE: vendor primary {} → {} [domain table]".format(out["primary"], base))
         out["primary"] = base
+        if isinstance(out.get("notes"), str) and out["notes"].strip():
+            out["notes"] = "Primary follows the product-domain table; secondary and CTA are derived from it."
     accent_roles = ("primary", "secondary", "cta")
     accent_i = 0
     for role, value in list(out.items()):
@@ -92,9 +108,10 @@ def post_filter_colors(colors, seed=""):
     return out
 
 
-def post_filter_typography(typo):
+def post_filter_typography(typo, query=""):
     """Break Inter-everywhere, Playfair+Inter, and mono-as-display pairings."""
     out = dict(typo or {})
+    out["_query"] = query
     heading = str(out.get("heading") or "")
     body = str(out.get("body") or "")
     bad_pairing = "playfair" in heading.lower() and body.strip().lower() == "inter"
@@ -104,12 +121,7 @@ def post_filter_typography(typo):
     mono_display = bool(_re.search(r"(?:^|\s)(?:fira code|jetbrains mono|space mono|ibm plex mono|share tech mono|roboto mono|source code pro|courier|consolas)(?:$|\s)|mono$", heading.lower()))
     in_table = any(name in heading.lower() for name in ("fraunces", "bricolage", "cabinet grotesk"))
     if inter_only or bad_pairing or mono_display or same_face or not in_table:
-        if bad_pairing or any(w in str(out.get("best_for", "")).lower() for w in ("luxury", "editorial", "culture")):
-            new_heading = "Fraunces"
-        elif any(w in str(out.get("best_for", "")).lower() for w in ("playful", "children", "consumer", "education")):
-            new_heading = "Cabinet Grotesk"
-        else:
-            new_heading = "Bricolage Grotesque"
+        new_heading = category_face(out.get("_query", ""))
         out["heading"] = new_heading
         body_face = body if body and body.strip().lower() != "inter" else "Inter"
         out["google_fonts_url"] = (
@@ -350,7 +362,7 @@ class DesignSystemGenerator:
                 "best_for": best_typography.get("Best For", ""),
                 "google_fonts_url": best_typography.get("Google Fonts URL", ""),
                 "css_import": best_typography.get("CSS Import", "")
-            }),
+            }, query=query),
             "key_effects": combined_effects,
             "anti_patterns": reasoning.get("anti_patterns", ""),
             "decision_rules": reasoning.get("decision_rules", {}),
