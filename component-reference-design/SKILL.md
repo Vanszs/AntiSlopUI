@@ -48,7 +48,7 @@ Use Category Map to select the narrowest relevant reference.
 
 | You're building… | Open | Contains |
 |------------------|------|----------|
-| Page/app skeleton, grid, responsive structure | `references/layouts.md` | 16 core layout patterns + 9 extended skeletons: holy-grail, sidebar shell, dashboard, split-screen, full-bleed, bento, masonry, magazine, asymmetric, sticky-aside, container-query, Z/F patterns, Every-Layout primitives |
+| Page/app skeleton, grid, responsive structure | `references/layouts.md` | 25 numbered patterns: sections 1–16 core skeletons (holy-grail, sidebar shell, dashboard, split-screen, full-bleed, bento, masonry, magazine, asymmetric, sticky-aside, multi-column, card grid, container queries, Z/F, cover, Every-Layout primitives) + sections 17–25 extended (hero variants, SaaS flow, dashboard shell, bento recipes, e-commerce, editorial, auth/pricing, mobile/PWA, modern CSS) |
 | Type scale, font pairing, fluid type | `references/typography.md` | 8+ display+body pairings, modular scales (1.2/1.25/1.333), clamp() recipes, per-role leading/measure/tracking, Tailwind config, MUI/MD3/Apple/Carbon scales compared |
 | Card, button, form, nav, table, list, badge | `references/components.md` | Card variants (17), buttons (10), form controls (13), navigation (13), data-display (16) |
 | Modal, drawer, toast, tooltip, popover, animation | `references/animation.md` | Overlay/feedback components + tasteful motion patterns (timing, easing, reduced-motion, 13 motion recipes) |
