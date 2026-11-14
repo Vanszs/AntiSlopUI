@@ -97,6 +97,22 @@ def _hover_shade(background, text):
     return background
 
 
+def _ensure_contrast(background, text):
+    """Return a background that clears 4.5:1 against `text`, changing the background if needed."""
+    if contrast_ratio(background, text) >= 4.5:
+        return background, text
+    for factor in (1.12, 1.22, 0.90, 0.82, 0.74, 1.35, 0.65):
+        candidate = _mix(background, factor)
+        if contrast_ratio(candidate, text) >= 4.5:
+            return candidate, text
+    flipped = "#FFFFFF" if text.upper() != "#FFFFFF" else "#0F172A"
+    for factor in (1.0, 0.90, 0.82, 1.12, 0.74):
+        candidate = _mix(background, factor)
+        if contrast_ratio(candidate, flipped) >= 4.5:
+            return candidate, flipped
+    return background, text
+
+
 def _seed_index(seed, size):
     digest = hashlib.sha256((seed or "default").encode("utf-8")).hexdigest()
     return int(digest[:8], 16) % size
@@ -138,7 +154,7 @@ def post_filter_colors(colors, seed=""):
         _note_override("OVERRIDE: vendor primary {} → {} [domain table]".format(out["primary"], base))
         out["primary"] = base
         if isinstance(out.get("notes"), str) and out["notes"].strip():
-            out["notes"] = "Primary follows the product-domain table; secondary and CTA are derived from it."
+            out["notes"] = "Primary follows the product-domain table; secondary and CTA are inherited from the vendor row unless banned, and each is recorded when replaced."
     accent_roles = ("primary", "secondary", "cta")
     accent_i = 0
     for role, value in list(out.items()):
@@ -844,8 +860,12 @@ def format_master_md(design_system: dict) -> str:
     lines.append("/* Primary Button */")
     lines.append(".btn-primary {")
     cta = colors.get("cta", "#F97316")
-    lines.append(f"  background: {cta};")
-    lines.append(f"  color: {_readable_on(cta)};")
+    _text = _readable_on(cta)
+    _cta, _text = _ensure_contrast(cta, _text)
+    if _cta.upper() != cta.upper():
+        _note_override("OVERRIDE: button background {} → {} for 4.5:1 [catalog C7]".format(cta, _cta))
+    lines.append(f"  background: {_cta};")
+    lines.append(f"  color: {_text};")
     lines.append("  padding: 12px 24px;")
     lines.append("  border-radius: 8px;")
     lines.append("  font-weight: 600;")
@@ -853,9 +873,9 @@ def format_master_md(design_system: dict) -> str:
     lines.append("  cursor: pointer;")
     lines.append("}")
     lines.append("")
-    _hover = _hover_shade(cta, _readable_on(cta))
-    if _hover.upper() != cta.upper():
-        _note_override("OVERRIDE: hover opacity 0.9 → background {} [catalog C7]".format(_hover))
+    _hover = _hover_shade(_cta, _text)
+    if _hover.upper() != _cta.upper():
+        _note_override("OVERRIDE: hover background {} → {} [catalog C7]".format(_cta, _hover))
     lines.append(".btn-primary:hover {")
     lines.append("  background: {};".format(_hover))
     lines.append("  transform: translateY(-1px);")
