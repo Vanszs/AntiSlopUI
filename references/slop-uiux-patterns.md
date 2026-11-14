@@ -34,7 +34,7 @@ LLMs generate UI by computing a weighted average across their training distribut
 Output **collapses toward the visual mean**. Every unspecified decision is filled with
 the single most probable token. This is structural math, not a bug.
 
-A tell is one row in sections 1–10, or one of the code-level findings listed in `../SKILL.md`'s audit (four a11y HIGH items and seven code P0 items). Count per element, page-scope rows once for the page, N4 and H8 as `JUDGEMENT`; canonical rule in `../SKILL.md`. **3+ P0/HIGH tells, or any P0 tell, = block (see ../SKILL.md) and regenerate.** The canonical threshold is defined in `../SKILL.md`.
+A tell is one row in sections 1–10, or one of the code-level findings listed in `../SKILL.md`'s audit (five a11y HIGH items and seven code P0 items). Count per element, page-scope rows once for the page, N4 and H8 as `JUDGEMENT`; canonical rule in `../SKILL.md`. **3+ P0/HIGH tells, or any P0 tell, = block (see ../SKILL.md) and regenerate.** The canonical threshold is defined in `../SKILL.md`.
 
 **The cure (one rule to rule them all):** every spacing value, color, font, grid,
 and animation must be *chosen for a content-specific reason*. If you can't explain
@@ -63,7 +63,7 @@ WHY, it's slop.
 |---|------|----------|-----|----------|
 | C1 | `indigo-500`/`violet-500`/`purple-500` (`#6366f1 #8b5cf6 #a855f7`) as primary accent | Tailwind's 5-yr default button color; >50% of YC Spring'25 AI cos used it | ONE brand hue that is NOT purple/indigo; define via CSS var / config | P0 |
 | C2 | `from-purple-500 to-pink-500` / `from-indigo-500 to-purple-600` / `from-blue-500 to-cyan-500` | Exact gradient combos dominating 2020–22 tutorials; "safest choice AI can make" | Single-hue gradient (brand-500→700) max, or flat color; gradient must draw the eye to ONE focal point | P0 |
-| C3 | Gradient on text AND button AND border AND background at once (budget: ONE gradient element per page) | Each fine alone; all together = converged fingerprint | Budget ONE gradient element per section | HIGH |
+| C3 | Gradient on text AND button AND border AND background at once (budget: ONE gradient element per page) | Each fine alone; all together = converged fingerprint | Budget one gradient element per page | HIGH |
 | C4 | Neon glow `box-shadow: 0 0 40px rgba(purple)` on cards/buttons/text | SaaS WordArt; when everything glows nothing is emphasized | Shadows = elevation only; neutral `shadow-sm/md`; glow only on focus ring | MEDIUM |
 | C5 | Aurora blobs / mesh gradient washes (`blur(100px)` saturated circles) | Named slop-detect pattern; every vibe-coder default for "modern" bg | Noise texture / single-tone radial ≤10%; never animate (paint storms) | MEDIUM |
 | C6 | `bg-gradient-to-br from-X to-Y` on every surface | Most common gradient direction in tutorials; kills hierarchy | Flat solids for 90% of surfaces; `to-b` if any; ONE gradient bg per page | MEDIUM |

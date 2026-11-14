@@ -100,7 +100,7 @@ scoring worse on the actual rubric:
 Everything else in `../SKILL.md` stays exactly as written.
 
 1. **Hero choreography duration** — may use 400ms. Declare `OVERRIDE: canonical motion limit → 400ms [craft tier §5]` on the motion instance.
-2. **Viewport-wide ambient animation** — the single permitted ambient animation may span the viewport instead of one section. Declare `OVERRIDE: ambient limited to one section → viewport-wide [craft tier §5]`. Keep it pausable and static under `prefers-reduced-motion`.
+2. **Viewport-wide ambient animation** — the single permitted ambient animation (max one per page) may span the viewport. Declare `OVERRIDE: ambient limited to one section → viewport-wide [craft tier §5]`. Keep it pausable and static under `prefers-reduced-motion`.
 
 Both relaxations remain pausable and static under reduced motion. Hovers and non-hero transitions stay within canonical limits.
 

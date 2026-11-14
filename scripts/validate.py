@@ -374,9 +374,20 @@ def main():
             missing = code_hues - table_hues
             # the generator's money hue must be the Money row, not merely present somewhere
             money = re.search(r"Money, invoicing[^\n]*?(#[0-9A-Fa-f]{6})", palette.group(1) if palette else "")
+            if not money:
+                problems.append("palette table has no Money row to verify")
+            catch_all = re.search(r"Anything not listed[^\n]*?(#[0-9A-Fa-f]{6})", palette.group(1) if palette else "")
+            source = (ROOT / "ui-ux-pro-max/scripts/design_system.py").read_text(encoding="utf-8")
+            fallback = re.search(r"def domain_hue[\s\S]*?return\s+\"(#[0-9A-Fa-f]{6})\"", source)
+            if catch_all and fallback and catch_all.group(1).upper() != fallback.group(1).upper():
+                problems.append("catch-all drift: table {} vs generator fallback {}".format(catch_all.group(1), fallback.group(1)))
+            if not catch_all or not fallback:
+                problems.append("cannot locate the catch-all hue in the table or the generator")
             proc = subprocess.run([sys.executable, str(script), "invoicing ledger", "--design-system"],
                                   cwd=_probe_cwd(), capture_output=True, text=True, timeout=60)
             found_money = re.search(r"Primary:\s+(#[0-9A-Fa-f]{6})", proc.stdout)
+            if not found_money:
+                problems.append("generator printed no Primary: line for the money query")
             if money and found_money and money.group(1).upper() != found_money.group(1).upper():
                 problems.append("money hue drift: table {} vs generator {}".format(money.group(1), found_money.group(1)))
             if missing:
@@ -482,7 +493,14 @@ def main():
         findings = []
         for path in md_files:
             for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-                if re.search(r"bare minimum guidelines|Improvise beyond what's documented", line, re.I) and "within the bans" not in line.casefold():
+                hedges = re.compile(
+                    r"bare minimum guidelines|improvise beyond what's documented|"
+                    r"(?:rules?|guidelines?)\s+(?:are|is)\s+(?:advisory|optional|not mandatory)|"
+                    r"not mandatory|may be skipped|feel free to ignore|use your (?:own )?judgement|"
+                    r"guidelines,? not rules|"
+                    r"(?:section|rule|guideline|checklist)[^.]*\boptional\b|"
+                    r"\bskip (?:it|this|these)\b|best[- ]effort", re.I)
+                if hedges.search(line) and "within the bans" not in line.casefold() and "nothing here overrides" not in line.casefold():
                     findings.append("{}:{} ban-voiding phrase".format(path.relative_to(ROOT), n))
         return findings
     run_check(results, "16 NO BAN-VOIDING CLAUSE", ban_voiding)
@@ -539,6 +557,15 @@ def main():
             failures.append("budget divisor differs: README {} vs SKILL.md {}".format(divisor.group(1), skill_divisor.group(1)))
         if kb and skill_kb and kb.group(1) != skill_kb.group(1):
             failures.append("budget ceiling differs: README {} KB vs SKILL.md {} KB".format(kb.group(1), skill_kb.group(1)))
+        skill_text_c = skill_text
+        for label, pattern in (("a11y HIGH items", r"(\w+)\s+a11y\s+HIGH\s+items"), ("code P0 items", r"(\w+)\s+code\s+P0\s+items")):
+            words = {"one":1,"two":2,"three":3,"four":4,"five":5,"six":6,"seven":7,"eight":8}
+            readme_v = re.search(pattern, text)
+            skill_v = re.search(pattern, skill_text_c)
+            if readme_v and skill_v:
+                a = words.get(readme_v.group(1).lower()); b = words.get(skill_v.group(1).lower())
+                if a and b and a != b:
+                    failures.append("{} differs: README {} vs SKILL.md {}".format(label, readme_v.group(1), skill_v.group(1)))
         claimed_gates = re.search(r"(\d+)\s+hard gates", text)
         if claimed_gates and int(claimed_gates.group(1)) != gates:
             failures.append("README claims {} hard gates; the table has {}".format(claimed_gates.group(1), gates))

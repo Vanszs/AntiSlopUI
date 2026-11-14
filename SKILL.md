@@ -34,7 +34,7 @@ recorded, not blocking.** `WARN-BRAND-SWAP` is a warning, never a block.
 ## Deterministic terms
 
 A **tell** is one catalogue row in `references/slop-uiux-patterns.md` sections 1–10, or one
-of the code-level findings the audit lists below (four a11y HIGH items and seven code P0
+of the code-level findings the audit lists below (five a11y HIGH items and seven code P0
 items). Severity is exactly `P0`, `HIGH`, `MEDIUM` or `LOW`; the vocabulary is closed.
 
 Count **per element**: when one element matches several rows (a 3-card grid with emoji icons
@@ -202,8 +202,8 @@ structures; at least two deliberate asymmetric moments per page.
 ## Reference budget
 
 Per task: this file plus **sections**, never whole reference files. A whole reference is
-6–36 KB (2–10k tokens): six still fit under the ceiling, the four largest do not, and none
-may be read whole. A section runs from a few hundred tokens to about 1,300, with the
+6–36 KB (2–10k tokens): six would still fit under the ceiling and four would not, but none
+may be read whole regardless. A section runs from a few hundred tokens to about 1,300, with the
 dashboard and code catalogues reaching roughly 2,100.
 
 Ceiling: **70 KB of skill text per task** (≈20k real tokens; 3.5 bytes ≈ 1 token, so bytes
@@ -228,10 +228,10 @@ cd <skill-dir> && grep -nE '^#{1,2} ' references/layouts.md   # names + line num
 sed -n 'START,ENDp' references/layouts.md                     # END = next match − 1
 ```
 
-When a reference carries its own checklist, run it too: `references/dashboards.md` has 15
-dashboard principles, `references/charts.md` a 15-point chart scan, and
-`references/research.md` a mandatory post-filter. Opening those files adds those checks to
-the audit.
+Some references carry their own checklists (`references/dashboards.md` 15 principles,
+`references/charts.md` a 15-point scan, `references/research.md` a post-filter). Run them as
+guidance for that artefact; they never add blocking items and never change the tell set.
+Where a reference checklist disagrees with this audit, this audit wins.
 
 ## Craft tier (opt-in)
 
@@ -278,7 +278,8 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 - [ ] Overlays are `<dialog>` (or a focus-trapped equivalent) and close on Escape.
 - [ ] Custom inputs follow the ARIA pattern: a combobox/select exposes `role="listbox"` +
   `aria-expanded` and is keyboard operable.
-- [ ] Icon-only controls carry `aria-label`; images carry `alt`.
+- [ ] Icon-only controls carry `aria-label` (P0).
+- [ ] Images carry `alt` (HIGH — one of the five a11y HIGH items).
 - [ ] No secrets, keys or tokens in client code, and no unsanitized HTML injection
   (`dangerouslySetInnerHTML`, `innerHTML`, `v-html`).
 - [ ] Data fetching follows the stack's idiom — server component, loader, or query cache —
@@ -286,7 +287,7 @@ Report `PASS` / `FAIL` / `N-A` / `UNVERIFIED` with an evidence pointer per item.
 
 **Motion and accessibility**
 - [ ] Motion inside the canonical table; colour/shadow hovers are 100–150ms; any spatial motion uses `transform`/`opacity` only; reduced-motion renders static.
-- [ ] Focus states visible; forms have labels and validation states; contrast checked.
+- [ ] Focus states visible; forms have labels and validation states (both HIGH a11y items); contrast checked.
 - [ ] Images have alt text; colour is never the only indicator.
 
 **Gestalt**
