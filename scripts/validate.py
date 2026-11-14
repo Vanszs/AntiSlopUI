@@ -134,6 +134,8 @@ def main():
                 failures.append("{}: invalid/mismatched name {!r}".format(path.relative_to(ROOT), name))
             if not isinstance(desc, str) or len(desc.strip()) < 60:
                 failures.append("{}: description must be at least 60 characters".format(path.relative_to(ROOT)))
+            if isinstance(desc, str) and len(desc.strip()) > 1024:
+                failures.append("{}: description exceeds the 1024-character platform limit".format(path.relative_to(ROOT)))
         except Exception as exc:
             failures.append("{}: {}".format(path.relative_to(ROOT), exc))
     results.append(check("1 FRONTMATTER SPEC", failures))

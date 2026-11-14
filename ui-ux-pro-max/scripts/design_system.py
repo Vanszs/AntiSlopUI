@@ -19,7 +19,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-# --- Local compliance post-filter (see ../references/research.md) ------------
+# --- Local compliance post-filter (see ../../references/research.md) ------------
 # The vendor database is statistically averaged and can recommend values the
 # suite bans. Substitutions happen here, in code, so generated artifacts are
 # compliant by construction instead of by agent discipline.

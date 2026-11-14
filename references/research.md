@@ -76,6 +76,8 @@ Flags: `--design-system` (`-ds`), `-p/--project-name`, `-f {ascii,markdown}`,
 
 ### Available Stacks
 
+The vendored database ships native-framework guides as well. This skill's rules target web UI; use the native guides as reference material only — the ban filter, patterns and audit here do not govern native mobile design.
+
 | Stack | Focus |
 |---|---|
 | `astro` | Islands, content collections, zero-JS defaults |

@@ -108,7 +108,7 @@ Both relaxations remain pausable and static under reduced motion. Hovers and non
 
 1. Confirm the tier applies (§0). If not, refuse and ship solid.
 2. Run the Pre-Delivery Audit in `../SKILL.md` first. A P0 fail denies the tier — do not
-   decorate a page that has not passed the ship gate.
+   decorate a page that has not passed the Delivery gate.
 3. Measure the §2 gates. Record numbers, not impressions.
 4. Score the §1 rubric. Fix the weakest criterion before adding any §3 pattern.
 5. Add craft patterns only while budget remains. Each one needs a one-line reason
