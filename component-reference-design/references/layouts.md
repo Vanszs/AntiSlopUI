@@ -2,6 +2,8 @@
 
 Companion to `../SKILL.md`. Every pattern: NAME · when-to-use · concrete CSS/Tailwind · responsive · motion. Sources: Every-Layout.dev, Josh Comeau, web.dev, Tailwind UI, MDN, NNG, Refactoring UI, Smashing.
 
+> Quality bar: semantic, responsive skeletons; vary anatomy and content-sized widths; preserve full-bleed breaks and reduced-motion support.
+
 > Anti-monotony rule of thumb: never repeat the same skeleton in consecutive sections; vary container width and section padding; ≥1 full-bleed break per page.
 
 ---
@@ -262,7 +264,7 @@ Mobile-first: base = mobile; add complexity upward. Container queries override v
 3. ≥2 asymmetric moments per page.
 4. One dominant element per section (≥1.5× weight).
 5. Break rhythm every 2–3 sections (full-bleed / color block / stats bar).
-6. Vary container width (text `max-w-3xl`, grids `max-w-6xl`, bleed full).
+6. Vary container width to fit content; alternate text measures, grid widths, and full-bleed sections.
 7. Mix card sizes in grids (one `col-span-2`).
 
 Sources: Every-Layout.dev, joshwcomeau.com (full-bleed, interactive grid guide), web.dev (container queries), Tailwind UI/Catalyst, NNG (F-pattern, menu checklist), Refactoring UI, MDN (grid-template-areas, masonry).
@@ -302,7 +304,7 @@ Real page-level skeletons as built by best-in-class sites: Linear, Vercel, Strip
         Identify at-risk students 6 weeks earlier
       </h1>
       <p class="mt-5 max-w-[52ch] text-lg leading-relaxed text-gray-600">
-        JagaSekolah scores attendance, grades, and economic data so wali kelas can intervene before dropout.
+        SchoolTrack scores attendance, grades, and economic data so homeroom teacher can intervene before dropout.
       </p>
       <a href="/demo" class="mt-8 inline-flex items-center rounded-md bg-blue-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
         See demo with sample data
@@ -357,7 +359,7 @@ Anti-monotony reference sequence (each row a different anatomy + width + padding
 2. Trust bar       logo strip OR metrics      py-8    max-w-5xl   border-y
 3. Features        scroll-sticky (pin+scroll) py-24   max-w-6xl   2-col
 4. Stats band      full-bleed rhythm break    py-12   bg-gray-50  border-y
-5. Features        bento grid (varied cells)  py-24   max-w-6xl   4-col
+5. Features        bento grid (varied cells)  py-24   max-w-5xl   4-col
 6. Testimonial     single big quote           py-24   max-w-3xl   bg-gray-50
 7. Integrations    logo grid                  py-24   max-w-5xl   6-col
 8. Pricing         3-tier cards               py-24   max-w-5xl   3-col
@@ -483,7 +485,7 @@ Mobile: sidebar → filter bottom-sheet/drawer. Note `scale-[1.03]` on image ins
 
 ### PDP — gallery + sticky buy box
 ```html
-<main class="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+<main class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
   <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_24rem] lg:items-start">
     <section aria-label="Product images" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <img src="" alt="Front view" class="aspect-square w-full rounded-lg object-cover sm:col-span-2" />

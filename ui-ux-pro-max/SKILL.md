@@ -1,6 +1,29 @@
+---
+name: ui-ux-pro-max
+description: Searches a design-system database for UI styles, color palettes, typography, UX guidance, charts, and stack-specific implementation patterns. Use when planning or implementing a web or mobile interface that needs evidence-backed design recommendations. Treat generated recommendations as proposals and apply the suite's mandatory post-filter before coding.
+license: MIT
+metadata:
+  upstream: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+  author: NextLevelBuilder (vendored)
+  version: 1.1.0
+  updated: 2026-11-14
+  references:
+    - POST-FILTER.md
+---
 # ui-ux-pro-max
 
 Comprehensive design guide for web and mobile applications. Contains 67 styles, 96 color palettes, 57 font pairings, 99 UX guidelines, and 25 chart types across 13 technology stacks. Searchable database with priority-based recommendations.
+
+## Path Convention
+
+Commands below are repo-relative. If this skill is installed elsewhere (for example, under `.kiro` or `~/.claude/skills/ui-ux-pro-max`), resolve the script path relative to the skill directory.
+
+## Context Budget
+
+- Do not read CSVs by hand; query them through `search.py`.
+- Run at most 2–3 targeted queries per task.
+- Avoid dumping or searching the whole database.
+- Use results relevant to the requested product and stack.
 
 ## Prerequisites
 
@@ -46,7 +69,7 @@ Extract key information from user request:
 **Always start with `--design-system`** to get comprehensive recommendations with reasoning:
 
 ```bash
-python3 steering/ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" --design-system [-p "Project Name"]
+python3 ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" --design-system [-p "Project Name"]
 ```
 
 This command:
@@ -57,7 +80,7 @@ This command:
 
 **Example:**
 ```bash
-python3 steering/ui-ux-pro-max/scripts/search.py "beauty spa wellness service" --design-system -p "Serenity Spa"
+python3 ui-ux-pro-max/scripts/search.py "beauty spa wellness service" --design-system -p "Serenity Spa"
 ```
 
 ### Step 2b: Persist Design System (Master + Overrides Pattern)
@@ -65,7 +88,7 @@ python3 steering/ui-ux-pro-max/scripts/search.py "beauty spa wellness service" -
 To save the design system for hierarchical retrieval across sessions, add `--persist`:
 
 ```bash
-python3 steering/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name"
+python3 ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name"
 ```
 
 This creates:
@@ -74,7 +97,7 @@ This creates:
 
 **With page-specific override:**
 ```bash
-python3 steering/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name" --page "dashboard"
+python3 ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name" --page "dashboard"
 ```
 
 This also creates:
@@ -90,7 +113,7 @@ This also creates:
 After getting the design system, use domain searches to get additional details:
 
 ```bash
-python3 steering/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
+python3 ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
 ```
 
 **When to use detailed searches:**
@@ -108,10 +131,14 @@ python3 steering/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [
 Get implementation-specific best practices. If user doesn't specify a stack, **default to `html-tailwind`**.
 
 ```bash
-python3 steering/ui-ux-pro-max/scripts/search.py "<keyword>" --stack html-tailwind
+python3 ui-ux-pro-max/scripts/search.py "<keyword>" --stack html-tailwind
 ```
 
-Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`, `react-native`, `flutter`, `shadcn`, `jetpack-compose`
+Available stacks: `astro`, `flutter`, `html-tailwind`, `jetpack-compose`, `nextjs`, `nuxt-ui`, `nuxtjs`, `react`, `react-native`, `shadcn`, `svelte`, `swiftui`, `vue`
+
+### Step 5: Post-Filter (MANDATORY)
+
+Treat every `--design-system` and domain-search result as a proposal: apply [`POST-FILTER.md`](POST-FILTER.md) before writing code. Run the Anti-AI-Slop pre-delivery audit last; its ban list is authoritative and wins any conflict.
 
 ---
 
@@ -137,8 +164,11 @@ Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`
 | Stack | Focus |
 |-------|-------|
 | `html-tailwind` | Tailwind utilities, responsive, a11y (DEFAULT) |
+| `astro` | Astro components, content, islands |
 | `react` | State, hooks, performance, patterns |
 | `nextjs` | SSR, routing, images, API routes |
+| `nuxtjs` | Nuxt routing, rendering, data fetching |
+| `nuxt-ui` | Nuxt UI components, theming, forms |
 | `vue` | Composition API, Pinia, Vue Router |
 | `svelte` | Runes, stores, SvelteKit |
 | `swiftui` | Views, State, Navigation, Animation |
@@ -162,7 +192,7 @@ Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`
 ### Step 2: Generate Design System (REQUIRED)
 
 ```bash
-python3 steering/ui-ux-pro-max/scripts/search.py "beauty spa wellness service elegant" --design-system -p "Serenity Spa"
+python3 ui-ux-pro-max/scripts/search.py "beauty spa wellness service elegant" --design-system -p "Serenity Spa"
 ```
 
 **Output:** Complete design system with pattern, style, colors, typography, effects, and anti-patterns.
@@ -171,19 +201,19 @@ python3 steering/ui-ux-pro-max/scripts/search.py "beauty spa wellness service el
 
 ```bash
 # Get UX guidelines for animation and accessibility
-python3 steering/ui-ux-pro-max/scripts/search.py "animation accessibility" --domain ux
+python3 ui-ux-pro-max/scripts/search.py "animation accessibility" --domain ux
 
 # Get alternative typography options if needed
-python3 steering/ui-ux-pro-max/scripts/search.py "elegant luxury serif" --domain typography
+python3 ui-ux-pro-max/scripts/search.py "elegant luxury serif" --domain typography
 ```
 
 ### Step 4: Stack Guidelines
 
 ```bash
-python3 steering/ui-ux-pro-max/scripts/search.py "layout responsive form" --stack html-tailwind
+python3 ui-ux-pro-max/scripts/search.py "layout responsive form" --stack html-tailwind
 ```
 
-**Then:** Synthesize design system + detailed searches and implement the design.
+**Then:** Synthesize design system + detailed searches, apply Step 5, and implement the design.
 
 ---
 
@@ -193,10 +223,10 @@ The `--design-system` flag supports two output formats:
 
 ```bash
 # ASCII box (default) - best for terminal display
-python3 steering/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system
+python3 ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system
 
 # Markdown - best for documentation
-python3 steering/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system -f markdown
+python3 ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system -f markdown
 ```
 
 ---
@@ -231,13 +261,13 @@ These are frequently overlooked issues that make UI look unprofessional:
 |------|----|----- |
 | **Cursor pointer** | Add `cursor-pointer` to all clickable/hoverable cards | Leave default cursor on interactive elements |
 | **Hover feedback** | Provide visual feedback (color, shadow, border) | No indication element is interactive |
-| **Smooth transitions** | Use `transition-colors duration-200` | Instant state changes or too slow (>500ms) |
+| **Motion budget** | Hovers 100–150ms; entrances 200–300ms; exits faster; animate `transform`/`opacity` only | Never use `transition-all`, layout-shifting motion, or slow exits |
 
 ### Light/Dark Mode Contrast
 
 | Rule | Do | Don't |
 |------|----|----- |
-| **Glass card light mode** | Use `bg-white/80` or higher opacity | Use `bg-white/10` (too transparent) |
+| **Glass card light mode (exception)** | At most ONE `bg-white/80` surface over imagery, with `@supports` fallback; ordinary cards are solid | Multiple glass surfaces or `bg-white/10` |
 | **Text contrast light** | Use `#0F172A` (slate-900) for text | Use `#94A3B8` (slate-400) for body text |
 | **Muted text light** | Use `#475569` (slate-600) minimum | Use gray-400 or lighter |
 | **Border visibility** | Use `border-gray-200` in light mode | Use `border-white/10` (invisible) |
@@ -246,9 +276,9 @@ These are frequently overlooked issues that make UI look unprofessional:
 
 | Rule | Do | Don't |
 |------|----|----- |
-| **Floating navbar** | Add `top-4 left-4 right-4` spacing | Stick navbar to `top-0 left-0 right-0` |
+| **Fixed solid navbar** | Use `fixed top-0 border-b` and offset content for nav height | Let content hide behind fixed elements |
 | **Content padding** | Account for fixed navbar height | Let content hide behind fixed elements |
-| **Consistent max-width** | Use same `max-w-6xl` or `max-w-7xl` | Mix different container widths |
+| **Vary container widths** | Match content: text `max-w-3xl`, grids `max-w-6xl`, with ≥1 full-bleed break | One uniform container width for every section |
 
 ---
 
@@ -266,7 +296,7 @@ Before delivering UI code, verify these items:
 ### Interaction
 - [ ] All clickable elements have `cursor-pointer`
 - [ ] Hover states provide clear visual feedback
-- [ ] Transitions are smooth (150-300ms)
+- [ ] Hovers use 100–150ms; entrances 200–300ms; exits faster; only `transform`/`opacity`, never `transition-all`
 - [ ] Focus states visible for keyboard navigation
 
 ### Light/Dark Mode
@@ -276,7 +306,8 @@ Before delivering UI code, verify these items:
 - [ ] Test both modes before delivery
 
 ### Layout
-- [ ] Floating elements have proper spacing from edges
+- [ ] Fixed nav is solid, `fixed top-0 border-b`, with content offset for its height
+- [ ] Container widths vary by content, including at least one full-bleed break
 - [ ] No content hidden behind fixed navbars
 - [ ] Responsive at 375px, 768px, 1024px, 1440px
 - [ ] No horizontal scroll on mobile

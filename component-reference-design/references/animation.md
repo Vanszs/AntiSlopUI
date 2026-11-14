@@ -2,6 +2,8 @@
 
 Companion to `../SKILL.md`. Overlay/feedback components + accessible motion. Sources: Radix, Headless UI, shadcn/ui, MUI, Ant Design, Material Design 3, Framer Motion / Motion, Emil Kowalski (Sonner, Vaul, animations.dev), Josh Comeau, NNG, web.dev, W3C WCAG/APG.
 
+> Quality bar: purposeful short motion, `prefers-reduced-motion` support, keyboard-accessible overlays, and no `transition-all`.
+
 > Motion budget: animate ≤30% of elements · `transform`+`opacity` ONLY (GPU) · ease-out in / ease-in out · exits 25–35% faster · `prefers-reduced-motion` MANDATORY.
 
 ---

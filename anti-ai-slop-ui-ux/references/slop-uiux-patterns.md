@@ -17,12 +17,8 @@ LLMs generate UI by computing a weighted average across their training distribut
 Output **collapses toward the visual mean**. Every unspecified decision is filled with
 the single most probable token. This is structural math, not a bug.
 
-**The full gestalt formula — any 5+ = unmistakable AI slop:**
-```
-purple-gradient + Inter + 3-card grid + centered hero + rounded-2xl + pill CTA
-+ "trusted by X teams" + "unlock/supercharge" copy + gradient blob background
-+ shadcn dashboard grid + generic Lucide icons + letter-in-rounded-box logo
-```
+3+ tells = block and regenerate; 5+ = unmistakable slop that fails any review.
+The canonical tell list lives in `../SKILL.md`; this section adds research context, not a second list.
 
 **The cure (one rule to rule them all):** every spacing value, color, font, grid,
 and animation must be *chosen for a content-specific reason*. If you can't explain
@@ -91,8 +87,8 @@ WHY, it's slop.
 |---|------|----------|-----|----------|
 | K1 | Identical 3-col feature grid (icon-in-rounded-square + title + blurb) | THE #1 AI layout fingerprint; statistical mean of every SaaS features section | Vary card sizes (one `col-span-2`); remove some containers; use list/table for uniform items | HIGH |
 | K2 | Uniform `rounded-2xl shadow-lg border` on every card | One safe shadow + radius applied everywhere; flattens hierarchy | Shadow hierarchy (`shadow-sm` cards, `shadow-xl` modals); drop border OR shadow | HIGH |
-| K3 | `hover:scale-105` in a grid | Tutorial-grade; overlaps neighbors; CLS | `hover:-translate-y-0.5 hover:shadow-md` or `hover:border-primary/50`, ≤200ms | HIGH |
-| K4 | Glassmorphism cards (`bg-white/10 backdrop-blur-lg`) | Peak-Dribbble 2021–22; fails contrast; GPU cost; invisible in light mode | Solid `bg-card`; glass on ≤1 element/viewport, min `bg-white/80`, `backdrop-blur-sm` | HIGH |
+| K3 | `hover:scale-105` in a grid | Tutorial-grade; overlaps neighbors; CLS | `hover:shadow-md` or `hover:border-primary/50`, ≤200ms | HIGH |
+| K4 | Glassmorphism cards (`bg-white/10 backdrop-blur-lg`) | Peak-Dribbble 2021–22; fails contrast; GPU cost; invisible in light mode | Solid `bg-card`; ⚠ exception (state it): ONE glass surface over imagery only, `bg-white/80` or higher, with an `@supports` fallback | HIGH |
 | K5 | Gradient-border cards (purple→blue wrapper hack) | "Safest choice AI can make"; pure decoration | Solid border conveying state; `ring-1 ring-primary/20` for emphasis | MEDIUM-HIGH |
 | K6 | `border-l-4 border-purple-500` left accent | "Almost as reliable a sign as em-dashes for text" (Krebs); lazy accent | Remove; left-border only for semantic alert/callout state | P0 |
 | K7 | Emoji icons in cards | Inconsistent cross-platform; can't theme; amateur | Consistent SVG set, monochrome, `w-5 h-5` | HIGH |
@@ -181,7 +177,7 @@ WHY, it's slop.
 | # | Tell | Why-slop | Fix | Severity |
 |---|------|----------|-----|----------|
 | MO1 | Universal fade-in-up on scroll (AOS on everything) | Most common scroll pattern; uniformity kills hierarchy; delays content | Animate section containers not elements; ≤2–3/viewport; fire once; 200–300ms, 8–12px | HIGH |
-| MO2 | `hover:scale-105` on every card | First Tailwind hover example; tutorial-grade; CLS | `hover:shadow-lg hover:-translate-y-0.5`, `scale-[1.02]` max, 150ms | HIGH |
+| MO2 | `hover:scale-105` on every card | First Tailwind hover example; tutorial-grade; CLS | `hover:shadow-md` or `hover:border-primary/50`, 150ms; no scaling in grids/lists | HIGH |
 | MO3 | Gratuitous Framer-Motion wrappers (default spring on all) | Same `y:20, opacity:0` copy-pasted; library defaults everywhere | 3–4 motion primitives; custom cubic-bezier; `useReducedMotion`; transform/opacity only | HIGH |
 | MO4 | Infinite floating/bobbing blobs | Cheap "dynamic" feel; drains battery; vestibular trigger | Remove; max 1 ambient/page; must pause on hover + reduced-motion | HIGH |
 | MO5 | Marquee logo scrollers | Template staple; unreadable moving targets; WCAG 2.2.2 | Static grid; if used: pause on hover/focus, control, >30s, reduced-motion fallback | MEDIUM-HIGH |
@@ -280,13 +276,13 @@ WHY, it's slop.
 
 <!-- CORRECT -->
 <nav class="fixed top-0 inset-x-0 bg-white border-b border-gray-200 z-50 px-4 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-7xl flex items-center justify-between h-16">
+  <div class="mx-auto max-w-6xl flex items-center justify-between h-16">
 ```
 
 ### Card hover
 ```css
 /* SLOP */ .card { @apply rounded-2xl shadow-lg border border-gray-200 hover:scale-105 transition-transform duration-300; }
-/* CORRECT */ .card { @apply rounded-lg border border-border hover:shadow-md hover:border-primary/30 transition-all duration-150 ease-out; }
+/* CORRECT */ .card { @apply rounded-lg border border-border hover:shadow-md hover:border-primary/30 transition-colors duration-150 ease-out; }
 ```
 
 ### Motion (reduced-motion)
@@ -309,7 +305,7 @@ WHY, it's slop.
 <!-- CORRECT -->
 <footer class="border-t border-gray-200 py-8 mt-16">
   <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-    <p class="text-sm text-gray-600">© 2026 JagaSekolah</p>
+    <p class="text-sm text-gray-600">© 2026 SchoolTrack</p>
     <nav class="flex gap-6 text-sm text-gray-600">
       <a href="/docs" class="hover:text-gray-900">Dokumentasi</a>
       <a href="/privacy" class="hover:text-gray-900">Privasi</a>

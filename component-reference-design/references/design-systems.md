@@ -2,6 +2,8 @@
 
 Companion to `../SKILL.md`. Which library to reach for, how to structure tokens, and varied marketing-section anatomies. Sources: official docs of each system, W3C DTCG, Evil Martians (100 dev-tool landing pages study), Tailwind UI.
 
+> Quality bar: choose systems by product fit, accessibility, theming, and license; use tokens consistently and vary section anatomy.
+
 ---
 
 # PART A — TRUSTED DESIGN SYSTEM INDEX (18)
@@ -119,13 +121,13 @@ Minimal (MVP, <16 pages: logo + 3–5 real links + copyright) · structured (16+
         Identify at-risk students 6 weeks earlier
       </h1>
       <p class="mt-5 max-w-prose text-lg leading-relaxed text-gray-600">
-        JagaSekolah scores attendance, grades, and economic data so wali kelas can intervene before a student drops out.
+        SchoolTrack scores attendance, grades, and economic data so homeroom teacher can intervene before a student drops out.
       </p>
       <a href="/demo" class="mt-8 inline-block rounded-md bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 transition-colors">
         See demo with sample data
       </a>
     </div>
-    <img src="/dashboard.png" alt="JagaSekolah risk-score dashboard" class="rounded-lg border border-gray-200 shadow-sm lg:justify-self-end" />
+    <img src="/dashboard.png" alt="SchoolTrack risk-score dashboard" class="rounded-lg border border-gray-200 shadow-sm lg:justify-self-end" />
   </div>
 </section>
 ```

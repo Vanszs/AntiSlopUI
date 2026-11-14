@@ -1,0 +1,8 @@
+# Conflict-guard exemptions, reviewed by a human.
+# Format: <repo-relative path>:<distinctive substring of the line>
+# Use only for a line that MENTIONS a banned literal in a prohibition/anti-pattern
+# context the token heuristic cannot see (no ❌, never, avoid, P0, →, etc.).
+component-reference-design/references/charts.md:animate gridlines/axes
+component-reference-design/references/animation.md:purposeful short motion
+component-reference-design/references/dashboards.md:whole-page scroll
+component-reference-design/references/dashboards.md:Vercel guidelines

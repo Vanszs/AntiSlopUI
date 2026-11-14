@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+"""Compute and optionally refresh the README statistics block."""
+import argparse
+import csv
+from pathlib import Path
+import re
+
+ROOT = Path(__file__).resolve().parent.parent
+MARKERS = ("<!-- stats:begin -->", "<!-- stats:end -->")
+
+
+def compute(root=ROOT):
+    root = Path(root)
+    rows = lambda path: sum(1 for _ in csv.reader((root / path).open(encoding="utf-8"))) - 1
+    values = [
+        ("Skills", sum(1 for p in root.iterdir() if p.is_dir() and (p / "SKILL.md").is_file())),
+        ("Markdown files", sum(1 for p in root.rglob("*.md") if ".git" not in p.parts)),
+        ("Reference files", sum(1 for p in root.rglob("*/references/*.md") if ".git" not in p.parts)),
+        ("Reasoning rules", rows("ui-ux-pro-max/data/ui-reasoning.csv")),
+        ("UI styles", rows("ui-ux-pro-max/data/styles.csv")),
+        ("Color palettes", rows("ui-ux-pro-max/data/colors.csv")),
+        ("Font pairings", rows("ui-ux-pro-max/data/typography.csv")),
+        ("UX guidelines", rows("ui-ux-pro-max/data/ux-guidelines.csv")),
+        ("Chart types", rows("ui-ux-pro-max/data/charts.csv")),
+        ("Tech stacks", sum(1 for p in (root / "ui-ux-pro-max/data/stacks").glob("*.csv"))),
+    ]
+    return values
+
+
+def block(root=ROOT):
+    lines = ["| Metric | Value |", "| --- | ---: |"]
+    lines.extend("| {} | {} |".format(label, value) for label, value in compute(root))
+    return MARKERS[0] + "\n" + "\n".join(lines) + "\n" + MARKERS[1]
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--write", action="store_true", help="refresh the README block")
+    parser.add_argument("--readme", type=Path, default=ROOT / "README.md", help="README path (defaults to repository README)")
+    parser.add_argument("--root", type=Path, default=ROOT, help="repository root used to compute values")
+    args = parser.parse_args()
+    generated = block(args.root)
+    if not args.write:
+        print(generated)
+        return
+    text = args.readme.read_text(encoding="utf-8")
+    pattern = re.escape(MARKERS[0]) + r".*?" + re.escape(MARKERS[1])
+    replacement, count = re.subn(pattern, lambda _: generated, text, count=1, flags=re.S)
+    if not count:
+        raise SystemExit("README missing stats markers")
+    args.readme.write_text(replacement, encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()

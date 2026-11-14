@@ -24,7 +24,7 @@ Companion to `../SKILL.md`. Every entry: NAME · when-to-use · concrete accessi
 | Interactive (link) | nav cards | pseudo-content trick (below) |
 | Actions-footer | settings, CRUD | content + `border-t` footer with buttons |
 | Overlay-text-on-image | featured/hero | image + `bg-gradient-to-t from-gray-900/80` + bottom text (≥70% gradient for AA) |
-| Glass (tasteful) | ONE per viewport over imagery | `bg-white/80 backdrop-blur-sm border-white/20` + `@supports` fallback |
+| Glass (tasteful) | ONE per viewport over imagery | ⚠ exception (state it): only one surface over imagery, `bg-white/80` or stronger, with `@supports` fallback; `backdrop-blur-sm border-white/20` |
 | Skeleton | loading | mirror real shape, `animate-pulse motion-reduce:animate-none`, `aria-busy` |
 | Bento cell | feature showcase | grid with `col-span-2 row-span-2` dominant cell |
 
@@ -38,7 +38,7 @@ Companion to `../SKILL.md`. Every entry: NAME · when-to-use · concrete accessi
 
 ### Interactive link card (Inclusive Components pseudo-content)
 ```html
-<article class="relative rounded-lg border border-gray-200 p-5 transition-all duration-150
+<article class="relative rounded-lg border border-gray-200 p-5 transition-colors duration-150
                 hover:border-blue-300 hover:shadow-md focus-within:ring-2 focus-within:ring-blue-500">
   <h3 class="text-sm font-semibold text-gray-900">
     <a href="/dest" class="after:absolute after:inset-0 focus:outline-none">Card title</a>
@@ -67,7 +67,7 @@ Entire card clickable, heading stays the semantic link, `:focus-within` mirrors 
 | radius | `rounded-md` | `rounded-lg` | `rounded-xl` | `rounded-full` |
 | shadow | none | `shadow-sm` rest / `shadow-md` hover | `shadow-lg` | — |
 
-Hover (never `scale-105`): `hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 ease-out`.
+Hover (never `scale-105`): `hover:shadow-md hover:-translate-y-0.5 transition-transform duration-150 ease-out`.
 
 ---
 
@@ -82,7 +82,7 @@ Hover (never `scale-105`): `hover:shadow-md hover:-translate-y-0.5 transition-al
 | Ghost | toolbars, dense | `text-gray-700 hover:bg-gray-100` |
 | Destructive | delete/revoke | `bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500` |
 | Icon-only | toolbar, close | `p-2` + **`aria-label`** + `<svg aria-hidden="true">` |
-| FAB / Extended FAB | single screen action (mobile) | `fixed bottom-6 right-6 rounded-2xl shadow-lg` |
+| FAB / Extended FAB | single screen action (mobile) | `fixed bottom-6 right-6 rounded-xl shadow-lg` |
 | Split | one default + dropdown | button group + `aria-haspopup` chevron |
 | Loading | async in progress | `disabled` + spinner + `<span aria-live="polite">Saving…</span>` |
 
@@ -170,8 +170,8 @@ Radio group skeleton:
 Top navbar (decision matrix: compact→bottom nav/hamburger, medium→rail, expanded→top nav or sidebar):
 ```html
 <header class="fixed top-0 inset-x-0 z-50 border-b border-gray-200 bg-white">
-  <nav aria-label="Global" class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-    <a href="/"><img class="h-8 w-auto" src="/logo.svg" alt="JagaSekolah home" /></a>
+  <nav aria-label="Global" class="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
+    <a href="/"><img class="h-8 w-auto" src="/logo.svg" alt="SchoolTrack home" /></a>
     <ul role="list" class="hidden md:flex md:gap-x-8">
       <li><a href="/dashboard" aria-current="page" class="text-sm font-medium text-gray-900">Dashboard</a></li>
       <li><a href="/siswa" class="text-sm font-medium text-gray-600 hover:text-gray-900">Siswa</a></li>

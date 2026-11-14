@@ -1,5 +1,5 @@
 ---
-name: Component Reference Design
+name: component-reference-design
 description: >-
   Positive reference library of modern, non-monotonous UI — the constructive
   companion to Anti-AI-Slop. Curated, copy-pasteable, accessible patterns sourced
@@ -12,7 +12,8 @@ description: >-
   any UI and you want a reference for "what good looks like."
 metadata:
   author: b4r7x
-  version: 1.0.0
+  version: 1.1.0
+  updated: 2026-11-14
   references:
     - references/layouts.md
     - references/typography.md
@@ -21,6 +22,8 @@ metadata:
     - references/design-systems.md
     - references/charts.md
     - references/dashboards.md
+    - references/awards-craft.md
+license: MIT
 ---
 
 # Component Reference Design — Positive Pattern Library
@@ -42,21 +45,36 @@ component variant, and tasteful accessible motion — all copy-pasteable and a11
 4. Apply the **Anti-Monotony Rules** below so the page doesn't feel templated.
 5. Run the Anti-AI-Slop **Pre-Delivery Audit** before shipping.
 
+## Precedence & Conflict Resolution
+This skill is the palette; `Anti-AI-Slop` is the filter and authority. Its bans win every conflict; state the compliant substitution.
+Glass is an explicit exception only as ONE surface over imagery, `bg-white/80` or stronger, with an `@supports` fallback; state the exception.
+Vary container widths by content; never use uniform `max-w-7xl`/`max-w-6xl` across sections. Never use `hover:scale-105` in grids/lists or `transition-all`.
+
+### Craft tier is opt-in
+`references/awards-craft.md` is the only file allowed to raise the craft ceiling, and only when the user explicitly asks for premium / award-grade / "wow" / studio / launch work. It carries a scored rubric (Design 40 · Usability 30 · Creativity 20 · Content 10), hard performance and a11y gates that deny the tier on failure, and a cost table for every craft pattern. It never buys a ban, and its two permitted relaxations are declared in `OVERRIDE:` form. Do not load it for dashboards, admin tools, docs, checkout, or forms.
+
+## Context Budget
+Always load this `SKILL.md` first.
+Open at most ONE reference file per task; two only when combining dashboards + charts.
+Grep to the needed section; do not read a 680-line reference whole.
+Use Category Map to select the narrowest relevant reference.
+
 ## Category Map (where to look)
 
 | You're building… | Open | Contains |
 |------------------|------|----------|
-| Page/app skeleton, grid, responsive structure | `references/layouts.md` | Holy-grail, sidebar shell, dashboard, split-screen, full-bleed, bento, masonry, magazine, asymmetric, sticky-aside, container-query, Z/F patterns, Every-Layout primitives |
+| Page/app skeleton, grid, responsive structure | `references/layouts.md` | 16 core layout patterns + 9 extended skeletons: holy-grail, sidebar shell, dashboard, split-screen, full-bleed, bento, masonry, magazine, asymmetric, sticky-aside, container-query, Z/F patterns, Every-Layout primitives |
 | Type scale, font pairing, fluid type | `references/typography.md` | 8+ display+body pairings, modular scales (1.2/1.25/1.333), clamp() recipes, per-role leading/measure/tracking, Tailwind config, MUI/MD3/Apple/Carbon scales compared |
 | Card, button, form, nav, table, list, badge | `references/components.md` | Card variants (17), buttons (10), form controls (13), navigation (13), data-display (16) |
 | Modal, drawer, toast, tooltip, popover, animation | `references/animation.md` | Overlay/feedback components + tasteful motion patterns (timing, easing, reduced-motion, 13 motion recipes) |
 | Choosing a library / design tokens | `references/design-systems.md` | 18 design-system index (ecosystem, styling, a11y, theming, license, URL) + W3C DTCG tokens + decision matrix |
 | Charts, graphs, KPI cards, sparklines, data-viz | `references/charts.md` | Beautiful modern Recharts patterns: color systems (teal/Okabe-Ito/OKLCH), premium chrome (custom tooltip/legend/axes/grid), bar/line/area/donut/radial, KPI+sparkline cards, specialty (heatmap/treemap/funnel/radar/scatter/bullet/waffle), motion, dark-mode/responsive, a11y, 15-point anti-slop scan |
 | Admin dashboard — app shell, sidebar, topbar, widgets, tables, filters | `references/dashboards.md` | Modern clean admin dashboard: 15 clean-dashboard principles, app shell (grid sidebar+header), sidebar nav (collapsible/rail/groups/footer), topbar (breadcrumb/⌘K search/notif/avatar/org-switcher), command palette, grid composition (KPI→hero+side→table, bento), KPI/stat cards (delta inversion), chart placement/chrome, filters & toolbar (date-range/segmented/chips/saved-views), data table (TanStack/density/sort/selection/pagination), all states (skeleton/empty/error/zero), 3-tier color tokens + dark, anti-pattern cheat sheet |
+| Award-grade / premium / studio page (opt-in only) | `references/awards-craft.md` | Scored rubric (Awwwards weights), hard perf+a11y gates that deny the tier, cost table for kinetic type / transitions / scroll choreography / 3D / video / custom cursor, award-theatre anti-patterns, the only two permitted relaxations |
 
 ## The Anti-Monotony Rules (apply to every multi-section page)
 1. **Never repeat the same section anatomy consecutively.** Vary: centered → split → bento → stats-bar → full-bleed → alternating.
-2. **Vary container widths by content** — text `max-w-3xl`, grids `max-w-6xl`, ≥1 full-bleed break per page.
+2. **Vary container widths by content** — text measures, grid widths, and full-bleed sections should suit their content; include ≥1 full-bleed break per page.
 3. **Vary section padding** — hero `py-32`, features `py-16`, CTA `py-12`. Never one uniform `py-20`.
 4. **One dominant element per section** — size/weight ≥1.5× its neighbours.
 5. **Break rhythm every 2–3 sections** — a full-bleed image, colour block, or stats bar.

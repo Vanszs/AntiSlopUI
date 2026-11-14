@@ -2,6 +2,8 @@
 
 Companion to `../SKILL.md`. Sources: Refactoring UI, Material Design 3, Apple HIG, IBM Carbon, MUI, Utopia, Typewolf, Fontshare, Google Fonts, Smashing.
 
+> Quality bar: distinctive display + neutral body; max 2 families and 3 weights; modular scale; readable measure and accessible contrast.
+
 > Rule of thumb: distinctive display font (NOT Inter-everywhere) + neutral body; max 2 families; max 3 weights (400/500/700); modular scale; `max-w-prose` (~65ch); left-aligned body.
 
 ---
@@ -29,7 +31,7 @@ Companion to `../SKILL.md`. Sources: Refactoring UI, Material Design 3, Apple HI
   --font-mono:'JetBrains Mono', ui-monospace, monospace;
 }
 ```
-> For JagaSekolah (gov/edu, trustworthy): pairing #5 Libre Franklin + Libre Baskerville, or #2 Fraunces + Inter.
+> For SchoolTrack (gov/edu, trustworthy): pairing #5 Libre Franklin + Libre Baskerville, or #2 Fraunces + Inter.
 
 ---
 

@@ -6,6 +6,8 @@ Synthesized from web research (2025–2026): Recharts 3.x docs, Tremor, shadcn/u
 Apache ECharts, Observable, IBM Carbon Data-Viz, ColorBrewer, Okabe-Ito, Vercel/Linear/Stripe
 dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
 
+> Quality bar: one intentional brand hue, accessible contrast and labels, real data, reduced-motion support, and chart chrome that preserves legibility.
+
 > Quality bar: one brand hue (teal, NOT purple) · subtle dashed horizontal grid · gradient
 > area fills · hover-only dots · custom tooltip card · `tabular-nums` · `prefers-reduced-motion`
 > gated · `role="img"`+`aria-label` · real data only. If a chart could be swapped into any
@@ -35,7 +37,7 @@ dashboards, Cole Nussbaumer (SWD), Tufte, NNG, animations.dev / Emil Kowalski.
 
 ## 1. COLOR SYSTEM (the #1 thing that makes charts beautiful or slop)
 
-### 1a. Brand + semantic tokens (JagaSekolah)
+### 1a. Brand + semantic tokens (SchoolTrack)
 ```ts
 const CHART = {
   brand:   "#005D4C",  // teal — primary/focal series
@@ -99,7 +101,7 @@ export const ANIM_MS = 600;
 function ChartTooltip({ active, payload, label, unit="" }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl border border-slate-200 bg-white/95 px-3 py-2 shadow-[0_4px_16px_rgb(15_23_42_/0.08)] backdrop-blur-sm">
+    <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-[0_4px_16px_rgb(15_23_42_/0.08)]">
       {label != null && <p className="mb-1 text-xs font-medium text-slate-500">{label}</p>}
       <ul className="space-y-0.5">
         {payload.map((p,i)=>(
@@ -171,7 +173,7 @@ Beauty = rounded caps + breathing room + value labels + ONE focal color.
 | Emphasis | dim others to `fillOpacity 0.3` on hover, OR `<Cell>` highlight one |
 | Gradient (single-series hero) | vertical `linearGradient` brand 100%→60% |
 
-### 3·PITFALL (this is the bug that made JagaSekolah bars look "empty")
+### 3·PITFALL (this is the bug that made SchoolTrack bars look "empty")
 > Setting `<XAxis type="number" hide />` (or `<YAxis hide />`) makes Recharts **drop the
 > domain → bars render 0-width / invisible** (labels still show). **ALWAYS** add an explicit
 > domain when hiding a numeric axis: `domain={[0, "dataMax"]}`. Affects ranking bars,
@@ -290,7 +292,7 @@ Progress vs target: `role="progressbar"` + colored fill (teal on-track, amber be
 
 ## 7. SPECIALTY (use when the data story needs it; always pair with a data table)
 
-| Chart | When (JagaSekolah) | Library | Beauty notes | Data? |
+| Chart | When (SchoolTrack) | Library | Beauty notes | Data? |
 |---|---|---|---|---|
 | **Calendar heatmap** | 365-day attendance per siswa | `react-activity-calendar` | block radius 2, gap 3px, teal 5-step theme | ✅ Absensi |
 | **Heatmap matrix** | day×week absence, subject×student | `@nivo/heatmap` or custom SVG | rect cells radius 2, single-hue sequential, empty=`#f8fafc` | ✅ |

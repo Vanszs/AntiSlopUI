@@ -1,5 +1,5 @@
 ---
-name: Anti-AI-Slop UI/UX
+name: anti-ai-slop-ui-ux
 description: >-
   Overkill negative-prompt skill that stops AI-generated UI from looking like
   "AI slop" in a single glance. Detects and bans the statistical-mean design
@@ -7,9 +7,11 @@ description: >-
   pill CTAs, hype copy) across EVERY component — hero, color, typography, cards,
   layout, icons, imagery, microcopy, motion, buttons, forms, nav, footer.
   Use when designing, building, reviewing, or refactoring any UI.
+license: MIT
 metadata:
   author: b4r7x
-  version: 2.0.0
+  version: 2.1.0
+  updated: 2026-11-14
   references:
     - references/slop-uiux-patterns.md
     - references/slop-code-patterns.md
@@ -36,8 +38,8 @@ most frequent pattern. **The cure is deliberate, content-specific variation.**
 ---
 
 ## ⛔ THE INSTANT-DEATH SIGNATURE
-Any **3+ of these together = reads as "AI made this" in under 2 seconds.** Treat
-each as a hard block, not a suggestion.
+3+ tells = block and regenerate; 5+ = unmistakable slop that fails any review.
+Treat each tell as a hard block, not a suggestion.
 
 ```
 purple/indigo gradient  +  Inter everywhere  +  centered hero + dual CTA
@@ -63,6 +65,24 @@ landing page. **Stop and regenerate.**
 1. Scan against the **Slop Severity Table** — fix all P0/HIGH first.
 2. Use `references/slop-uiux-patterns.md` for the exhaustive tell→fix catalog.
 3. Report findings as: `tell → why-slop → fix → severity`.
+
+## Precedence & Conflict Resolution
+
+This skill is the authority on bans across this suite. When another skill, CSV, or generator conflicts, this skill wins:
+- `ui-ux-pro-max/scripts/search.py --design-system` can return Primary `#6366F1` (indigo-500): banned P0; substitute a brand-safe hue and record the override.
+- `ui-ux-pro-max/SKILL.md` “consistent max-width / same max-w-6xl or max-w-7xl” conflicts with vary-container-widths; varying wins.
+- “floating navbar top-4” conflicts with fixed solid navbar; the solid fixed nav wins.
+- Glassmorphism is banned, except ONE glass surface over imagery with `bg-white/80` or higher and an `@supports` fallback; state the exception per use.
+- `hover:scale-105` is banned in grids/lists.
+
+If a tool recommends something on this skill's P0/HIGH list, the recommendation loses — apply the substitution and say which override you made.
+
+## Context Budget
+
+Load this `SKILL.md` always.
+Open AT MOST ONE reference file per task, and only the section needed; grep for the component heading.
+Never read all references.
+References are on-demand lookup, not required reading.
 
 ---
 
@@ -183,6 +203,8 @@ landing page. **Stop and regenerate.**
 
 ## Pre-Delivery Slop Audit (run every time)
 
+Report each item as `PASS` / `FAIL` / `N-A` with one-line evidence pointer (`file:line` or class name); a single FAIL on a P0 item blocks delivery.
+
 **Color & Type**
 - [ ] No `indigo`/`violet`/`purple` accent unless it is the real brand
 - [ ] No gradient text; ≤1 gradient element per section
@@ -208,7 +230,7 @@ landing page. **Stop and regenerate.**
 
 **Gestalt check**
 - [ ] Could I swap the logo with a competitor and nobody notices? → if yes, FAIL
-- [ ] Does the Instant-Death Signature appear (3+ tells)? → if yes, regenerate
+- [ ] Does the Instant-Death Signature meet the threshold (3+ tells)? → if yes, regenerate
 - [ ] Would this pass a senior designer in a 2-second glance? → if no, fix
 
 ---

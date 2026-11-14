@@ -252,7 +252,7 @@ Dominant ≥`col-span-2 row-span-2` else it's a uniform card grid (slop). Mix co
 ### Grid
 `grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4` — 4-up desktop, 2×2 tablet, stacked mobile. Hero metric → `sm:col-span-2` + `text-3xl` + embedded sparkline (breaks 4-box monotony, Vercel/Mixpanel).
 
-### ⚠️ Delta semantic INVERSION (critical for JagaSekolah)
+### ⚠️ Delta semantic INVERSION (critical for SchoolTrack)
 Direction (↑↓) ≠ judgment (good/bad). Decouple them — caller decides intent per metric:
 - **"Siswa Berisiko"**: ↑ = red (bad), ↓ = emerald (good)
 - **"Kehadiran"**: ↑ = emerald (good), ↓ = red (bad)
@@ -313,7 +313,7 @@ height 32–48px · `dot={false}` · NO axes/grid/tooltip · `isAnimationActive=
 52 weeks × 7 days, cell 11×11px gap 3px, single-hue teal sequential (`#f1f5f9`→`#005D4C`), tooltip on hover, `role="img"`+`aria-label`. Never rainbow. (GitHub graph)
 
 ### 7f. Hover tooltip card
-`rounded-lg border border-slate-200 bg-white/95 backdrop-blur-sm shadow-[0_4px_16px_rgba(15,23,42,0.08)]` — date label + dot+name+value (right-aligned `tabular-nums`). Fade 100ms, no spring/scale. **Source:** Tremor, Vercel, Stripe, charts.md §2.
+`rounded-lg border border-slate-200 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.08)]` — date label + dot+name+value (right-aligned `tabular-nums`). Fade 100ms, no spring/scale. **Source:** Tremor, Vercel, Stripe, charts.md §2.
 
 ---
 
@@ -328,7 +328,7 @@ APPLIED CHIPS (conditional, flex-wrap): Filter: [Kelas 6A ×] [Risiko Tinggi ×]
 
 ### 8a. Horizontal filter bar (NOT sidebar for SaaS, ≤6–8 filters — Baymard)
 ```html
-<div class="sticky top-14 z-20 border-b border-slate-200 bg-white/95 backdrop-blur-sm">
+<div class="sticky top-14 z-20 border-b border-slate-200 bg-white">
   <div class="flex items-center gap-2 px-4 py-2 sm:px-6" role="toolbar" aria-label="Filter data">
     <button type="button" aria-haspopup="listbox" aria-expanded="false"
       class="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 transition-colors">
