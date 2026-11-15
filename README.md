@@ -143,7 +143,9 @@ AntiSlopUI/
 │   ├── audit.py                 # artifact gate (bans, glass, motion, layout)
 │   ├── stats.py                 # recompute/splice the stats block below
 │   ├── toc.py                   # regenerate every ## Contents index
+│   ├── golden.py                # semantic snapshot test over five generator fixtures
 │   └── conflict-allowlist.txt   # reviewed exemptions for audit/validate scans
+├── tests/golden/                # committed fixtures (ASCII, markdown, MASTER, page)
 └── .github/workflows/validate.yml
 ```
 
@@ -154,6 +156,7 @@ Claims here are checked, not asserted:
 ```bash
 python3 scripts/validate.py       # 23 structural + semantic checks, non-zero exit on failure
 python3 scripts/audit.py .        # artifact gate across docs and code
+python3 scripts/golden.py         # semantic snapshot: filtered generator output must not drift
 python3 scripts/stats.py          # recompute the stats block from the CSVs
 python3 scripts/toc.py --write    # regenerate reference indexes (non-destructive)
 ```
@@ -163,7 +166,11 @@ stale paths; stats matching the CSVs; stack coverage; documented CLI values matc
 argparse; the brand-hue table matching the generator and `-p` invariance; the persist
 contract named in `references/research.md`; CSV structure (width, IDs, severity);
 `## Contents` correctness; a single motion canon; README claim sync; and an audit of a
-freshly generated `MASTER.md`.
+freshly generated `MASTER.md`. `golden.py` locks behaviour rather than structure: five
+fixtures (ASCII, markdown, persisted `MASTER.md`, and a page override) are regenerated and
+compared byte-for-byte with the timestamp normalised, so a change to the post-filter, the
+ledger, the button contrast pair, or the CSVs fails CI until the fixtures are refreshed
+with `python3 scripts/golden.py --write`.
 
 ## Stats
 

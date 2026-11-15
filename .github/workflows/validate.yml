@@ -18,6 +18,7 @@ jobs:
       - run: pip install pyyaml || true
       - run: python scripts/stats.py
       - run: python scripts/validate.py
+      - run: python scripts/golden.py
       - run: |
           output=$(mktemp -d)
           python ui-ux-pro-max/scripts/search.py "validation probe" --design-system --persist -p ValidateProbe -o "$output"

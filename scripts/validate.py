@@ -173,18 +173,25 @@ def main():
                 failures.append("{}: missing link target {!r}".format(path.relative_to(ROOT), target))
     results.append(check("3 LINK INTEGRITY", failures))
 
-    retired = ("steering/ui-ux-pro-max", "anti-ai-slop-ui-ux/", "component-reference-design/",
-               "ui-ux-pro-max/SKILL.md", "ui-ux-pro-max/POST-FILTER.md")
+    retired = re.compile(
+        r"steering/ui-ux-pro-max"
+        r"|anti-ai-slop-ui-ux[\w/]*"
+        r"|component-reference-design[\w/]*"
+        r"|ui-ux-pro-max/(?:SKILL\.md|POST-FILTER\.md)"
+        r"|POST-FILTER\.md")
     failures = []
     stale_targets = (list(ROOT.glob("*.md")) + list(ROOT.glob("references/*.md"))
-                     + list(ROOT.glob("scripts/*.py")) + list(ROOT.glob("ui-ux-pro-max/scripts/*.py")))
+                     + list(ROOT.glob("scripts/*.py")) + list(ROOT.glob("ui-ux-pro-max/scripts/*.py"))
+                     + list(ROOT.glob(".github/workflows/*.yml")) + list(ROOT.glob(".github/workflows/*.yaml"))
+                     + list(ROOT.glob("ui-ux-pro-max/data/*.csv")) + list(ROOT.glob("ui-ux-pro-max/data/stacks/*.csv")))
     for doc in stale_targets:
         if doc.name in ("README.md", "validate.py"):
             continue  # README documents the migration; validate.py holds this list
-        for i, line in enumerate(doc.read_text(encoding="utf-8").splitlines(), 1):
-            for literal in retired:
-                if literal in line:
-                    failures.append("{}:{} references retired path {!r}".format(doc.relative_to(ROOT), i, literal))
+        for i, line in enumerate(doc.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+            match = retired.search(line)
+            if match:
+                failures.append("{}:{} references retired path {!r}".format(
+                    doc.relative_to(ROOT), i, match.group(0)))
     results.append(check("4 NO STALE PATHS", failures))
 
     failures = []
@@ -333,6 +340,23 @@ def main():
             nums = sorted(int(value) for value in ids if value.isdigit())
             if nums and nums != list(range(nums[0], nums[-1] + 1)):
                 problems.append("{}: numeric ID gaps".format(path.relative_to(ROOT)))
+            # a shifted row keeps the field count but moves content: the classic
+            # signature is a cell that repeats another column's header name, or an
+            # empty cell in a column the header declares.
+            headers = [name.strip().casefold() for name in rows[0]]
+            optional = {"docs url", "don't"}  # columns that may legitimately be blank
+            for row in (r for r in rows[1:] if len(r) == width):
+                for index, cell in enumerate(row):
+                    value = cell.strip()
+                    if not value:
+                        if headers[index] not in optional:
+                            problems.append("{}: row {} has an empty {!r} cell".format(
+                                path.relative_to(ROOT), row[0], rows[0][index].strip()))
+                        continue
+                    lowered = value.casefold()
+                    if lowered in headers and lowered != headers[index]:
+                        problems.append("{}: row {} has header text {!r} in column {!r} (shifted?)".format(
+                            path.relative_to(ROOT), row[0], value, rows[0][index].strip()))
         return problems
     run_check(results, "11 CSV STRUCTURE", csv_structure)
 
@@ -607,6 +631,19 @@ def main():
         if len(distinct) != 1:
             return ["suite_version disagrees: {}".format(versions)]
         version = next(iter(distinct))
+        problems = []
+        for path, data in parsed.items():
+            meta = data.get("metadata") or {}
+            declared = meta.get("version") if isinstance(meta, dict) else None
+            if declared != version:
+                problems.append("{}: metadata.version {!r} differs from suite_version {!r}".format(
+                    path.relative_to(ROOT), declared, version))
+            updated = meta.get("updated") if isinstance(meta, dict) else None
+            if updated is not None and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(updated)):
+                problems.append("{}: metadata.updated {!r} is not YYYY-MM-DD".format(
+                    path.relative_to(ROOT), updated))
+        if problems:
+            return problems
         badge = re.search(r"suite%20([0-9][0-9.]*)-blue", readme.read_text(encoding="utf-8"))
         if not badge:
             return ["README badge does not state the suite version"]
