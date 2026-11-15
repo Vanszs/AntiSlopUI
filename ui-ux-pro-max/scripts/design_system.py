@@ -842,8 +842,8 @@ def format_master_md(design_system: dict) -> str:
     lines.append("| Level | Value | Usage |")
     lines.append("|-------|-------|-------|")
     lines.append("| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift |")
-    lines.append("| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)` | Cards, buttons |")
-    lines.append("| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)` | Modals, dropdowns |")
+    lines.append("| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.08)` | Cards, buttons |")
+    lines.append("| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.12)` | Modals, dropdowns |")
     lines.append("| `--shadow-xl` | `0 20px 25px rgba(0,0,0,0.15)` | Hero images, featured cards |")
     lines.append("")
     
